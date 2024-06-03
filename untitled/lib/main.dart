@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        appBarTheme: AppBarTheme(),
+        appBarTheme: const AppBarTheme(),
         useMaterial3: true,
       ),
       home: const MyHomePage(),
@@ -36,18 +36,18 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF00001a),
+        backgroundColor: const Color(0xFF00001a),
         title: const Text(
           "Homepage",
           style: TextStyle(color: Colors.white),
         ),
-        systemOverlayStyle: SystemUiOverlayStyle(
+        systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor:
-              Colors.transparent, // Set to transparent or any color you like
+              Colors.transparent,
           statusBarIconBrightness:
-              Brightness.light, // Adjust icon brightness for contrast
+              Brightness.light,
         ),
-        leading: Padding(
+        leading: const Padding(
           padding: EdgeInsets.all(8.0),
           child: CircleAvatar(
             backgroundImage: AssetImage('assets/images/3039972.png'),
@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body:
           // Foreground content
-          SingleChildScrollView(
+          const SingleChildScrollView(
             child: Column(
               children: [
                 UserSection(),

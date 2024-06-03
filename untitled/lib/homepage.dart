@@ -8,15 +8,15 @@ class UserSection extends StatelessWidget {
     return Container(
       width: 500,
       height: MediaQuery.of(context).size.height * 0.3,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Color(0xFF00001a),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(10.0),
           bottomRight: Radius.circular(1000.0),
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+      child: const Padding(
+        padding: EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -115,7 +115,7 @@ class ModuleCard extends StatelessWidget {
       margin: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-          // Add navigation or functionality here
+          // Add navigation
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -125,14 +125,14 @@ class ModuleCard extends StatelessWidget {
               backgroundColor: Colors.white,
               child: Icon(icon, size: 25, color: color),
             ),
-            // SizedBox(height: 8),
-            Divider(
+            const SizedBox(height: 8),
+            const Divider(
               thickness: 1,
             ),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
           ],
         ),
