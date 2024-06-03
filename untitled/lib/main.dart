@@ -16,10 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        appBarTheme: AppBarTheme(
-
-        ),
-
+        appBarTheme: AppBarTheme(),
         useMaterial3: true,
       ),
       home: const MyHomePage(),
@@ -39,12 +36,16 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        
-        backgroundColor: Color(0xFF000033),
-        title: const Text("Homepage", style: TextStyle(color: Colors.white),),
+        backgroundColor: Color(0xFF00001a),
+        title: const Text(
+          "Homepage",
+          style: TextStyle(color: Colors.white),
+        ),
         systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent, // Set to transparent or any color you like
-          statusBarIconBrightness: Brightness.light, // Adjust icon brightness for contrast
+          statusBarColor:
+              Colors.transparent, // Set to transparent or any color you like
+          statusBarIconBrightness:
+              Brightness.light, // Adjust icon brightness for contrast
         ),
         leading: Padding(
           padding: EdgeInsets.all(8.0),
@@ -54,21 +55,26 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white,),
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+            ),
             onPressed: () {
               // Handle navigation drawer open
             },
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            UserSection(),
-            ModuleGrid(),
-          ],
-        ),
-      ),
+      body:
+          // Foreground content
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                UserSection(),
+                ModuleGrid(),
+              ],
+            ),
+          ),
     );
   }
 }

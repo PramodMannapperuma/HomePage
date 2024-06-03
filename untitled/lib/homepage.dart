@@ -5,37 +5,46 @@ class UserSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color:Colors.grey,width: 1),
-          borderRadius: BorderRadius.circular(8),
+    return Container(
+      width: 500,
+      height: MediaQuery.of(context).size.height *
+        0.3,
+      decoration: BoxDecoration(
+        color: Color(0xFF00001a),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(10.0),
+          bottomRight: Radius.circular(1000.0),
         ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
-
               children: [
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/user.jpg'), // replace with your image asset
+                  backgroundImage: AssetImage(
+                      'assets/images/user.jpg'), // replace with your image asset
                   radius: 40,
                 ),
                 SizedBox(width: 10),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Hello User ,', style: TextStyle(fontSize: 24),),
-                    Text('Last login: 2024/06/03', style: TextStyle(fontSize: 20), ),
+                    Text(
+                      'Hello User ,',
+                      style: TextStyle(fontSize: 24, color: Colors.white),
+                    ),
+                    Text(
+                      'Last login: 2024/06/03',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
                   ],
                 ),
-
               ],
             ),
-            SizedBox(width: 8),
-            Icon(Icons.settings, color: Colors.white),
           ],
         ),
       ),
@@ -50,12 +59,12 @@ class ModuleGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height *
-          0.8, // Adjust the height as needed
+          0.8,
       child: GridView.count(
         crossAxisCount: 2,
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
-        childAspectRatio: 3 / 2,
+        childAspectRatio: 2 / 1,
         padding: const EdgeInsets.all(8.0),
         children: const [
           ModuleCard(
@@ -112,9 +121,9 @@ class ModuleCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
-              radius: 30, // Adjust the radius as needed
+              radius: 20, // Adjust the radius as needed
               backgroundColor: Colors.white,
-              child: Icon(icon, size: 30, color: color),
+              child: Icon(icon, size: 20, color: color),
             ),
             SizedBox(height: 8),
             Text(
@@ -128,4 +137,3 @@ class ModuleCard extends StatelessWidget {
     );
   }
 }
-
