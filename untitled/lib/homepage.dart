@@ -5,69 +5,38 @@ class UserSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(6.0),
-        child: Card(
-          color: Colors.black87,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          elevation: 5,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color:Colors.grey,width: 1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/user.jpg'), // replace with your image asset
+                  radius: 40,
+                ),
+                SizedBox(width: 10),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: AssetImage(
-                              'assets/images/user.jpg'), // replace with your image asset
-                          radius: 35,
-                        ),
-                        SizedBox(width: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 4),
-                            Text(
-                              'Hello',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'UserName',
-                              style: TextStyle(
-                                color: Colors.white54,
-                                fontSize: 18,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text('Last Login: Today',
-                                style: TextStyle(
-                                    color: Colors.white54, fontSize: 14)),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Icon(
-                      Icons.settings,
-                      color: Colors.white,
-                    ),
+                    Text('Hello User ,', style: TextStyle(fontSize: 24),),
+                    Text('Last login: 2024/06/03', style: TextStyle(fontSize: 20), ),
                   ],
                 ),
-                SizedBox(height: 16),
+
               ],
             ),
-          ),
+            SizedBox(width: 8),
+            Icon(Icons.settings, color: Colors.white),
+          ],
         ),
       ),
     );
@@ -81,7 +50,7 @@ class ModuleGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height *
-          0.6, // Adjust the height as needed
+          0.8, // Adjust the height as needed
       child: GridView.count(
         crossAxisCount: 2,
         mainAxisSpacing: 4.0,
@@ -160,22 +129,3 @@ class ModuleCard extends StatelessWidget {
   }
 }
 
-class QuickAccessSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Quick Access:',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-          Text('Approval, pending task, messages',
-              style: TextStyle(color: Colors.white)),
-        ],
-      ),
-    );
-  }
-}
