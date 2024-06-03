@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 class UserSection extends StatelessWidget {
-  const UserSection({Key? key});
+  const UserSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 500,
-      height: MediaQuery.of(context).size.height *
-        0.3,
+      height: MediaQuery.of(context).size.height * 0.3,
       decoration: BoxDecoration(
         color: Color(0xFF00001a),
         borderRadius: BorderRadius.only(
@@ -53,45 +52,46 @@ class UserSection extends StatelessWidget {
 }
 
 class ModuleGrid extends StatelessWidget {
-  const ModuleGrid({super.key});
+  const ModuleGrid({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height *
-          0.8,
-      child: GridView.count(
-        crossAxisCount: 2,
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
-        childAspectRatio: 2 / 1,
-        padding: const EdgeInsets.all(8.0),
-        children: const [
-          ModuleCard(
-              title: 'Attendance',
-              icon: Icons.event_available,
-              color: Colors.blue),
-          ModuleCard(
-              title: 'Leave', icon: Icons.beach_access, color: Colors.green),
-          ModuleCard(title: 'News', icon: Icons.article, color: Colors.red),
-          ModuleCard(
-              title: 'Policies', icon: Icons.policy, color: Colors.orange),
-          ModuleCard(
-              title: 'Request', icon: Icons.request_page, color: Colors.purple),
-          ModuleCard(
-              title: 'Celebrations',
-              icon: Icons.celebration,
-              color: Colors.yellow),
-          ModuleCard(
-              title: 'Profile View', icon: Icons.person, color: Colors.teal),
-          ModuleCard(
-              title: 'PaySlips', icon: Icons.payment, color: Colors.pink),
-          ModuleCard(
-              title: 'Approval Task',
-              icon: Icons.approval,
-              color: Colors.brown),
-          ModuleCard(title: 'Msg', icon: Icons.message, color: Colors.indigo),
-        ],
+    return SingleChildScrollView(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.6,
+        child: GridView.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 4.0,
+          crossAxisSpacing: 4.0,
+          childAspectRatio: 3 / 2,
+          padding: const EdgeInsets.all(8.0),
+          children: const [
+            ModuleCard(
+                title: 'Attendance',
+                icon: Icons.event_available,
+                color: Colors.blue),
+            ModuleCard(
+                title: 'Leave', icon: Icons.beach_access, color: Colors.green),
+            ModuleCard(title: 'News', icon: Icons.article, color: Colors.red),
+            ModuleCard(
+                title: 'Policies', icon: Icons.policy, color: Colors.orange),
+            ModuleCard(
+                title: 'Request', icon: Icons.request_page, color: Colors.purple),
+            ModuleCard(
+                title: 'Celebrations',
+                icon: Icons.celebration,
+                color: Colors.yellow),
+            ModuleCard(
+                title: 'Profile View', icon: Icons.person, color: Colors.teal),
+            ModuleCard(
+                title: 'PaySlips', icon: Icons.payment, color: Colors.pink),
+            ModuleCard(
+                title: 'Approval Task',
+                icon: Icons.approval,
+                color: Colors.brown),
+            ModuleCard(title: 'Msg', icon: Icons.message, color: Colors.indigo),
+          ],
+        ),
       ),
     );
   }
@@ -121,15 +121,18 @@ class ModuleCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
-              radius: 20, // Adjust the radius as needed
+              radius: 25, // Adjust the radius as needed
               backgroundColor: Colors.white,
-              child: Icon(icon, size: 20, color: color),
+              child: Icon(icon, size: 25, color: color),
             ),
-            SizedBox(height: 8),
+            // SizedBox(height: 8),
+            Divider(
+              thickness: 1,
+            ),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14),
+              style: TextStyle(fontSize: 16),
             ),
           ],
         ),
