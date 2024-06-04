@@ -36,22 +36,37 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF00001a),
+        backgroundColor: const Color(0xff4d2880),
         title: const Text(
           "Homepage",
           style: TextStyle(color: Colors.white),
         ),
         systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor:
-              Colors.transparent,
-          statusBarIconBrightness:
-              Brightness.light,
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
         ),
-        leading: const Padding(
+        leading: Padding(
           padding: EdgeInsets.all(8.0),
-          child: CircleAvatar(
-            backgroundImage: AssetImage('assets/images/3039972.png'),
+          child: Container(
+            width: 62.0 * MediaQuery.of(context).devicePixelRatio, // Adjusted width
+            height: 62.0 * MediaQuery.of(context).devicePixelRatio, // Adjusted height
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/hrislogo3.png'),
+                fit: BoxFit.contain,
+              ),
+              shape: BoxShape.rectangle,
+              // borderRadius: BorderRadius.all(
+              //   Radius.circular(4.0),
+              // ),
+            ),
           ),
+          // CircleAvatar(
+          //   backgroundImage: AssetImage(
+          //     'assets/images/webLogo.png',
+          //   ),
+          //   radius: 10.0,
+          // ),
         ),
         actions: [
           IconButton(
@@ -67,13 +82,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body:
           // Foreground content
-          const SingleChildScrollView(
-            child: Column(
-              children: [
-                UserSection(),
-                ModuleGrid(),
-              ],
-            ),
+          Column(
+            children: [
+              UserSection(),
+              ModuleGrid(),
+            ],
           ),
     );
   }
