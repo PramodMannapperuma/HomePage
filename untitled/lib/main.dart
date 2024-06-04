@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:untitled/auth/login.dart';
 import 'homepage.dart';
 
 void main() {
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: Login(),
     );
   }
 }

@@ -1,0 +1,164 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:untitled/main.dart';
+
+class Login extends StatefulWidget {
+  const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xff4d2880),
+        title: const Text(
+          "Login",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+        ),
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            width: 32.0 *
+                MediaQuery.of(context).devicePixelRatio, // Adjusted width
+            height: 32.0 *
+                MediaQuery.of(context).devicePixelRatio, // Adjusted height
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/hrislogo3.png'),
+                fit: BoxFit.contain,
+              ),
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(
+                Radius.circular(4.0),
+              ),
+            ),
+          ),
+        ),
+      ),
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            child: Image.asset(
+              'assets/images/hrislogo2.png', // Replace with your image path
+              width: 380.0, // Adjust the width as needed
+              height: 220.0, // Adjust the height as needed
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 120.0),
+                  Padding(
+                    padding: EdgeInsets.all(1.0),
+                    child: LoginForm(),
+                  ),
+                  SizedBox(height: 10.0),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class LoginForm extends StatefulWidget {
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  void _login() {
+    String username = _usernameController.text;
+    String password = _passwordController.text;
+
+    // Add your login logic here
+    print('Username: $username');
+    print('Password: $password');
+    
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: _usernameController,
+          decoration: InputDecoration(
+            labelText: 'Username',
+            border: UnderlineInputBorder(),
+          ),
+        ),
+        SizedBox(height: 10.0),
+        TextField(
+          controller: _passwordController,
+          obscureText: true,
+          decoration: InputDecoration(
+            labelText: 'Password',
+            border: UnderlineInputBorder(),
+          ),
+        ),
+        SizedBox(height: 10.0),
+        GestureDetector(
+          onTap: () {
+            // Add your forgot password logic here
+            print('Forgot Password tapped');
+          },
+          child: Text(
+            'Forgot Password?',
+            style: TextStyle(
+              color: Colors.blue,
+              fontSize: 16.0,
+            ),
+          ),
+        ),
+        SizedBox(height: 10.0),
+        ElevatedButton(
+          onPressed: _login,
+          style: ElevatedButton.styleFrom(
+            primary: Color(0xFF4d2880),
+            padding: EdgeInsets.symmetric(
+              vertical: 10.0,
+            ),
+            minimumSize: Size(double.infinity, 50.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              side: BorderSide(color: Color(0xFF4d2880)),
+            ),
+          ),
+          child: Text(
+            'Login',
+            style: TextStyle(fontSize: 18.0, color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+}
