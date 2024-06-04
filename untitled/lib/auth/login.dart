@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
+import '../app_bar.dart';
 import '../homepage.dart';
 
 class Login extends StatefulWidget {
@@ -14,37 +13,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xff4d2880),
-        title: const Text(
-          "Login",
-          style: TextStyle(color: Colors.white),
-        ),
-        centerTitle: true,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: 32.0 *
-                MediaQuery.of(context).devicePixelRatio, // Adjusted width
-            height: 32.0 *
-                MediaQuery.of(context).devicePixelRatio, // Adjusted height
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/hrislogo3.png'),
-                fit: BoxFit.contain,
-              ),
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(
-                Radius.circular(4.0),
-              ),
-            ),
-          ),
-        ),
-      ),
+      appBar: customAppBar(title: 'Login', showActions: false),
       body: Stack(
         children: [
           Positioned(
