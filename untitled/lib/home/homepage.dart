@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'home/module_grid.dart';
+import 'module_grid.dart';
 import 'user_section.dart';
 
 class MyHomePage extends StatefulWidget {

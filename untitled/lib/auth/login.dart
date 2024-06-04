@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:untitled/main.dart';
+
+import '../homepage.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -90,11 +91,32 @@ class _LoginFormState extends State<LoginForm> {
     String username = _usernameController.text;
     String password = _passwordController.text;
 
-    // Add your login logic here
-    print('Username: $username');
-    print('Password: $password');
-    
+    if (username == 'admin' && password == 'pass') {
+      print('Username: $username');
+      print('Password: $password');
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage(),));
+    } else {
+      // If the credentials are incorrect, show an error message
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Login Failed'),
+            content: Text('Invalid username or password'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
