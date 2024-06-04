@@ -26,7 +26,8 @@ class ModuleGrid extends StatelessWidget {
           bottom: 0,
           left: 0,
           child: Container(
-            width: MediaQuery.of(context).size.width * 1, // Adjust the width as needed
+            width: MediaQuery.of(context).size.width *
+                1, // Adjust the width as needed
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -50,39 +51,65 @@ class ModuleGrid extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               children: const [
                 ModuleCard(
-                    title: 'Attendance',
-                    icon: Icons.event_available,
-                    color: Colors.blue),
+                  title: 'Attendance',
+                  icon: Icons.event_available,
+                  color: Colors.blue,
+                  route: '/attendance',
+                ),
                 ModuleCard(
-                    title: 'Leave',
-                    icon: Icons.beach_access,
-                    color: Colors.green),
+                  title: 'Leave',
+                  icon: Icons.beach_access,
+                  color: Colors.green,
+                  route: '/leave',
+                ),
                 ModuleCard(
-                    title: 'News', icon: Icons.article, color: Colors.red),
+                  title: 'News',
+                  icon: Icons.article,
+                  color: Colors.red,
+                  route: '/news',
+                ),
                 ModuleCard(
-                    title: 'Policies',
-                    icon: Icons.policy,
-                    color: Colors.orange),
+                  title: 'Policies',
+                  icon: Icons.policy,
+                  color: Colors.orange,
+                  route: '/policies',
+                ),
                 ModuleCard(
-                    title: 'Request',
-                    icon: Icons.request_page,
-                    color: Colors.purple),
+                  title: 'Request',
+                  icon: Icons.request_page,
+                  color: Colors.purple,
+                  route: '/requests',
+                ),
                 ModuleCard(
-                    title: 'Celebrations',
-                    icon: Icons.celebration,
-                    color: Colors.yellow),
+                  title: 'Celebrations',
+                  icon: Icons.celebration,
+                  color: Colors.yellow,
+                  route: '/celebrations',
+                ),
                 ModuleCard(
-                    title: 'Profile View',
-                    icon: Icons.person,
-                    color: Colors.teal),
+                  title: 'Profile View',
+                  icon: Icons.person,
+                  color: Colors.teal,
+                  route: '/profile',
+                ),
                 ModuleCard(
-                    title: 'PaySlips', icon: Icons.payment, color: Colors.pink),
+                  title: 'PaySlips',
+                  icon: Icons.payment,
+                  color: Colors.pink,
+                  route: '/payslips',
+                ),
                 ModuleCard(
-                    title: 'Approval Task',
-                    icon: Icons.approval,
-                    color: Colors.brown),
+                  title: 'Approval Task',
+                  icon: Icons.approval,
+                  color: Colors.brown,
+                  route: '/approvalTask',
+                ),
                 ModuleCard(
-                    title: 'Msg', icon: Icons.message, color: Colors.indigo),
+                  title: 'Msg',
+                  icon: Icons.message,
+                  color: Colors.indigo,
+                  route: '/msg',
+                ),
               ],
             ),
           ),
@@ -96,12 +123,15 @@ class ModuleCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final Color color;
+  final String route;
 
-  const ModuleCard(
-      {super.key,
-        required this.title,
-        required this.icon,
-        required this.color});
+  const ModuleCard({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.color,
+    required this.route,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +140,7 @@ class ModuleCard extends StatelessWidget {
       margin: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-          // Add navigation
+          Navigator.pushNamed(context, route);
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
