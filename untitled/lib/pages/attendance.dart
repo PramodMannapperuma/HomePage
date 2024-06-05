@@ -171,7 +171,7 @@ class _AttendanceState extends State<Attendance> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-          title: '', showActions: true, showLeading: true, context: context),
+          title: 'Attendance', showActions: true, showLeading: true, context: context),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4d2880),
         onPressed: () {

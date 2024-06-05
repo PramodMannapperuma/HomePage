@@ -13,7 +13,8 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: '', showActions: false, showLeading: false, context: context),
+      appBar: customAppBar(
+          title: '', showActions: false, showLeading: false, context: context),
       body: Stack(
         children: [
           Positioned(
@@ -63,7 +64,11 @@ class _LoginFormState extends State<LoginForm> {
     if (username == 'admin' && password == 'pass') {
       print('Username: $username');
       print('Password: $password');
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage(),));
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyHomePage(),
+          ));
     } else {
       // If the credentials are incorrect, show an error message
       showDialog(
@@ -85,7 +90,6 @@ class _LoginFormState extends State<LoginForm> {
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
