@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/auth/login.dart';
+import 'package:untitled/homepage.dart';
 import 'package:untitled/pages/attendance.dart';
 import 'package:untitled/routes.dart';
 
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(),
         useMaterial3: true,
       ),
-      home: Attendance(),
+      home: MyHomePage(),
       routes: routes,
     );
   }
