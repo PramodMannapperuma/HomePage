@@ -6,47 +6,62 @@ class UserSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 500,
-      height: MediaQuery.of(context).size.height * 0.1,
-      decoration: const BoxDecoration(
-        color: Color(0xFF4d2880),
-        // borderRadius: BorderRadius.only(
-        //   bottomLeft: Radius.circular(10.0),
-        //   bottomRight: Radius.circular(1000.0),
-        // ),
-      ),
-      child: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          width: 500,
+          height: MediaQuery.of(context).size.height * 0.18,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0xff4d2880),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(12)
+          ),
+          child: const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage(
-                      'assets/images/user.jpg'), // replace with your image asset
-                  radius: 30,
-                ),
-                SizedBox(width: 10),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Text(
-                      'Hello User ,',
-                      style: TextStyle(fontSize: 22, color: Colors.white),
-                    ),
-                    Text(
-                      'Last login: 2024/06/03',
-                      style: TextStyle(fontSize: 15, color: Colors.white),
+                    // CircleAvatar(
+                    //   backgroundImage: AssetImage(
+                    //       'assets/images/user.jpg'), // replace with your image asset
+                    //   radius: 30,
+                    // ),
+                    SizedBox(width: 10),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Hello Demon ',
+                              style: TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold),
+                            ),
+                            Icon(Icons.waving_hand_sharp, color: Colors.yellow,),
+                          ],
+                        ),
+                        Text(
+                          'Welcome Back to work ,',
+                          style: TextStyle(fontSize: 20, color: Colors.black),
+                        ),
+                        Text(
+                          'Last login: 2024/06/03',
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
+
       ),
     );
   }

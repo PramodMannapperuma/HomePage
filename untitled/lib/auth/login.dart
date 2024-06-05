@@ -13,7 +13,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: 'Login', showActions: false),
+      appBar: customAppBar(title: '', showActions: false, showLeading: false, context: context),
       body: Stack(
         children: [
           Positioned(
