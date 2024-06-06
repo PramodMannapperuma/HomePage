@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
+import '../profile/personal_info.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -14,7 +15,11 @@ class ProfilePage extends StatelessWidget {
     };
 
     return Scaffold(
-      appBar: customAppBar(title: 'Profile', showActions: true, showLeading: false, context: context),
+      appBar: customAppBar(
+          title: 'Profile',
+          showActions: true,
+          showLeading: false,
+          context: context),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(15.0),
         child: Column(
@@ -23,7 +28,8 @@ class ProfilePage extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 60.0,
-                  backgroundImage: const AssetImage("assets/images/2.-electronic-evan (1).jpg"),
+                  backgroundImage: const AssetImage(
+                      "assets/images/2.-electronic-evan (1).jpg"),
                 ),
                 // Positioned(
                 //   bottom: 2,
@@ -74,7 +80,7 @@ class ProfilePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const ProfileDetails()),
+                      builder: (context) => const PersonalInfo()),
                 );
               },
             ),
@@ -95,8 +101,7 @@ class ProfilePage extends StatelessWidget {
               onPress: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => FeedbackScreen()),
+                  MaterialPageRoute(builder: (context) => FeedbackScreen()),
                 );
               },
             ),
@@ -192,7 +197,7 @@ class ProfileMenuWidget extends StatelessWidget {
         ),
         child: Icon(
           icon,
-          color: Colors.black87,
+          color: Colors.purple.shade300,
         ),
       ),
       title: Text(title,
@@ -202,17 +207,17 @@ class ProfileMenuWidget extends StatelessWidget {
               ?.copyWith(color: textColor, fontSize: 17.0)),
       trailing: endIcon
           ? Container(
-        width: 30,
-        height: 30,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: Colors.black.withOpacity(0.1),
-        ),
-        child: const Icon(
-          Icons.keyboard_arrow_right,
-          color: Colors.blueGrey,
-        ),
-      )
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: Colors.black.withOpacity(0.1),
+              ),
+              child: const Icon(
+                Icons.keyboard_arrow_right,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+              ),
+            )
           : null,
     );
   }

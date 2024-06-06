@@ -8,8 +8,8 @@ import 'package:untitled/pages/msg.dart';
 import 'package:untitled/pages/news.dart';
 import 'package:untitled/pages/payslip.dart';
 import 'package:untitled/pages/policie.dart';
-import 'package:untitled/pages/personal_info.dart';
 import 'package:untitled/pages/requests.dart';
+import 'package:untitled/profile/personal_info.dart';
 import 'homepage.dart';
 
 final Map<String, WidgetBuilder> routes = {
