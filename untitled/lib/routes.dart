@@ -8,7 +8,7 @@ import 'package:untitled/pages/msg.dart';
 import 'package:untitled/pages/news.dart';
 import 'package:untitled/pages/payslip.dart';
 import 'package:untitled/pages/policie.dart';
-import 'package:untitled/pages/profile_view.dart';
+import 'package:untitled/pages/personal_info.dart';
 import 'package:untitled/pages/requests.dart';
 import 'homepage.dart';
 
@@ -21,7 +21,7 @@ final Map<String, WidgetBuilder> routes = {
   '/policies': (context) => Policies(),
   '/requests': (context) => Requests(),
   '/celebrations': (context) => Celebrations(),
-  '/profile': (context) => ProfileView(),
+  '/profile': (context) => PersonalInfo(),
   '/payslips': (context) => PaySlip(),
   '/approvalTask': (context) => ApprovalTask(),
   '/msg': (context) => Msg(),
