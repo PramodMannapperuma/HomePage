@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
 import 'package:untitled/profile/career_profile.dart';
 import 'package:untitled/profile/contact_info.dart';
+import '../auth/login.dart';
+import '../profile/Info.dart';
 import '../profile/personal_info.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -127,7 +129,7 @@ class ProfilePage extends StatelessWidget {
               onPress: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginForm()),
+                  MaterialPageRoute(builder: (context) => const Login()),
                 );
               },
             ),
@@ -225,78 +227,3 @@ class ProfileMenuWidget extends StatelessWidget {
   }
 }
 
-class ProfileDetails extends StatelessWidget {
-  const ProfileDetails({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile Details'),
-      ),
-      body: Center(
-        child: const Text('Profile Details Page'),
-      ),
-    );
-  }
-}
-
-class EditProfilePage extends StatelessWidget {
-  const EditProfilePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Profile'),
-      ),
-      body: Center(
-        child: const Text('Edit Profile Page'),
-      ),
-    );
-  }
-}
-
-class FeedbackScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Feedback'),
-      ),
-      body: Center(
-        child: const Text('Feedback Page'),
-      ),
-    );
-  }
-}
-
-class FAQAndPricingScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('FAQ and Pricing'),
-      ),
-      body: Center(
-        child: const Text('FAQ and Pricing Page'),
-      ),
-    );
-  }
-}
-
-class LoginForm extends StatelessWidget {
-  const LoginForm({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: Center(
-        child: const Text('Login Page'),
-      ),
-    );
-  }
-}

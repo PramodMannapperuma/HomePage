@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(),
         useMaterial3: true,
       ),
-      home: ProfilePage(),
+      home: MyHomePage(),
       routes: routes,
     );
   }
