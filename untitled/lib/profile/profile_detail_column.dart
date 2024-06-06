@@ -17,6 +17,7 @@ class ProfileDetailColumn extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 10.0),
             Text(
               title,
               style: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -26,7 +27,7 @@ class ProfileDetailColumn extends StatelessWidget {
             ),
             const SizedBox(height: 10.0),
             Text(value, style: Theme.of(context).textTheme.bodyMedium),
-            const SizedBox(height: 10.0),
+
             SizedBox(
               width: MediaQuery.of(context).size.width / 1.1,
               child: const Divider(thickness: 1.0),

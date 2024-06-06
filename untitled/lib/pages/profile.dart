@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
+import 'package:untitled/profile/career_profile.dart';
+import 'package:untitled/profile/contact_info.dart';
 import '../profile/personal_info.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -91,7 +93,7 @@ class ProfilePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const EditProfilePage()),
+                      builder: (context) => ContactInfo()),
                 );
               },
             ),
@@ -101,7 +103,7 @@ class ProfilePage extends StatelessWidget {
               onPress: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FeedbackScreen()),
+                  MaterialPageRoute(builder: (context) => CareerProfile()),
                 );
               },
             ),

@@ -17,6 +17,9 @@ class ProfileDetailRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(
+                height: 10,
+              ),
               Text(
                 title,
                 style: Theme.of(context)
@@ -26,9 +29,9 @@ class ProfileDetailRow extends StatelessWidget {
               ),
               const SizedBox(height: 10.0),
               Text(value, style: Theme.of(context).textTheme.bodyMedium),
-              const SizedBox(height: 10.0),
+              // const SizedBox(height: 10.0),
               SizedBox(
-                width: MediaQuery.of(context).size.width / 3,
+                width: MediaQuery.of(context).size.width / 2.8,
                 child: const Divider(thickness: 1.0),
               ),
             ],
