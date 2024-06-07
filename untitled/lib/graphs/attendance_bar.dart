@@ -22,13 +22,13 @@ class AttendanceBarGraph extends StatelessWidget {
       height: 250,
       child: Scaffold(
           appBar: AppBar(
-            title: Text('Attendance Chart'),
+            title: Text('Attendance '),
           ),
           body: Center(
             child: AttendanceBarChart(
               data: [
-                // AttendanceData(month: 'Jan', attended: 20, leave: 5, absent: 3),
-                // AttendanceData(month: 'Feb', attended: 18, leave: 3, absent: 2),
+                AttendanceData(month: 'Jan', attended: 20, leave: 5, absent: 3),
+                AttendanceData(month: 'Feb', attended: 18, leave: 3, absent: 2),
                 AttendanceData(month: 'Mar', attended: 22, leave: 4, absent: 1),
                 AttendanceData(month: 'Apr', attended: 25, leave: 6, absent: 0),
                 AttendanceData(month: 'May', attended: 23, leave: 5, absent: 2),

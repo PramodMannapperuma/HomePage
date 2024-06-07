@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/graphs/attendance_bar.dart';
 import 'package:untitled/graphs/attendance_pie_chart.dart';
+import 'package:untitled/home/test_home.dart';
 import 'package:untitled/home/user_section.dart';
 import 'package:untitled/pages/attendance_tracker.dart';
 
@@ -14,81 +15,82 @@ class ModuleGrid extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           UserSection(),
-          AttendancePie(),
-          AttendanceTracker(),
+          // AttendancePie(),
+          // AttendanceTracker(),
           AttendanceBarGraph(),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.7,
-            child: GridView.count(
-              crossAxisCount: 2,
-              mainAxisSpacing: 4.0,
-              crossAxisSpacing: 4.0,
-              childAspectRatio: 3 / 2,
-              padding: const EdgeInsets.all(8.0),
-              children: const [
-                ModuleCard(
-                  title: 'Attendance',
-                  icon: Icons.event_available,
-                  color: Colors.blue,
-                  route: '/attendance',
-                ),
-                ModuleCard(
-                  title: 'Leave',
-                  icon: Icons.beach_access,
-                  color: Colors.green,
-                  route: '/leave',
-                ),
-                ModuleCard(
-                  title: 'News',
-                  icon: Icons.article,
-                  color: Colors.red,
-                  route: '/news',
-                ),
-                ModuleCard(
-                  title: 'Policies',
-                  icon: Icons.policy,
-                  color: Colors.orange,
-                  route: '/policies',
-                ),
-                ModuleCard(
-                  title: 'Request',
-                  icon: Icons.request_page,
-                  color: Colors.purple,
-                  route: '/requests',
-                ),
-                ModuleCard(
-                  title: 'Celebrations',
-                  icon: Icons.celebration,
-                  color: Colors.yellow,
-                  route: '/celebrations',
-                ),
-                ModuleCard(
-                  title: 'Profile View',
-                  icon: Icons.person,
-                  color: Colors.teal,
-                  route: '/profile',
-                ),
-                ModuleCard(
-                  title: 'PaySlips',
-                  icon: Icons.payment,
-                  color: Colors.pink,
-                  route: '/payslips',
-                ),
-                ModuleCard(
-                  title: 'Approval Task',
-                  icon: Icons.approval,
-                  color: Colors.brown,
-                  route: '/approvalTask',
-                ),
-                ModuleCard(
-                  title: 'Msg',
-                  icon: Icons.message,
-                  color: Colors.indigo,
-                  route: '/msg',
-                ),
-              ],
-            ),
-          ),
+          TestHomeApp(),
+          // Container(
+          //   height: MediaQuery.of(context).size.height * 0.7,
+          //   child: GridView.count(
+          //     crossAxisCount: 2,
+          //     mainAxisSpacing: 4.0,
+          //     crossAxisSpacing: 4.0,
+          //     childAspectRatio: 3 / 2,
+          //     padding: const EdgeInsets.all(8.0),
+          //     children: const [
+          //       ModuleCard(
+          //         title: 'Attendance',
+          //         icon: Icons.event_available,
+          //         color: Colors.blue,
+          //         route: '/attendance',
+          //       ),
+          //       ModuleCard(
+          //         title: 'Leave',
+          //         icon: Icons.beach_access,
+          //         color: Colors.green,
+          //         route: '/leave',
+          //       ),
+          //       ModuleCard(
+          //         title: 'News',
+          //         icon: Icons.article,
+          //         color: Colors.red,
+          //         route: '/news',
+          //       ),
+          //       ModuleCard(
+          //         title: 'Policies',
+          //         icon: Icons.policy,
+          //         color: Colors.orange,
+          //         route: '/policies',
+          //       ),
+          //       ModuleCard(
+          //         title: 'Request',
+          //         icon: Icons.request_page,
+          //         color: Colors.purple,
+          //         route: '/requests',
+          //       ),
+          //       ModuleCard(
+          //         title: 'Celebrations',
+          //         icon: Icons.celebration,
+          //         color: Colors.yellow,
+          //         route: '/celebrations',
+          //       ),
+          //       ModuleCard(
+          //         title: 'Profile View',
+          //         icon: Icons.person,
+          //         color: Colors.teal,
+          //         route: '/profile',
+          //       ),
+          //       ModuleCard(
+          //         title: 'PaySlips',
+          //         icon: Icons.payment,
+          //         color: Colors.pink,
+          //         route: '/payslips',
+          //       ),
+          //       ModuleCard(
+          //         title: 'Approval Task',
+          //         icon: Icons.approval,
+          //         color: Colors.brown,
+          //         route: '/approvalTask',
+          //       ),
+          //       ModuleCard(
+          //         title: 'Msg',
+          //         icon: Icons.message,
+          //         color: Colors.indigo,
+          //         route: '/msg',
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
