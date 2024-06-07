@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/auth/login.dart';
+import 'package:untitled/graphs/attendance_bar.dart';
+import 'package:untitled/graphs/attendance_pie_chart.dart';
 import 'package:untitled/homepage.dart';
+import 'package:untitled/onbording_screen.dart';
 import 'package:untitled/pages/attendance.dart';
 import 'package:untitled/pages/leave.dart';
 import 'package:untitled/pages/profile.dart';
