@@ -62,6 +62,7 @@ class ProfilePage extends StatelessWidget {
                 // ),
               ],
             ),
+            
             const SizedBox(height: 10),
             Column(
               children: [
