@@ -123,8 +123,7 @@ class _AttendanceState extends State<Attendance> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.all(14.0),
-                        primary: Color(0xff4d2880),
+                        padding: EdgeInsets.all(14.0), backgroundColor: Color(0xff4d2880),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
