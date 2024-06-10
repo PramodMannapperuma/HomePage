@@ -1,3 +1,5 @@
+// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:untitled/auth/login.dart';
@@ -168,6 +170,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Color.fromRGBO(77, 40, 128, 0.5),
                   size: 35,
                 ),
+                title: Text('News'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/news');
+                },
+              ),
+              // Divider(thickness: 0.2,),
+              ListTile(
+                leading: Icon(
+                  Icons.receipt_long_outlined,
+                  color: Color.fromRGBO(77, 40, 128, 0.5),
+                  size: 35,
+                ),
                 title: Text('PaySlips'),
                 onTap: () {
                   Navigator.pop(context);
@@ -248,11 +263,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             UserSection(),
-            Divider(thickness: 2,),
-            Text('Attendance Tracker', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-            SizedBox(height: 10,),
+            Divider(
+              thickness: 2,
+            ),
+            Text(
+              'Attendance Tracker',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 10,
+            ),
             AttendanceBarGraph(),
-            Divider(thickness: 2,),
+            Divider(
+              thickness: 2,
+            ),
             TestHomeApp(),
 
             // ModuleGrid(),
