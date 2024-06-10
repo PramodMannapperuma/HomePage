@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(),
         useMaterial3: true,
       ),
-      home: Policies(),
+      home: OnboardingScreen(),
       routes: routes,
     );
   }
