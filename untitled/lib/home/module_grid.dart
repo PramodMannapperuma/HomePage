@@ -3,7 +3,7 @@ import 'package:untitled/graphs/attendance_bar.dart';
 import 'package:untitled/graphs/attendance_pie_chart.dart';
 import 'package:untitled/home/test_home.dart';
 import 'package:untitled/home/user_section.dart';
-import 'package:untitled/pages/attendance_tracker.dart';
+import 'package:untitled/graphs/attendance_tracker.dart';
 
 class ModuleGrid extends StatelessWidget {
   const ModuleGrid({Key? key}) : super(key: key);
@@ -14,12 +14,12 @@ class ModuleGrid extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          UserSection(),
+          // UserSection(),
           // AttendancePie(),
           // AttendanceTracker(),
-          Divider(thickness: 2,),
-          AttendanceBarGraph(),
-          Divider(thickness: 2,),
+          // Divider(thickness: 2,),
+          // AttendanceBarGraph(),
+          // Divider(thickness: 2,),
           // TestHomeApp(),
           Container(
             height: MediaQuery.of(context).size.height * 0.7,
@@ -95,6 +95,7 @@ class ModuleGrid extends StatelessWidget {
           ),
         ],
       ),
+
     );
   }
 }
