@@ -131,7 +131,7 @@ class _LoginFormState extends State<LoginForm> {
         ElevatedButton(
           onPressed: _login,
           style: ElevatedButton.styleFrom(
-            primary: Color(0xFF4d2880),
+            backgroundColor: Color(0xFF4d2880),
             padding: EdgeInsets.symmetric(
               vertical: 10.0,
             ),
