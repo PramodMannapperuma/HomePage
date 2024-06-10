@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:untitled/auth/login.dart';
+import 'package:untitled/pages/attendance_tracker.dart';
 import 'home/module_grid.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -141,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text('Requests'),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.pushNamed(context, '/requests');
+                  Navigator.pushNamed(context, '/attendanceTracker');
                 },
               ),
               // Divider(thickness: 0.2,),
@@ -241,7 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: const Column(
+        child: Column(
           children: [
             // UserSection(),
             ModuleGrid(),
