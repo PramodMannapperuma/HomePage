@@ -71,7 +71,6 @@ class AttendanceBarChart extends StatelessWidget {
             rightTitles: AxisTitles(
               sideTitles: SideTitles(showTitles: false),
             ),
-
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
@@ -146,6 +145,7 @@ class AttendanceBarChart extends StatelessWidget {
     });
   }
 }
+
 Widget _buildLegend(String label, Color color) {
   return Row(
     children: [
