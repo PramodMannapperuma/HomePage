@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart';
 
 class AttendanceData {
   final String month;
@@ -18,14 +18,20 @@ class AttendanceData {
 class AttendanceBarGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return  SizedBox(
-      height: 250,
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text('Attendance '),
-          ),
-          body: Center(
-            child: AttendanceBarChart(
+    return Container(
+      child: Center(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildLegend('Attended', Colors.green),
+                _buildLegend('Leave', Colors.yellow),
+                _buildLegend('Absent', Colors.red),
+              ],
+            ),
+            SizedBox(height: 16),
+            AttendanceBarChart(
               data: [
                 AttendanceData(month: 'Jan', attended: 20, leave: 5, absent: 3),
                 AttendanceData(month: 'Feb', attended: 18, leave: 3, absent: 2),
@@ -35,7 +41,8 @@ class AttendanceBarGraph extends StatelessWidget {
                 AttendanceData(month: 'Jun', attended: 21, leave: 4, absent: 3),
               ],
             ),
-          ),
+          ],
+        ),
       ),
     );
   }
@@ -48,45 +55,107 @@ class AttendanceBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<charts.Series<AttendanceData, String>> series = [
-      charts.Series(
-        id: 'Attendance',
-        data: data,
-        domainFn: (AttendanceData attendance, _) => attendance.month,
-        measureFn: (AttendanceData attendance, _) => attendance.attended,
-        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        labelAccessorFn: (AttendanceData attendance, _) => '${attendance.attended}',
-      ),
-      charts.Series(
-        id: 'Leave',
-        data: data,
-        domainFn: (AttendanceData attendance, _) => attendance.month,
-        measureFn: (AttendanceData attendance, _) => attendance.leave,
-        colorFn: (_, __) => charts.MaterialPalette.yellow.shadeDefault,
-        labelAccessorFn: (AttendanceData attendance, _) => '${attendance.leave}',
-      ),
-      charts.Series(
-        id: 'Absent',
-        data: data,
-        domainFn: (AttendanceData attendance, _) => attendance.month,
-        measureFn: (AttendanceData attendance, _) => attendance.absent,
-        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        labelAccessorFn: (AttendanceData attendance, _) => '${attendance.absent}',
-      ),
-    ];
-
     return Container(
-      height: 400,
-      padding: EdgeInsets.all(8.0),
-      child: charts.BarChart(
-        series,
-        animate: true,
-        vertical: false,
-        barGroupingType: charts.BarGroupingType.stacked,
-        behaviors: [
-          charts.SeriesLegend(),
-        ],
+      height: 250,
+      padding: EdgeInsets.all(16.0),
+      child: BarChart(
+        BarChartData(
+          barGroups: _buildBarGroups(),
+          titlesData: FlTitlesData(
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (double value, TitleMeta meta) {
+                  const style = TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  );
+                  Widget text;
+                  switch (value.toInt()) {
+                    case 0:
+                      text = Text('Jan', style: style);
+                      break;
+                    case 1:
+                      text = Text('Feb', style: style);
+                      break;
+                    case 2:
+                      text = Text('Mar', style: style);
+                      break;
+                    case 3:
+                      text = Text('Apr', style: style);
+                      break;
+                    case 4:
+                      text = Text('May', style: style);
+                      break;
+                    case 5:
+                      text = Text('Jun', style: style);
+                      break;
+                    default:
+                      text = Text('', style: style);
+                      break;
+                  }
+                  return SideTitleWidget(
+                    axisSide: meta.axisSide,
+                    space: 4.0, // space between bar and title
+                    child: text,
+                  );
+                },
+              ),
+            ),
+          ),
+          borderData: FlBorderData(show: true),
+          barTouchData: BarTouchData(enabled: false),
+        ),
+        swapAnimationDuration: Duration(milliseconds: 0),
+        swapAnimationCurve: Curves.easeOut,
       ),
     );
   }
+
+  List<BarChartGroupData> _buildBarGroups() {
+    return List.generate(data.length, (index) {
+      final attendance = data[index];
+      return BarChartGroupData(
+        x: index,
+        barRods: [
+          BarChartRodData(
+            toY: attendance.attended.toDouble(),
+            color: Colors.green,
+          ),
+          BarChartRodData(
+            toY: attendance.leave.toDouble(),
+            color: Colors.yellow,
+          ),
+          BarChartRodData(
+            toY: attendance.absent.toDouble(),
+            color: Colors.red,
+          ),
+        ],
+      );
+    });
+  }
+}
+Widget _buildLegend(String label, Color color) {
+  return Row(
+    children: [
+      Container(
+        width: 20,
+        height: 20,
+        color: color,
+        margin: EdgeInsets.only(right: 8),
+      ),
+      Text(label),
+    ],
+  );
 }

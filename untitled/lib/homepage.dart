@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:untitled/auth/login.dart';
-import 'package:untitled/pages/attendance_tracker.dart';
+import 'package:untitled/home/test_home.dart';
+import 'package:untitled/graphs/attendance_tracker.dart';
+import 'graphs/attendance_bar.dart';
 import 'home/module_grid.dart';
+import 'home/user_section.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -244,8 +247,15 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // UserSection(),
-            ModuleGrid(),
+            UserSection(),
+            Divider(thickness: 2,),
+            Text('Attendance Tracker', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+            SizedBox(height: 10,),
+            AttendanceBarGraph(),
+            Divider(thickness: 2,),
+            TestHomeApp(),
+
+            // ModuleGrid(),
             // Recent(),
           ],
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:untitled/auth/login.dart';
 import 'package:untitled/graphs/attendance_bar.dart';
 import 'package:untitled/graphs/attendance_pie_chart.dart';
+import 'package:untitled/graphs/bar_graph.dart';
 import 'package:untitled/home/test_home.dart';
 import 'package:untitled/homepage.dart';
 import 'package:untitled/onbording_screen.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(),
         useMaterial3: true,
       ),
-      home: OnboardingScreen(),
+        home: MyHomePage(),
       routes: routes,
     );
   }

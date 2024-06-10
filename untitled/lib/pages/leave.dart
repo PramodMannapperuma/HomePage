@@ -1,6 +1,6 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 
 class Leave extends StatefulWidget {
   const Leave({super.key});
@@ -31,22 +31,6 @@ class _LeaveState extends State<Leave> {
     'Leave Balance': 18,
   };
 
-  List<charts.Series<LeaveDetail, String>> _createLeaveDetailsData() {
-    final data = leaveDetails.entries
-        .map((entry) => LeaveDetail(entry.key, entry.value))
-        .toList();
-
-    return [
-      charts.Series<LeaveDetail, String>(
-        id: 'Leave Details',
-        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
-        domainFn: (LeaveDetail detail, _) => detail.type,
-        measureFn: (LeaveDetail detail, _) => detail.days,
-        data: data,
-      )
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,14 +53,17 @@ class _LeaveState extends State<Leave> {
                       color: Colors.purple)),
               SizedBox(height: 8),
               SizedBox(
-                height: 150,
-                child: charts.BarChart(
-                  _createLeaveDetailsData(),
-                  animate: true,
+                height: 300,
+                child: LeaveBar(
+                  leaveData: leaveDetails.values.toList(),
                 ),
               ),
-              SizedBox(height: 4,),
-              Divider(thickness: 1,),
+              SizedBox(
+                height: 4,
+              ),
+              Divider(
+                thickness: 1,
+              ),
               SizedBox(height: 4),
               // Leave Details Section
               Text('Leave Details',
@@ -95,8 +82,12 @@ class _LeaveState extends State<Leave> {
                   return _buildDetailCard(entry.key, entry.value);
                 }).toList(),
               ),
-              SizedBox(height: 8,),
-              Divider(thickness: 1,),
+              SizedBox(
+                height: 8,
+              ),
+              Divider(
+                thickness: 1,
+              ),
               SizedBox(height: 8),
 
               Text('Request Leaves',
@@ -113,12 +104,14 @@ class _LeaveState extends State<Leave> {
                       CircleAvatar(
                         radius: 30,
                         backgroundColor: Colors.grey.shade300,
-                        child: Icon(Icons.flight, size: 25, color: Colors.black87),
+                        child:
+                            Icon(Icons.flight, size: 25, color: Colors.black87),
                       ),
                       SizedBox(height: 8),
                       Text(
                         'Annual',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -127,12 +120,14 @@ class _LeaveState extends State<Leave> {
                       CircleAvatar(
                         radius: 30,
                         backgroundColor: Colors.grey.shade300,
-                        child: Icon(Icons.beach_access, size: 25, color: Colors.black54),
+                        child: Icon(Icons.beach_access,
+                            size: 25, color: Colors.black54),
                       ),
                       SizedBox(height: 8),
                       Text(
                         'Casual',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -141,16 +136,17 @@ class _LeaveState extends State<Leave> {
                       CircleAvatar(
                         radius: 30,
                         backgroundColor: Colors.grey.shade300,
-                        child: Icon(Icons.local_hospital, size: 25, color: Colors.purple),
+                        child: Icon(Icons.local_hospital,
+                            size: 25, color: Colors.purple),
                       ),
                       SizedBox(height: 8),
                       Text(
                         'Medical',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
-
                 ],
               ),
               SizedBox(height: 16),
@@ -286,9 +282,126 @@ class _LeaveState extends State<Leave> {
   }
 }
 
-class LeaveDetail {
-  final String type;
-  final int days;
+class LeaveBar extends StatefulWidget {
+  final List<int> leaveData;
+  const LeaveBar({super.key, required this.leaveData});
 
-  LeaveDetail(this.type, this.days);
+  @override
+  State<LeaveBar> createState() => _LeaveBarState();
+}
+
+class _LeaveBarState extends State<LeaveBar> {
+  late BarData myBarData;
+
+  @override
+  void initState() {
+    super.initState();
+    myBarData = BarData(
+      entitledAmount: widget.leaveData[0].toDouble(),
+      utilizedAmount: widget.leaveData[1].toDouble(),
+      pendingAmount: widget.leaveData[2].toDouble(),
+      availableAmount: widget.leaveData[3].toDouble(),
+    );
+    myBarData.initializeBarData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BarChart(
+      BarChartData(
+        maxY: 40,
+        minY: 0,
+        gridData: FlGridData(show: false),
+        borderData: FlBorderData(show: true),
+        titlesData: FlTitlesData(
+          show: true,
+          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: getBottomTitles,
+            ),
+          ),
+        ),
+        barGroups: myBarData.barData
+            .map((data) => BarChartGroupData(
+                  x: data.x,
+                  barRods: [
+                    BarChartRodData(
+                      toY: data.y,
+                      color: Colors.purple,
+                      borderRadius: BorderRadius.circular(0),
+                      width: 50,
+                    )
+                  ],
+                ))
+            .toList(),
+      ),
+      swapAnimationDuration: Duration(milliseconds: 150), // Optional
+      swapAnimationCurve: Curves.linear,
+    );
+  }
+}
+
+class IndividualBar {
+  final int x;
+  final double y;
+
+  IndividualBar({
+    required this.x,
+    required this.y,
+  });
+}
+
+class BarData {
+  final double entitledAmount;
+  final double utilizedAmount;
+  final double pendingAmount;
+  final double  availableAmount;
+
+  BarData(
+      {required this.entitledAmount,
+      required this.pendingAmount,
+      required this.utilizedAmount,
+      required this. availableAmount});
+
+  List<IndividualBar> barData = [];
+
+  void initializeBarData() {
+    barData = [
+      IndividualBar(x: 0, y: entitledAmount),
+      IndividualBar(x: 1, y: utilizedAmount),
+      IndividualBar(x: 2, y: pendingAmount),
+      IndividualBar(x: 3, y:  availableAmount),
+    ];
+  }
+}
+
+Widget getBottomTitles(double value, TitleMeta meta) {
+  const style = TextStyle(
+    color: Colors.purple,
+    fontWeight: FontWeight.bold,
+    fontSize: 14,
+  );
+
+  switch (value.toInt()) {
+    case 0:
+      return SideTitleWidget(
+          child: const Text('Entitled', style: style), axisSide: meta.axisSide);
+    case 1:
+      return SideTitleWidget(
+          child: const Text('Utilized', style: style), axisSide: meta.axisSide);
+    case 2:
+      return SideTitleWidget(
+          child: const Text('Pending', style: style), axisSide: meta.axisSide);
+    case 3:
+      return SideTitleWidget(
+          child: const Text('Available', style: style),
+          axisSide: meta.axisSide);
+    default:
+      return SideTitleWidget(
+          child: const Text('Unknown', style: style), axisSide: meta.axisSide);
+  }
 }

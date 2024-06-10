@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:untitled/auth/login.dart';
 import 'package:untitled/pages/approval_task.dart';
 import 'package:untitled/pages/attendance.dart';
-import 'package:untitled/pages/attendance_tracker.dart';
+import 'package:untitled/graphs/attendance_tracker.dart';
 import 'package:untitled/pages/celebrations.dart';
 import 'package:untitled/pages/leave.dart';
 import 'package:untitled/pages/msg.dart';
