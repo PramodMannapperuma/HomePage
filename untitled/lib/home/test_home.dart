@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-import 'module_grid.dart';
-
 class TestHomeApp extends StatefulWidget {
   const TestHomeApp({Key? key}) : super(key: key);
 
@@ -11,6 +9,18 @@ class TestHomeApp extends StatefulWidget {
 }
 
 class _TestHomeAppState extends State<TestHomeApp> {
+  final List<TileInfo> tilesInfo = [
+    TileInfo('Attendance',Icons.event_available,'/attendance',Colors.blue,'assets/images/attendance.jpeg'),
+    TileInfo('Leave', Icons.beach_access,'/leave',Colors.pinkAccent, 'assets/images/leave.jpeg'),
+    TileInfo('News', Icons.article,'/news',Colors.cyan, 'assets/images/news.jpeg'),
+    TileInfo('Policies', Icons.policy,'/policies',Colors.red, 'assets/images/policies.jpeg'),
+    TileInfo('Request', Icons.request_page,'/requests',Colors.green, 'assets/images/request.jpeg'),
+    TileInfo('Celebrations', Icons.celebration, '/celebrations', Colors.teal,'assets/images/celebrations.jpeg'),
+    TileInfo('Profile View', Icons.person,'/profile',Colors.brown,'assets/images/profile.jpeg'),
+    TileInfo('Approval Task', Icons.approval,'/approvalTask',Colors.black45,'assets/images/approval.jpeg'),
+    TileInfo('Msg', Icons.message,'/msg',Colors.indigo,'assets/images/msg.jpeg'),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -32,8 +42,9 @@ class _TestHomeAppState extends State<TestHomeApp> {
             ],
           ),
           childrenDelegate: SliverChildBuilderDelegate(
-            (context, index) => Tile(index: index),
-            childCount: 9
+            (context, index) => Tile(tileInfo: tilesInfo[index],
+            ),
+            childCount: tilesInfo.length
           ),
         ),
       ),
@@ -42,42 +53,36 @@ class _TestHomeAppState extends State<TestHomeApp> {
 }
 
 class Tile extends StatelessWidget {
+  final TileInfo tileInfo;
+
   const Tile({
     Key? key,
-    required this.index,
-    this.extent,
-    this.backgroundColor,
-    this.bottomSpace,
-    // required this.title,
-    // required this.icon,
-    // required this.color,
-    // required this.route,
+    required this.tileInfo
   }) : super(key: key);
 
-  final int index;
-  final double? extent;
-  final double? bottomSpace;
-  final Color? backgroundColor;
-  // final String title;
-  // final IconData icon;
-  // final Color color;
-  // final String route;
+
 
   @override
   Widget build(BuildContext context) {
     final child = Container(
-      // decoration: BoxDecoration(
-      //   borderRadius: BorderRadius.circular(10.0),
-      //   border: Border.all(color: Colors.black, width: 2.0), // Add border
-      // ),
+
       color:
-      // Colors.purple.withOpacity(0.70),
-      Color.fromRGBO(77, 40, 120, 0.8),
-      height: extent,
+      Colors.deepPurple,
+          // .withOpacity(0.60),
+      // Color.fromRGBO(77, 40, 120, 0.8),
+      height: 120,
+      foregroundDecoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(tileInfo.imagePath), // Replace with your image path
+          fit: BoxFit.cover,
+        ),
+          border: Border.all(color: Colors.purple, width: 2.0), // Add border
+      ),
+      // extent,
       child: Center(
         child: InkWell(
           onTap: () {
-            // Navigator.pushNamed(context, route);
+            Navigator.pushNamed(context, tileInfo.route);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -87,14 +92,14 @@ class Tile extends StatelessWidget {
                 maxRadius: 20,
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.black,
-                child: Icon(Icons.man, size: 30, color: Colors.purple),
+                child: Icon(tileInfo.icon, size: 30, color: tileInfo.color),
               ),
               const SizedBox(height: 8),
               const Divider(
                 thickness: 1,
               ),
               Text(
-                'title',
+                tileInfo.title,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 16, color: Colors.white),
               ),
@@ -104,18 +109,30 @@ class Tile extends StatelessWidget {
       ),
     );
 
-    if (bottomSpace == null) {
-      return child;
-    }
-
-    return Column(
-      children: [
-        Expanded(child: child),
-        Container(
-          height: bottomSpace,
-          color: Colors.green,
-        )
-      ],
-    );
+    // if (bottomSpace == null) {
+    //   return child;
+    // }
+    //
+    // return Column(
+    //   children: [
+    //     Expanded(child: child),
+    //     Container(
+    //       height: bottomSpace,
+    //       color: Colors.green,
+    //     )
+    //   ],
+    // );
+    return child;
   }
+}
+
+class TileInfo {
+  final String title;
+  final IconData icon;
+  final String route;
+  final Color color;
+  final String imagePath;
+
+
+  TileInfo(this.title, this.icon, this.route, this.color, this.imagePath);
 }

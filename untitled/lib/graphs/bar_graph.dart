@@ -16,16 +16,15 @@ class _LeaveBarState extends State<LeaveBar> {
       28.50,
       54.24,
       90.50,
-
     ];
     return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: SizedBox(
-            height: 300,
-            child: BarDataChart(weeklySummary: weeklySummary),
-          ),
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: SizedBox(
+          height: 300,
+          child: BarDataChart(weeklySummary: weeklySummary),
         ),
+      ),
     );
   }
 }
@@ -72,20 +71,19 @@ class _BarDataChartState extends State<BarDataChart> {
               getTitlesWidget: getBottomTitles,
             ),
           ),
-
         ),
         barGroups: myBarData.barData
             .map((data) => BarChartGroupData(
-          x: data.x,
-          barRods: [
-            BarChartRodData(
-              toY: data.y,
-              color: Colors.purple,
-              borderRadius: BorderRadius.circular(0),
-              width: 40,
-            )
-          ],
-        ))
+                  x: data.x,
+                  barRods: [
+                    BarChartRodData(
+                      toY: data.y,
+                      color: Colors.purple,
+                      borderRadius: BorderRadius.circular(0),
+                      width: 40,
+                    )
+                  ],
+                ))
             .toList(),
       ),
       swapAnimationDuration: Duration(milliseconds: 0),
@@ -110,13 +108,11 @@ class BarData {
   final double tueAmount;
   final double wedAmount;
 
-
   BarData({
     required this.sunAmount,
     required this.monAmount,
     required this.tueAmount,
     required this.wedAmount,
-
   });
 
   List<IndividualBar> barData = [];
@@ -140,14 +136,20 @@ Widget getBottomTitles(double value, TitleMeta meta) {
 
   switch (value.toInt()) {
     case 0:
-      return SideTitleWidget(child: const Text('Entitled', style: style), axisSide: meta.axisSide);
+      return SideTitleWidget(
+          child: const Text('Entitled', style: style), axisSide: meta.axisSide);
     case 1:
-      return SideTitleWidget(child: const Text('Utilized', style: style), axisSide: meta.axisSide);
+      return SideTitleWidget(
+          child: const Text('Utilized', style: style), axisSide: meta.axisSide);
     case 2:
-      return SideTitleWidget(child: const Text('Pending', style: style), axisSide: meta.axisSide);
+      return SideTitleWidget(
+          child: const Text('Pending', style: style), axisSide: meta.axisSide);
     case 3:
-      return SideTitleWidget(child: const Text('Available', style: style), axisSide: meta.axisSide);
+      return SideTitleWidget(
+          child: const Text('Available', style: style),
+          axisSide: meta.axisSide);
     default:
-      return SideTitleWidget(child: const Text('D', style: style), axisSide: meta.axisSide);
+      return SideTitleWidget(
+          child: const Text('D', style: style), axisSide: meta.axisSide);
   }
 }
