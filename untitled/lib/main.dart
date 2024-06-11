@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/homepage.dart';
 import 'package:untitled/onbording_screen.dart';
 import 'package:untitled/routes.dart';
 
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(),
         useMaterial3: true,
       ),
-        home: MyHomePage(),
+        home: OnboardingScreen(),
       routes: routes,
     );
   }

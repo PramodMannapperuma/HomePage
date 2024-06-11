@@ -53,11 +53,3 @@ class _NewsState extends State<News> {
     );
   }
 }
-
-void main() {
-  runApp(const MaterialApp(
-    home: News(),
-  ));
-}
-
-
