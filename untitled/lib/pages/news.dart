@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'article_detail.dart'; // Import the new file
 
 class News extends StatefulWidget {
   const News({super.key});
@@ -17,8 +19,7 @@ class _NewsState extends State<News> {
     {
       'title': 'Happy Birthday',
       'description': 'Today is your birthday.',
-      'image':
-          'https://kentstreetcellars.com.au/products/happy-birthday-gift-card'
+      'image': 'https://kentstreetcellars.com.au/products/happy-birthday-gift-card'
     },
     {
       'title': 'Tomorrow is Tuesday!',
@@ -44,7 +45,12 @@ class _NewsState extends State<News> {
               title: Text(article['title']!),
               subtitle: Text(article['description']!),
               onTap: () {
-                // Handle news article tap
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ArticleDetail(article: article),
+                  ),
+                );
               },
             ),
           );
@@ -53,3 +59,7 @@ class _NewsState extends State<News> {
     );
   }
 }
+
+
+
+

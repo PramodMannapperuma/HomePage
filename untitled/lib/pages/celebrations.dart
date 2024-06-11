@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/app_bar.dart';  // Adjust the import according to your project structure
 
 class Celebrations extends StatefulWidget {
   const Celebrations({Key? key}) : super(key: key);
@@ -20,11 +19,9 @@ class _CelebrationsState extends State<Celebrations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(
-        title: 'Celebrations',
-        showActions: true,
-        showLeading: true,
-        context: context,
+      appBar: AppBar(
+        title: Text('Celebrations'),
+        backgroundColor: Colors.white, // Custom color for the AppBar
       ),
       body: ListView.builder(
         itemCount: celebrations.length,
