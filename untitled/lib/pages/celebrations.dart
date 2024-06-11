@@ -21,7 +21,7 @@ class _CelebrationsState extends State<Celebrations> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Celebrations'),
-        backgroundColor: Colors.purple, // Custom color for the AppBar
+        backgroundColor: Colors.white, // Custom color for the AppBar
       ),
       body: ListView.builder(
         itemCount: celebrations.length,
@@ -31,7 +31,7 @@ class _CelebrationsState extends State<Celebrations> {
             margin: EdgeInsets.all(8.0), // Adds spacing around each card
             child: ListTile(
               leading: CircleAvatar(
-                backgroundColor: Colors.purple, // Custom color for the icon background
+                backgroundColor: Color(0xff4d2880), // Custom color for the icon background
                 child: Icon(
                   celebrations[index]['icon'],
                   color: Colors.white, // Icon color
@@ -44,7 +44,7 @@ class _CelebrationsState extends State<Celebrations> {
               subtitle: Text('${celebrations[index]['date']}'),
               trailing: IconButton(
                 icon: Icon(Icons.message),
-                color: Colors.purple, // Custom color for the message icon
+                color: Color(0xff4d2880), // Custom color for the message icon
                 onPressed: () {
                   // Implement messaging functionality
                 },
