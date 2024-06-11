@@ -31,7 +31,7 @@ class _PaySlipState extends State<PaySlip> {
           // Year selector
           Container(
             height: 60,
-            color: Color(0xff4d2880), // Dark blue theme color
+            color: Color(0xff4d2880),
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: List.generate(10, (index) => _yearButton(2023 + index)),
