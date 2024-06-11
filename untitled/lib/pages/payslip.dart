@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/app_bar.dart';  // Adjust the import according to your project structure
 
 class PaySlip extends StatefulWidget {
   const PaySlip({Key? key}) : super(key: key);
@@ -19,16 +20,18 @@ class _PaySlipState extends State<PaySlip> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Pay Slip'),
-        backgroundColor: Colors.white, // Dark purple theme color
+      appBar: customAppBar(
+        title: 'Pay Slips',
+        showActions: true,
+        showLeading: true,
+        context: context,
       ),
       body: Column(
         children: [
           // Year selector
           Container(
             height: 60,
-            color: Colors.blueAccent, // Dark blue theme color
+            color: Color(0xff4d2880),
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: List.generate(10, (index) => _yearButton(2023 + index)),
