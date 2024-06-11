@@ -31,14 +31,14 @@ class _NewsState extends State<News> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('News'),
+        title: const Text('News'),
       ),
       body: ListView.builder(
         itemCount: newsArticles.length,
         itemBuilder: (context, index) {
           final article = newsArticles[index];
           return Card(
-            margin: EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
             child: ListTile(
               leading: Image.network(article['image']!),
               title: Text(article['title']!),
@@ -59,3 +59,5 @@ void main() {
     home: News(),
   ));
 }
+
+
