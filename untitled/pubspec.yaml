@@ -83,6 +83,9 @@ flutter:
      - assets/images/attendance.jpeg
      - assets/images/approval.jpeg
      - assets/images/request.jpeg
+     - assets/images/Monday.jpg
+     - assets/images/Tuesday.jpg
+     - assets/images/Birthday.jpeg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -23,8 +23,6 @@ class _ArticleDetailState extends State<ArticleDetail> {
   void initState() {
     super.initState();
     _commentController = TextEditingController();
-    _commentController.text = widget.comments
-        .join('\n'); // Initialize controller with existing comments
   }
 
   @override
@@ -47,7 +45,7 @@ class _ArticleDetailState extends State<ArticleDetail> {
             SizedBox(
               width: double.infinity, // makes the image take full width
               height: 200, // fixed height for the image
-              child: Image.network(
+              child: Image.asset(
                 widget.article['image']!,
                 fit: BoxFit.cover, // ensures the image covers the SizedBox area
               ),
@@ -96,7 +94,10 @@ class _ArticleDetailState extends State<ArticleDetail> {
                     final comment = _commentController.text;
                     if (comment.isNotEmpty) {
                       widget.onCommentAdded(comment);
-                      _commentController.clear();
+                      setState(() {
+                        widget.comments.add(comment);
+                        _commentController.clear();
+                      });
                     }
                   },
                 ),
