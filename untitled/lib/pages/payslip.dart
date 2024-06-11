@@ -1,5 +1,8 @@
+// pay_slip.dart
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';  // Adjust the import according to your project structure
+import 'pay_slip_data.dart';  // Import the PaySlipData class
+import 'pay_slip_details.dart';  // Import the new PaySlipDetails screen
 
 class PaySlip extends StatefulWidget {
   const PaySlip({Key? key}) : super(key: key);
@@ -16,6 +19,27 @@ class _PaySlipState extends State<PaySlip> {
   final List<String> _months = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
+
+  // Dummy data for pay slips
+  final Map<String, PaySlipData> paySlipData = {
+    'Jan2023': PaySlipData(
+      month: 'Jan',
+      year: '2023',
+      basicSalary: '1000',
+      allowances: '200',
+      deductions: '50',
+      netPay: '1150',
+    ),
+    'Feb2023': PaySlipData(
+      month: 'Feb',
+      year: '2023',
+      basicSalary: '1000',
+      allowances: '200',
+      deductions: '50',
+      netPay: '1150',
+    ),
+    // Add more data for other months and years
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +69,33 @@ class _PaySlipState extends State<PaySlip> {
               ),
               itemCount: _months.length,
               itemBuilder: (context, index) {
-                return Card(
-                  color: Colors.white, // White theme color
-                  child: Center(
-                    child: Text(
-                      _months[index],
-                      style: TextStyle(
-                        color: Color(0xff4d2880), // Dark purple text color
+                return GestureDetector(
+                  onTap: () {
+                    // Navigate to the PaySlipDetails screen
+                    String key = '${_months[index]}$_selectedYear';
+                    PaySlipData? data = paySlipData[key];
+                    if (data != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PaySlipDetails(paySlipData: data),
+                        ),
+                      );
+                    } else {
+                      // Handle case where no data is available for the selected month and year
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('No data available for ${_months[index]} $_selectedYear')),
+                      );
+                    }
+                  },
+                  child: Card(
+                    color: Colors.white, // White theme color
+                    child: Center(
+                      child: Text(
+                        _months[index],
+                        style: TextStyle(
+                          color: Color(0xff4d2880), // Dark purple text color
+                        ),
                       ),
                     ),
                   ),
