@@ -88,18 +88,25 @@ class _ArticleDetailState extends State<ArticleDetail> {
                     ),
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () {
-                    final comment = _commentController.text;
-                    if (comment.isNotEmpty) {
-                      widget.onCommentAdded(comment);
-                      setState(() {
-                        widget.comments.add(comment);
-                        _commentController.clear();
-                      });
-                    }
-                  },
+                Theme(
+                  data: Theme.of(context).copyWith(
+                    iconTheme: const IconThemeData(
+                      color: Color(0xff4d2880), // Set the color to purple
+                    ),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.send),
+                    onPressed: () {
+                      final comment = _commentController.text;
+                      if (comment.isNotEmpty) {
+                        widget.onCommentAdded(comment);
+                        setState(() {
+                          widget.comments.add(comment);
+                          _commentController.clear();
+                        });
+                      }
+                    },
+                  ),
                 ),
               ],
             ),
