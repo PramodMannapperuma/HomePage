@@ -29,6 +29,8 @@ class _PaySlipState extends State<PaySlip> {
       allowances: '200',
       deductions: '50',
       netPay: '1150',
+      employeeNumber: 'EMP12345',
+      deductionDetails: 'Tax: 30, Insurance: 20',
     ),
     'Feb2023': PaySlipData(
       month: 'Feb',
@@ -37,6 +39,8 @@ class _PaySlipState extends State<PaySlip> {
       allowances: '200',
       deductions: '50',
       netPay: '1150',
+      employeeNumber: 'EMP12345',
+      deductionDetails: 'Tax: 30, Insurance: 20',
     ),
     // Add more data for other months and years
   };
@@ -64,8 +68,11 @@ class _PaySlipState extends State<PaySlip> {
           // Pay Slip table
           Expanded(
             child: GridView.builder(
+              padding: EdgeInsets.all(16),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, // Three months per row
+                crossAxisCount: 3,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
               ),
               itemCount: _months.length,
               itemBuilder: (context, index) {
@@ -89,13 +96,30 @@ class _PaySlipState extends State<PaySlip> {
                     }
                   },
                   child: Card(
-                    color: Colors.white, // White theme color
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 4,
                     child: Center(
-                      child: Text(
-                        _months[index],
-                        style: TextStyle(
-                          color: Color(0xff4d2880), // Dark purple text color
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.receipt, // Change this icon to any of the above suggestions
+                            color: Color(0xff4d2880),
+                            size: 30,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            _months[index],
+                            style: TextStyle(
+                              color: Color(0xff4d2880),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -119,11 +143,14 @@ class _PaySlipState extends State<PaySlip> {
       child: Container(
         width: 75,
         alignment: Alignment.center,
+        margin: EdgeInsets.symmetric(horizontal: 4),
+        padding: EdgeInsets.symmetric(vertical: 10),
         child: Text(
           year.toString(),
           style: TextStyle(
             color: _selectedYear == year.toString() ? Colors.white : Colors.grey,
             fontWeight: FontWeight.bold,
+            fontSize: 16,
           ),
         ),
       ),
