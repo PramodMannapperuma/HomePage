@@ -1,4 +1,3 @@
-// pay_slip_data.dart
 class PaySlipData {
   final String month;
   final String year;
@@ -6,6 +5,8 @@ class PaySlipData {
   final String allowances;
   final String deductions;
   final String netPay;
+  final String employeeNumber;
+  final String deductionDetails;
 
   PaySlipData({
     required this.month,
@@ -14,5 +15,7 @@ class PaySlipData {
     required this.allowances,
     required this.deductions,
     required this.netPay,
+    required this.employeeNumber,
+    required this.deductionDetails,
   });
 }
