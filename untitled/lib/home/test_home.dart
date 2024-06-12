@@ -12,7 +12,7 @@ class _TestHomeAppState extends State<TestHomeApp> {
   final List<TileInfo> tilesInfo = [
     TileInfo('Attendance',Icons.event_available,'/attendance',Colors.blue,'assets/images/attendance.jpeg'),
     TileInfo('Leave', Icons.beach_access,'/leave',Colors.pinkAccent, 'assets/images/leave.jpeg'),
-    TileInfo('News', Icons.article,'/news',Colors.cyan, 'assets/images/news.jpeg'),
+    TileInfo('News', Icons.article,'/news_screen',Colors.cyan, 'assets/images/news.jpeg'),
     TileInfo('Policies', Icons.policy,'/policies',Colors.red, 'assets/images/policies.jpeg'),
     TileInfo('Request', Icons.request_page,'/requests',Colors.green, 'assets/images/request.jpeg'),
     TileInfo('Celebrations', Icons.celebration, '/celebrations', Colors.teal,'assets/images/celebrations.jpeg'),
