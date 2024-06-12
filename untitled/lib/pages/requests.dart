@@ -9,7 +9,7 @@ class Requests extends StatefulWidget {
 
 class _RequestsState extends State<Requests> {
   final _formKey = GlobalKey<FormState>();
-  String _requestType = 'Leave Request';
+  String _requestType = 'Salary Confirmation'; // Default to the first item in the list
   String _name = '';
   String _employeeId = '';
   DateTime _date = DateTime.now();
@@ -39,7 +39,6 @@ class _RequestsState extends State<Requests> {
                   icon: Icon(Icons.request_page, color: Color(0xff4d2880)),
                 ),
                 items: <String>[
-                  'Leave Request',
                   'Salary Confirmation',
                   'VISA Letter',
                   'Letter to Bank for loans'
