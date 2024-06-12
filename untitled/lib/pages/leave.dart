@@ -53,7 +53,7 @@ class _LeaveState extends State<Leave> {
                       color: Colors.purple)),
               SizedBox(height: 8),
               SizedBox(
-                height: 300,
+                height: 200,
                 child: LeaveBar(
                   leaveData: leaveDetails.values.toList(),
                 ),
