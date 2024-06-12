@@ -11,9 +11,12 @@ import 'package:untitled/pages/payslip.dart';
 import 'package:untitled/pages/policie.dart';
 import 'package:untitled/pages/profile.dart';
 import 'package:untitled/pages/requests.dart';
+import 'package:untitled/pages/task_screen.dart';
+import 'package:untitled/pages/team_task.dart';
 import 'package:untitled/profile/career_profile.dart';
 import 'package:untitled/profile/contact_info.dart';
 import 'package:untitled/profile/personal_info.dart';
+
 import 'homepage.dart';
 
 final Map<String, WidgetBuilder> routes = {
@@ -33,4 +36,6 @@ final Map<String, WidgetBuilder> routes = {
   '/profile': (context) => ProfilePage(),
   '/contactInfo': (context) => ContactInfo(),
   '/attendanceTracker': (context) => AttendanceTracker(),
+  '/taskScreen':(context) => TaskScreen(),
+  '/taskList':(context) => TaskListScreen(),
 };
