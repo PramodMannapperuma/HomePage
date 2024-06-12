@@ -7,6 +7,7 @@ import 'package:untitled/pages/celebrations.dart';
 import 'package:untitled/pages/leave.dart';
 import 'package:untitled/pages/msg.dart';
 import 'package:untitled/pages/news.dart';
+import 'package:untitled/pages/news_screen.dart';
 import 'package:untitled/pages/payslip.dart';
 import 'package:untitled/pages/policie.dart';
 import 'package:untitled/pages/profile.dart';
@@ -21,7 +22,8 @@ final Map<String, WidgetBuilder> routes = {
   '/home': (context) => MyHomePage(),
   '/attendance': (context) => Attendance(),
   '/leave': (context) => Leave(),
-  '/news': (context) => News(),
+  // '/news': (context) => News(),
+  '/news_screen': (context) => NewsScreen(),
   '/policies': (context) => Policies(),
   '/requests': (context) => Requests(),
   '/celebrations': (context) => Celebrations(),
