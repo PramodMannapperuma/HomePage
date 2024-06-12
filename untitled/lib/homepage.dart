@@ -6,6 +6,7 @@ import 'package:untitled/auth/login.dart';
 import 'package:untitled/home/test_home.dart';
 import 'package:untitled/graphs/attendance_tracker.dart';
 import 'graphs/attendance_bar.dart';
+import 'graphs/attendance_pie_chart.dart';
 import 'home/module_grid.dart';
 import 'home/user_section.dart';
 
@@ -59,10 +60,10 @@ class _MyHomePageState extends State<MyHomePage> {
             IconButton(
               icon: const Icon(
                 Icons.person,
-                color: Colors.black,
+                color: Color(0xff4d2880),
               ),
               onPressed: () {
-                // Handle navigation drawer open
+                Navigator.pushNamed(context, '/profile');
               },
             ),
           ]),
@@ -211,9 +212,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 title: Text('My Team'),
                 onTap: () {
-                  // Update the state of the app
-                  // Then close the drawer
                   Navigator.pop(context);
+                  Navigator.pushNamed(context, '/employee');
                 },
               ),
               Divider(
@@ -273,7 +273,12 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(
               height: 10,
             ),
+            // AttendanceBarGraph(),
+            // AttendancePie(),
+            // AttendanceTracker(),
+            // Divider(thickness: 2,),
             AttendanceBarGraph(),
+            // Divider(thickness: 2,),
             Divider(
               thickness: 2,
             ),

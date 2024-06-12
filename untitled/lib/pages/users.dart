@@ -26,7 +26,7 @@ final List<Employee> employees = List.generate(
     name: 'Employee $index',
     jobTitle: 'Job Title $index',
     department: 'Department $index',
-    pictureUrl: 'https://via.placeholder.com/150',
+    pictureUrl: 'assets/images/2.-electronic-evan (1).jpg',
     email: 'employee$index@company.com',
     phone: '123-456-7890',
   ),
@@ -52,7 +52,7 @@ class EmployeeCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 50.0,
-              backgroundImage: NetworkImage(employee.pictureUrl),
+              backgroundImage: AssetImage(employee.pictureUrl),
             ),
             SizedBox(height: 16.0),
             Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/app_bar.dart';
 
 class ArticleDetail extends StatefulWidget {
   final Map<String, String> article;
@@ -34,12 +35,9 @@ class _ArticleDetailState extends State<ArticleDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.article['title']!),
-        backgroundColor: const Color(0xff4d2880), // Custom color for the AppBar
-      ),
+      appBar: customAppBar(title: widget.article['title']!, showActions: true, showLeading: false, context: context),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -52,11 +50,11 @@ class _ArticleDetailState extends State<ArticleDetail> {
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
             Text(
               widget.article['title']!,
               style: const TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Color(0xff4d2880), // Custom color for the title
               ),
@@ -73,7 +71,7 @@ class _ArticleDetailState extends State<ArticleDetail> {
             const Text(
               'Comments',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xff4d2880), // Custom color for the comments section
               ),
