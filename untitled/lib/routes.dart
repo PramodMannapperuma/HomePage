@@ -14,6 +14,7 @@ import 'package:untitled/pages/profile.dart';
 import 'package:untitled/pages/requests.dart';
 import 'package:untitled/pages/task_screen.dart';
 import 'package:untitled/pages/team_task.dart';
+import 'package:untitled/pages/users.dart';
 import 'package:untitled/profile/career_profile.dart';
 import 'package:untitled/profile/contact_info.dart';
 import 'package:untitled/profile/personal_info.dart';
@@ -40,4 +41,5 @@ final Map<String, WidgetBuilder> routes = {
   '/attendanceTracker': (context) => AttendanceTracker(),
   '/taskScreen':(context) => TaskScreen(),
   '/taskList':(context) => TaskListScreen(),
+  '/employeeScreen': (context) => EmployeeGridScreen(),
 };

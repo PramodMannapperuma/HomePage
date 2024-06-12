@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/app_bar.dart';
 
 class TeamTask {
   final String title;
@@ -71,8 +72,9 @@ class TaskListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: customAppBar(title: 'Team Tasks', showActions: true, showLeading: false, context: context),
       body: Container(
-        color: Colors.grey[200],
+        // color: Colors.grey[200],
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,6 +84,14 @@ class TaskListScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10,),
+            Text(
+              'Team',
+              style: TextStyle(
+                fontSize: 15.0,
+                color: Colors.purple,
               ),
             ),
             SizedBox(height: 10.0),

@@ -17,8 +17,8 @@ class _TestHomeAppState extends State<TestHomeApp> {
     TileInfo('Request', Icons.request_page,'/requests',Colors.green, 'assets/images/request.jpeg'),
     TileInfo('Celebrations', Icons.celebration, '/celebrations', Colors.teal,'assets/images/celebrations.jpeg'),
     TileInfo('Profile View', Icons.person,'/profile',Colors.brown,'assets/images/profile.jpeg'),
-    TileInfo('Approval Task', Icons.approval,'/taskList',Colors.black45,'assets/images/approval.jpeg'),
-    TileInfo('Msg', Icons.message,'/msg',Colors.indigo,'assets/images/msg.jpeg'),
+    TileInfo('Approval Task', Icons.approval,'/taskScreen',Colors.black45,'assets/images/approval.jpeg'),
+    TileInfo('Msg', Icons.message,'/employeeScreen',Colors.indigo,'assets/images/msg.jpeg'),
   ];
 
   @override
