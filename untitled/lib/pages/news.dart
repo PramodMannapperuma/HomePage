@@ -34,24 +34,32 @@ class _NewsState extends State<News> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('News'),
+        backgroundColor: Colors.white, // Custom color for the AppBar
       ),
       body: ListView.builder(
         itemCount: newsArticles.length,
         itemBuilder: (context, index) {
           final article = newsArticles[index];
           return Card(
-            margin: const EdgeInsets.all(10),
+            elevation: 4.0, // Adds a shadow to each card
+            margin: const EdgeInsets.all(8.0), // Adds spacing around each card
             child: ListTile(
-              leading: SizedBox(
-                width: 60, // fixed width for the image
-                height: 60, // fixed height for the image
-                child: Image.asset(
-                  article['image']!,
-                  fit: BoxFit.cover, // ensures the image covers the SizedBox area
-                ),
+              leading: CircleAvatar(
+                backgroundColor: const Color(0xff4d2880), // Custom color for the icon background
+                backgroundImage: AssetImage(article['image']!), // Use the article image
               ),
-              title: Text(article['title']!),
+              title: Text(
+                article['title']!,
+                style: const TextStyle(fontWeight: FontWeight.bold), // Bold text for the title
+              ),
               subtitle: Text(article['description']!),
+              trailing: IconButton(
+                icon: const Icon(Icons.message),
+                color: const Color(0xff4d2880), // Custom color for the message icon
+                onPressed: () {
+                  // Implement messaging functionality if needed
+                },
+              ),
               onTap: () {
                 Navigator.push(
                   context,
