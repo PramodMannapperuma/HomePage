@@ -67,7 +67,9 @@ class Tile extends StatelessWidget {
     final child = Container(
 
       color:
-      Colors.deepPurple,
+      // Colors.white,
+      Color(0xff4d2880),
+      // Colors.deepPurple,
           // .withOpacity(0.60),
       // Color.fromRGBO(77, 40, 120, 0.8),
       height: 120,

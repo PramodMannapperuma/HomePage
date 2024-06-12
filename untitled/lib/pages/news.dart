@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/app_bar.dart';
 import 'article_detail.dart'; // Import the new file
 
 class News extends StatefulWidget {
@@ -32,10 +33,7 @@ class _NewsState extends State<News> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('News'),
-        backgroundColor: Colors.white, // Custom color for the AppBar
-      ),
+      appBar: customAppBar(title: 'News', showActions: true, showLeading: false, context: context),
       body: ListView.builder(
         itemCount: newsArticles.length,
         itemBuilder: (context, index) {

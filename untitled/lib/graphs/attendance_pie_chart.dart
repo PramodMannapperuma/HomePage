@@ -16,8 +16,8 @@ class AttendancePie extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('ATTENDANCE'),
-                Text('Attended', style: TextStyle(color: Colors.blue),),
-                Text('Leaves',style: TextStyle(color: Colors.green),),
+                Text('Attended', style: TextStyle(color: Colors.green),),
+                Text('Leaves',style: TextStyle(color: Colors.yellow),),
                 Text('Absent',style: TextStyle(color: Colors.red),),
                 Text('Attended'),
               ],
