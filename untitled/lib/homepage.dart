@@ -173,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text('News'),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.pushNamed(context, '/news');
+                  Navigator.pushNamed(context, '/news_screen');
                 },
               ),
               // Divider(thickness: 0.2,),
