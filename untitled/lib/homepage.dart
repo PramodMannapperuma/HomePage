@@ -148,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text('Requests'),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.pushNamed(context, '/attendanceTracker');
+                  Navigator.pushNamed(context, '/requests');
                 },
               ),
               // Divider(thickness: 0.2,),
