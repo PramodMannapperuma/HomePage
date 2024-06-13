@@ -49,6 +49,24 @@ class PaySlipDetails extends StatelessWidget {
               isHighlight: true,
               icon: Icons.attach_money,
             ),
+            SizedBox(height: 20),
+            ElevatedButton.icon(
+              icon: Icon(Icons.cloud_download, color: Colors.white),
+              label: Text(
+                'Download Pay Slip',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF4d2880), // Deep purple color
+                padding: EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              onPressed: () {
+                // TODO: Implement the download functionality
+              },
+            ),
           ],
         ),
       ),
