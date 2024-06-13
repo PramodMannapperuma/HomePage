@@ -12,7 +12,7 @@ class _TestHomeAppState extends State<TestHomeApp> {
   final List<TileInfo> tilesInfo = [
     TileInfo('Attendance',Icons.event_available,'/attendance',Colors.blue,'assets/images/attendance.jpeg'),
     TileInfo('Leave', Icons.beach_access,'/leave',Colors.pinkAccent, 'assets/images/leave.jpeg'),
-    TileInfo('News', Icons.article,'/news',Colors.cyan, 'assets/images/news.jpeg'),
+    TileInfo('News', Icons.article,'/news_screen',Colors.cyan, 'assets/images/news.jpeg'),
     TileInfo('Policies', Icons.policy,'/policies',Colors.red, 'assets/images/policies.jpeg'),
     TileInfo('Request', Icons.request_page,'/requests',Colors.green, 'assets/images/request.jpeg'),
     TileInfo('Celebrations', Icons.celebration, '/celebrations', Colors.teal,'assets/images/celebrations.jpeg'),
@@ -67,7 +67,9 @@ class Tile extends StatelessWidget {
     final child = Container(
 
       color:
-      Colors.deepPurple,
+      // Colors.white,
+      Color(0xff4d2880),
+      // Colors.deepPurple,
           // .withOpacity(0.60),
       // Color.fromRGBO(77, 40, 120, 0.8),
       height: 120,

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:untitled/app_bar.dart';
 import 'celebrations.dart';
 import 'news.dart';
 // import 'staff_page.dart';
@@ -11,40 +12,64 @@ class NewsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('News'),
-        backgroundColor: const Color(0xff4d2880), // Custom color for the AppBar
-      ),
+      appBar: customAppBar(title: 'News', showActions: true, showLeading: false, context: context),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
+        child: Column(
           children: [
-            _buildModuleCard(
-              context,
-              title: 'Celebrations',
-              icon: Icons.celebration,
-              page: const Celebrations(),
+            GridView.count(
+              crossAxisCount: 3,
+              crossAxisSpacing: 2,
+              mainAxisSpacing: 5,
+              shrinkWrap: true,
+              children: [
+                _buildModuleCard(
+                  context,
+                  title: 'Celebrations',
+                  icon: Icons.celebration,
+                  page: const News(),
+                ),
+                _buildModuleCard(
+                  context,
+                  title: 'Anniversaries',
+                  icon: Icons.cake,
+                  page: const News(),
+                ),
+                _buildModuleCard(
+                  context,
+                  title: 'Event',
+                  icon: Icons.event,
+                  page: const News(),
+                ),
+              ],
             ),
-            _buildModuleCard(
-              context,
-              title: 'Anniversaries',
-              icon: Icons.cake,
-              page: const News(),
+            SizedBox(height: 10,),
+            Divider(thickness: 2,),
+            SizedBox(height: 10),
+            Text(
+              'General News',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            // _buildModuleCard(
-            //   context,
-            //   title: 'Staff',
-            //   icon: Icons.person,
-            //   page: const StaffPage(),
-            // ),
-            _buildModuleCard(
-              context,
-              title: 'Event',
-              icon: Icons.event,
-              page: const event(),
+            SizedBox(height: 10),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    _buildNewsCard('New Policy Update', 'Details about the new policy.', Icons.policy),
+                  ],
+                ),
+                Row(
+                  children: [
+                    _buildNewsCard('Upcoming Holiday', 'Information about the upcoming holiday.', Icons.holiday_village),
+                  ],
+                ),
+                Row(
+                  children: [
+                    _buildNewsCard('Team Outing', 'Details about the team outing.', Icons.people),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
@@ -62,9 +87,9 @@ class NewsScreen extends StatelessWidget {
         );
       },
       child: Card(
-        elevation: 10,
+        elevation: 4,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: Container(
           padding: const EdgeInsets.all(8.0),
@@ -80,7 +105,7 @@ class NewsScreen extends StatelessWidget {
                 color: Colors.black.withOpacity(0.2),
                 spreadRadius: 2,
                 blurRadius: 5,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
@@ -93,16 +118,16 @@ class NewsScreen extends StatelessWidget {
                   color: Colors.white.withOpacity(0.2),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Icon(icon, size: 50, color: Colors.white),
+                    child: Icon(icon, size: 40, color: Colors.white),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               Text(
                 title,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 10,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -113,4 +138,41 @@ class NewsScreen extends StatelessWidget {
       ),
     );
   }
+}
+Widget _buildNewsCard(String title, String description, IconData icon) {
+  return Card(
+    elevation: 4,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    child: Container(
+      width: 344,
+      padding: EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 40, color: Colors.purple),
+              SizedBox(width: 20),
+              Text(
+                title,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          SizedBox(height: 10,),
+          Row(
+            children: [
+              SizedBox(width: 20),
+              Text(
+                description,
+                style: TextStyle(fontSize: 12),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 }
