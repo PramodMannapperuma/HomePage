@@ -28,10 +28,10 @@ class _CelebrationsState extends State<Celebrations> {
           itemBuilder: (context, index) {
             return Card(
               elevation: 4.0, // Adds a shadow to each card
-              margin: EdgeInsets.all(8.0), // Adds spacing around each card
+              margin: const EdgeInsets.all(8.0), // Adds spacing around each card
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Colors.purple, // Custom color for the icon background
+                  backgroundColor: const Color(0xff4d2880), // Custom color for the icon background
                   child: Icon(
                     celebrations[index]['icon'],
                     color: Colors.white, // Icon color
@@ -39,12 +39,12 @@ class _CelebrationsState extends State<Celebrations> {
                 ),
                 title: Text(
                   '${celebrations[index]['type']} for ${celebrations[index]['name']}',
-                  style: TextStyle(fontWeight: FontWeight.bold), // Bold text for the title
+                  style: const TextStyle(fontWeight: FontWeight.bold), // Bold text for the title
                 ),
                 subtitle: Text('${celebrations[index]['date']}'),
                 trailing: IconButton(
-                  icon: Icon(Icons.message),
-                  color: Color(0xff4d2880), // Custom color for the message icon
+                  icon: const Icon(Icons.message),
+                  color: const Color(0xff4d2880), // Custom color for the message icon
                   onPressed: () {
                     // Implement messaging functionality
                   },

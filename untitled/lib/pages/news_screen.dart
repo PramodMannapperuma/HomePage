@@ -43,14 +43,14 @@ class NewsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 10,),
-            Divider(thickness: 2,),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10,),
+            const Divider(thickness: 2,),
+            const SizedBox(height: 10),
+            const Text(
               'General News',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Column(
               children: [
                 Row(
@@ -145,28 +145,28 @@ Widget _buildNewsCard(String title, String description, IconData icon) {
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     child: Container(
       width: 344,
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             children: [
-              Icon(icon, size: 40, color: Colors.purple),
-              SizedBox(width: 20),
+              Icon(icon, size: 40, color: const Color(0xff4d2880)),
+              const SizedBox(width: 20),
               Text(
                 title,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             ],
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           Row(
             children: [
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Text(
                 description,
-                style: TextStyle(fontSize: 12),
+                style: const TextStyle(fontSize: 12),
                 textAlign: TextAlign.center,
               ),
             ],
