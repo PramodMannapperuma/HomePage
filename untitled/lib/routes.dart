@@ -6,7 +6,6 @@ import 'package:untitled/graphs/attendance_tracker.dart';
 import 'package:untitled/pages/celebrations.dart';
 import 'package:untitled/pages/employee.dart';
 import 'package:untitled/pages/leave.dart';
-import 'package:untitled/pages/msg.dart';
 import 'package:untitled/pages/news.dart';
 import 'package:untitled/pages/news_screen.dart';
 import 'package:untitled/pages/payslip.dart';
@@ -36,7 +35,6 @@ final Map<String, WidgetBuilder> routes = {
   '/personalInfo': (context) => PersonalInfo(),
   '/payslips': (context) => PaySlip(),
   '/approvalTask': (context) => ApprovalTask(),
-  '/msg': (context) => Msg(),
   '/careerProfile': (context) => CareerProfile(),
   '/profile': (context) => ProfilePage(),
   '/contactInfo': (context) => ContactInfo(),
