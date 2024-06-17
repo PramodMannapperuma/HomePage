@@ -96,7 +96,7 @@ class NewsScreen extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             gradient: const LinearGradient(
-              colors: [Color(0xff4d2880), Color(0xff8a2be2)],
+              colors: [Color(0xff4d2880), Color(0xff4d2880)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
