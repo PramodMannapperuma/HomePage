@@ -10,7 +10,8 @@ import 'package:untitled/pages/msg.dart';
 import 'package:untitled/pages/news.dart';
 import 'package:untitled/pages/news_screen.dart';
 import 'package:untitled/pages/payslip.dart';
-import 'package:untitled/pages/policie.dart';
+import 'package:untitled/pages/policies.dart';
+import 'package:untitled/pages/policy_pdf.dart';
 import 'package:untitled/pages/profile.dart';
 import 'package:untitled/pages/requests.dart';
 import 'package:untitled/pages/task_screen.dart';
@@ -44,4 +45,5 @@ final Map<String, WidgetBuilder> routes = {
   '/taskList':(context) => TaskListScreen(),
   '/employeeScreen': (context) => EmployeeGridScreen(),
   '/employee':(context) => EmployeeScreen(),
+  '/leavePolicy': (context) => LeavePolicy(),
 };

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/homepage.dart';
 import 'package:untitled/onbording_screen.dart';
+import 'package:untitled/pages/policy_pdf.dart';
 import 'package:untitled/routes.dart';
 
 void main() {
