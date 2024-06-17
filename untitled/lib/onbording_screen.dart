@@ -33,12 +33,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 description: 'This is the first onboarding screen description.',
               ),
               OnboardingPage(
-                imageAsset: 'assets/images/test-bg.png',
+                imageAsset: 'assets/images/WhatsApp Image 2024-06-17 at 15.49.33_365890dc.jpg',
                 title: 'Track Your Progress',
                 description: 'This is the second onboarding screen description.',
               ),
               OnboardingPage(
-                imageAsset: 'assets/images/test-bg.png',
+                imageAsset: 'assets/images/WhatsApp Image 2024-06-17 at 15.49.33_4c16691b.jpg',
                 title: 'Achieve Your Goals',
                 description: 'This is the third onboarding screen description.',
               ),
