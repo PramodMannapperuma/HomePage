@@ -40,6 +40,7 @@ dependencies:
   flutter_staggered_grid_view: ^0.6.2
   image_picker: ^1.0.8
   provider: ^6.0.1
+  pdfx: ^2.6.0
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +87,9 @@ flutter:
      - assets/images/Monday.jpg
      - assets/images/Tuesday.jpg
      - assets/images/Birthday.jpeg
+     - assets/Files/D-sample.pdf
+     - assets/Files/Intelligent_vehicular_maintenance_system_using_IoT (1).pdf
+     - assets/Files/Mobile_Application_for_Automobile_Manage (1).pdf
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
