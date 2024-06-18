@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/auth/login.dart';
-import 'package:untitled/pages/approval_task.dart';
+//import 'package:untitled/pages/approval_task.dart';
 import 'package:untitled/pages/attendance.dart';
 import 'package:untitled/graphs/attendance_tracker.dart';
 import 'package:untitled/pages/celebrations.dart';
@@ -34,7 +34,7 @@ final Map<String, WidgetBuilder> routes = {
   '/celebrations': (context) => Celebrations(),
   '/personalInfo': (context) => PersonalInfo(),
   '/payslips': (context) => PaySlip(),
-  '/approvalTask': (context) => ApprovalTask(),
+  //'/approvalTask': (context) => ApprovalTask(),
   '/careerProfile': (context) => CareerProfile(),
   '/profile': (context) => ProfilePage(),
   '/contactInfo': (context) => ContactInfo(),
