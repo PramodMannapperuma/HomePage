@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
+import 'package:untitled/app_colors.dart';
 
 class TeamTask {
   final String title;
@@ -91,7 +92,7 @@ class TaskListScreen extends StatelessWidget {
               'Team',
               style: TextStyle(
                 fontSize: 15.0,
-                color: Colors.purple,
+                color: AppColors.background,
               ),
             ),
             SizedBox(height: 10.0),
@@ -125,7 +126,7 @@ class TaskListScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.purple,
+                                  color: AppColors.background,
                                 ),
                               ),
                             ],
