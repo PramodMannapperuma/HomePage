@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:untitled/app_colors.dart';
 
 class TestHomeApp extends StatefulWidget {
   const TestHomeApp({Key? key}) : super(key: key);
@@ -68,7 +69,7 @@ class Tile extends StatelessWidget {
 
       color:
       // Colors.white,
-      Color(0xff4d2880),
+      AppColors.background,
       // Colors.deepPurple,
           // .withOpacity(0.60),
       // Color.fromRGBO(77, 40, 120, 0.8),
@@ -78,7 +79,7 @@ class Tile extends StatelessWidget {
           image: AssetImage(tileInfo.imagePath), // Replace with your image path
           fit: BoxFit.cover,
         ),
-          border: Border.all(color: Colors.purple, width: 2.0), // Add border
+          border: Border.all(color: AppColors.background, width: 2.0), // Add border
       ),
       // extent,
       child: Center(
