@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pay_slip_data.dart';
+import 'package:untitled/app_colors.dart';
 
 class PaySlipDetails extends StatelessWidget {
   final PaySlipData paySlipData;
@@ -57,7 +58,7 @@ class PaySlipDetails extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF4d2880), // Deep purple color
+                backgroundColor: AppColors.background, // Deep purple color
                 padding: EdgeInsets.symmetric(vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
@@ -101,14 +102,14 @@ class PaySlipItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            icon != null ? Icon(icon, color: Color(0xFF4d2880)) : SizedBox(),
+            icon != null ? Icon(icon, color:AppColors.background) : SizedBox(),
             SizedBox(width: 8),
             Text(
               label,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF4d2880),
+                color: AppColors.background,
               ),
             ),
             Spacer(),
@@ -117,7 +118,7 @@ class PaySlipItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: isHighlight ? FontWeight.bold : FontWeight.normal,
-                color: isHighlight ? Color(0xFF4d2880) : Colors.black,
+                color: isHighlight ? AppColors.background : Colors.black,
               ),
             ),
           ],
