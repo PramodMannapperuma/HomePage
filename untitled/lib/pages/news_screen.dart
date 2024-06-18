@@ -5,6 +5,7 @@ import 'celebrations.dart';
 import 'news.dart';
 // import 'staff_page.dart';
 import 'event.dart';
+import 'package:untitled/app_colors.dart';
 
 class NewsScreen extends StatelessWidget {
   const NewsScreen({Key? key}) : super(key: key);
@@ -96,7 +97,7 @@ class NewsScreen extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             gradient: const LinearGradient(
-              colors: [Color(0xff4d2880), Color(0xff4d2880)],
+              colors: [AppColors.background, AppColors.background],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -122,7 +123,7 @@ class NewsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 4),
               Text(
                 title,
                 textAlign: TextAlign.center,
@@ -144,14 +145,14 @@ Widget _buildNewsCard(String title, String description, IconData icon) {
     elevation: 4,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     child: Container(
-      width: 344,
+      width: 368,
       padding: const EdgeInsets.all(10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             children: [
-              Icon(icon, size: 40, color: const Color(0xff4d2880)),
+              Icon(icon, size: 40, color: AppColors.background),
               const SizedBox(width: 20),
               Text(
                 title,
