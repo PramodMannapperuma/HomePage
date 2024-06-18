@@ -36,7 +36,12 @@ class _ArticleDetailState extends State<ArticleDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: widget.article['title']!, showActions: true, showLeading: false, context: context),
+      appBar: AppBar(
+          title: Text(widget.article['title']!),
+          // showActions: true,
+          // showLeading: false,
+          // context: context
+          ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -55,17 +60,18 @@ class _ArticleDetailState extends State<ArticleDetail> {
             Text(
               widget.article['title']!,
               style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                   color: AppColors.background // Custom color for the title
-              ),
+                  ),
             ),
             const SizedBox(height: 16),
             Text(
               widget.article['description']!,
               style: const TextStyle(
                 fontSize: 18,
-                color: Colors.black87, // Slightly softer color for the description
+                color:
+                    Colors.black87, // Slightly softer color for the description
               ),
             ),
             const SizedBox(height: 16),
@@ -74,7 +80,8 @@ class _ArticleDetailState extends State<ArticleDetail> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: AppColors.background, // Custom color for the comments section
+                color: AppColors
+                    .background, // Custom color for the comments section
               ),
             ),
             const SizedBox(height: 8),
@@ -104,7 +111,8 @@ class _ArticleDetailState extends State<ArticleDetail> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 8.0),
                     ),
                   ),
                 ),
