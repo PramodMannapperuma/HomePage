@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
 import 'package:untitled/app_colors.dart';
 
-import '../app_colors.dart';
 
 class Task {
   final String title;
