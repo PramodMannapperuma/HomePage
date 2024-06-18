@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
+import 'package:untitled/app_colors.dart';
 
 class Leave extends StatefulWidget {
   const Leave({super.key});
@@ -45,33 +46,33 @@ class _LeaveState extends State<Leave> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 8),
-              Text('Leave Chart',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.purple)),
-              SizedBox(height: 8),
-              SizedBox(
-                height: 200,
-                child: LeaveBar(
-                  leaveData: leaveDetails.values.toList(),
-                ),
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              Divider(
-                thickness: 1,
-              ),
-              SizedBox(height: 4),
+              // SizedBox(height: 8),
+              // Text('Leave Chart',
+              //     style: TextStyle(
+              //         fontSize: 18,
+              //         fontWeight: FontWeight.bold,
+              //         color: Colors.purple)),
+              // SizedBox(height: 8),
+              // SizedBox(
+              //   height: 200,
+              //   child: LeaveBar(
+              //     leaveData: leaveDetails.values.toList(),
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 4,
+              // ),
+              // Divider(
+              //   thickness: 1,
+              // ),
+              // SizedBox(height: 4),
               // Leave Details Section
               Text('Leave Details',
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.purple)),
-              SizedBox(height: 16),
+                      color: AppColors.background)),
+              SizedBox(height: 10),
               GridView.count(
                 crossAxisCount: 4,
                 crossAxisSpacing: 2,
@@ -83,19 +84,19 @@ class _LeaveState extends State<Leave> {
                 }).toList(),
               ),
               SizedBox(
-                height: 8,
+                height: 5,
               ),
               Divider(
                 thickness: 1,
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 5),
 
               Text('Request Leaves',
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.purple)),
-              SizedBox(height: 16),
+                      color: AppColors.background)),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -105,7 +106,7 @@ class _LeaveState extends State<Leave> {
                         radius: 30,
                         backgroundColor: Colors.grey.shade300,
                         child:
-                            Icon(Icons.flight, size: 25, color: Colors.black87),
+                            Icon(Icons.flight, size: 25, color: AppColors.background),
                       ),
                       SizedBox(height: 8),
                       Text(
@@ -121,9 +122,9 @@ class _LeaveState extends State<Leave> {
                         radius: 30,
                         backgroundColor: Colors.grey.shade300,
                         child: Icon(Icons.beach_access,
-                            size: 25, color: Colors.black54),
+                            size: 25, color: AppColors.background),
                       ),
-                      SizedBox(height: 8),
+                      SizedBox(height: 4),
                       Text(
                         'Casual',
                         style: TextStyle(
@@ -137,7 +138,7 @@ class _LeaveState extends State<Leave> {
                         radius: 30,
                         backgroundColor: Colors.grey.shade300,
                         child: Icon(Icons.local_hospital,
-                            size: 25, color: Colors.purple),
+                            size: 25, color: AppColors.background),
                       ),
                       SizedBox(height: 8),
                       Text(
@@ -149,7 +150,7 @@ class _LeaveState extends State<Leave> {
                   ),
                 ],
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 10),
               TextField(
                 decoration: InputDecoration(
                   labelText: 'Description',
@@ -157,7 +158,7 @@ class _LeaveState extends State<Leave> {
                 ),
                 maxLines: 3,
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 5),
               Row(
                 children: [
                   Text('Dates',
@@ -268,7 +269,7 @@ class _LeaveState extends State<Leave> {
               style: TextStyle(
                   fontSize: 10.5,
                   fontWeight: FontWeight.bold,
-                  color: Colors.purple),
+                  color: AppColors.background),
             ),
             SizedBox(height: 8),
             Text(
@@ -331,7 +332,7 @@ class _LeaveBarState extends State<LeaveBar> {
                   barRods: [
                     BarChartRodData(
                       toY: data.y,
-                      color: Colors.purple,
+                      color: AppColors.background,
                       borderRadius: BorderRadius.circular(0),
                       width: 50,
                     )
@@ -381,7 +382,7 @@ class BarData {
 
 Widget getBottomTitles(double value, TitleMeta meta) {
   const style = TextStyle(
-    color: Colors.purple,
+    color: AppColors.background,
     fontWeight: FontWeight.bold,
     fontSize: 14,
   );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
 
+import '../app_colors.dart';
+
 class Task {
   final String title;
   final String description;
@@ -103,7 +105,7 @@ class TaskScreen extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   color: tasks[index].status == 'Completed'
                                       ? Colors.green // Completed status color
-                                      : Colors.purple,
+                                      : AppColors.background,
                                 ),
                               ),
                             ],
@@ -126,7 +128,7 @@ class TaskScreen extends StatelessWidget {
                                   fontSize: 16.0,
                                   color: tasks[index].status == 'Completed'
                                       ? Colors.green // Completed status color
-                                      : Colors.purple,
+                                      : AppColors.background,
                                 ),
                               ),
                               Text(
