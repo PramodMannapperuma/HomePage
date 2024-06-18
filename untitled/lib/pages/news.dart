@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
 import 'article_detail.dart'; // Import the new file
+import 'package:untitled/app_colors.dart';
 
 class News extends StatefulWidget {
   const News({Key? key}) : super(key: key);
@@ -43,7 +44,7 @@ class _NewsState extends State<News> {
             margin: const EdgeInsets.all(8.0), // Adds spacing around each card
             child: ListTile(
               leading: CircleAvatar(
-                backgroundColor: const Color(0xff4d2880), // Custom color for the icon background
+                backgroundColor: AppColors.background, // Custom color for the icon background
                 backgroundImage: AssetImage(article['image']!), // Use the article image
               ),
               title: Text(
@@ -53,7 +54,7 @@ class _NewsState extends State<News> {
               subtitle: Text(article['description']!),
               trailing: IconButton(
                 icon: const Icon(Icons.message),
-                color: const Color(0xff4d2880), // Custom color for the message icon
+                color: AppColors.background, // Custom color for the message icon
                 onPressed: () {
                   // Implement messaging functionality if needed
                 },
