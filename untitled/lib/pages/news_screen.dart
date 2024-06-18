@@ -1,3 +1,5 @@
+// ignore_for_file: sized_box_for_whitespace, unused_import
+
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
 import 'celebrations.dart';
@@ -25,7 +27,7 @@ class NewsScreen extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
                       Color.fromRGBO(77, 40, 128, 0.5),
@@ -49,12 +51,12 @@ class NewsScreen extends StatelessWidget {
                 ),
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.home_outlined,
                   color: Color.fromRGBO(77, 40, 128, 0.5),
                   size: 35,
                 ),
-                title: Text(
+                title: const Text(
                   'Home',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
@@ -64,102 +66,102 @@ class NewsScreen extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.event_available,
                   color: Color.fromRGBO(77, 40, 128, 0.5),
                   size: 35,
                 ),
-                title: Text('Attendance'),
+                title: const Text('Attendance'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, '/attendance');
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.airplanemode_on_sharp,
                   color: Color.fromRGBO(77, 40, 128, 0.5),
                   size: 35,
                 ),
-                title: Text('Leaves'),
+                title: const Text('Leaves'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, '/leave');
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.list_alt,
                   color: Color.fromRGBO(77, 40, 128, 0.5),
                   size: 35,
                 ),
-                title: Text('Requests'),
+                title: const Text('Requests'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, '/requests');
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.person_pin_outlined,
                   color: Color.fromRGBO(77, 40, 128, 0.5),
                   size: 35,
                 ),
-                title: Text('Profile'),
+                title: const Text('Profile'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, '/profile');
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.receipt_long_outlined,
                   color: Color.fromRGBO(77, 40, 128, 0.5),
                   size: 35,
                 ),
-                title: Text('News'),
+                title: const Text('News'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, '/news_screen');
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.receipt_long_outlined,
                   color: Color.fromRGBO(77, 40, 128, 0.5),
                   size: 35,
                 ),
-                title: Text('PaySlips'),
+                title: const Text('PaySlips'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, '/payslips');
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.assignment_turned_in_outlined,
                   color: Color.fromRGBO(77, 40, 128, 0.5),
                   size: 35,
                 ),
-                title: Text('Approval Tasks'),
+                title: const Text('Approval Tasks'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, '/taskScreen');
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.group_add_outlined,
                   color: Color.fromRGBO(77, 40, 128, 0.5),
                   size: 35,
                 ),
-                title: Text('My Team'),
+                title: const Text('My Team'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, '/employee');
                 },
               ),
-              Divider(
+              const Divider(
                 thickness: 0.5,
               ),
               ListTile(
@@ -170,13 +172,13 @@ class NewsScreen extends StatelessWidget {
                 contentPadding: EdgeInsets.zero, // Remove default padding
                 title: Center(
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
                     decoration: BoxDecoration(
                       border: Border.all(width: 2, color: Colors.red),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.logout, color: Colors.red),
