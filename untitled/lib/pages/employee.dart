@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
+import 'package:untitled/app_colors.dart';
 
 class Employee {
   final String name;
@@ -95,7 +96,7 @@ class EmployeeScreen extends StatelessWidget {
                   child: CircularProgressIndicator(
                     value: 1.0, // Assuming supervisor completion is 100%
                     backgroundColor: Colors.grey[300],
-                    color: Colors.purple,
+                      color: AppColors.background,
                     strokeWidth: 6,
                   ),
                 ),
@@ -135,7 +136,7 @@ class EmployeeScreen extends StatelessWidget {
                             child: CircularProgressIndicator(
                               value: employees[index].completion / 100,
                               backgroundColor: Colors.grey[300],
-                              color: Colors.purple,
+                              color: AppColors.background,
                               strokeWidth: 4,
                             ),
                           ),
