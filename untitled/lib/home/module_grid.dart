@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/app_colors.dart';
 import 'package:untitled/graphs/attendance_bar.dart';
 import 'package:untitled/graphs/attendance_pie_chart.dart';
 import 'package:untitled/home/test_home.dart';
@@ -33,61 +34,61 @@ class ModuleGrid extends StatelessWidget {
                 ModuleCard(
                   title: 'Attendance',
                   icon: Icons.event_available,
-                  color: Colors.blue,
+                  color: AppColors.background,
                   route: '/attendance',
                 ),
                 ModuleCard(
                   title: 'Leave',
                   icon: Icons.beach_access,
-                  color: Colors.green,
+                  color: AppColors.background,
                   route: '/leave',
                 ),
                 ModuleCard(
                   title: 'News',
                   icon: Icons.article,
-                  color: Colors.red,
+                  color: AppColors.background,
                   route: '/news',
                 ),
                 ModuleCard(
                   title: 'Policies',
                   icon: Icons.policy,
-                  color: Colors.orange,
+                  color: AppColors.background,
                   route: '/policies',
                 ),
                 ModuleCard(
                   title: 'Request',
                   icon: Icons.request_page,
-                  color: Colors.purple,
+                  color: AppColors.background,
                   route: '/requests',
                 ),
                 ModuleCard(
                   title: 'Celebrations',
                   icon: Icons.celebration,
-                  color: Colors.yellow,
+                  color: AppColors.background,
                   route: '/celebrations',
                 ),
                 ModuleCard(
                   title: 'Profile View',
                   icon: Icons.person,
-                  color: Colors.teal,
+                  color: AppColors.background,
                   route: '/profile',
                 ),
                 ModuleCard(
                   title: 'PaySlips',
                   icon: Icons.payment,
-                  color: Colors.pink,
+                  color: AppColors.background,
                   route: '/payslips',
                 ),
                 ModuleCard(
                   title: 'Approval Task',
                   icon: Icons.approval,
-                  color: Colors.brown,
-                  route: '/taskScreen',
+                  color: AppColors.background,
+                  route: '/approvalTask',
                 ),
                 ModuleCard(
                   title: 'Msg',
                   icon: Icons.message,
-                  color: Colors.indigo,
+                  color: AppColors.background,
                   route: '/msg',
                 ),
               ],
@@ -117,7 +118,7 @@ class ModuleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white,
+      color: AppColors.background,
       margin: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
