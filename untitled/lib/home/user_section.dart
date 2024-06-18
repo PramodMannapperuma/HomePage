@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/app_colors.dart';
 
 class UserSection extends StatelessWidget {
   const UserSection({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class UserSection extends StatelessWidget {
         height: MediaQuery.of(context).size.height * 0.18,
         decoration: BoxDecoration(
             border: Border.all(
-              color: Color(0xff4d2880),
+              color: AppColors.background,
               width: 2,
             ),
             borderRadius: BorderRadius.circular(12)),
