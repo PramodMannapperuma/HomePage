@@ -5,6 +5,7 @@ import 'package:untitled/profile/contact_info.dart';
 import '../auth/login.dart';
 import '../profile/Info.dart';
 import '../profile/personal_info.dart';
+import 'package:untitled/app_colors.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -201,8 +202,7 @@ class ProfileMenuWidget extends StatelessWidget {
           color: Colors.blueGrey.withOpacity(0.1),
         ),
         child: Icon(
-          icon,
-          color: Colors.purple.shade300,
+          icon, color: AppColors.background,
         ),
       ),
       title: Text(title,

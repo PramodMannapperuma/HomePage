@@ -267,14 +267,14 @@ class _LeaveState extends State<Leave> {
             Text(
               title,
               style: TextStyle(
-                  fontSize: 10.5,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: AppColors.background),
             ),
             SizedBox(height: 8),
             Text(
               '$value days',
-              style: TextStyle(fontSize: 10, color: Colors.black87),
+              style: TextStyle(fontSize: 12, color: Colors.black87),
             ),
           ],
         ),

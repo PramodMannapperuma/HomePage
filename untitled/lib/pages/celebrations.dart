@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
+import 'package:untitled/app_colors.dart';
 
 class Celebrations extends StatefulWidget {
   const Celebrations({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class _CelebrationsState extends State<Celebrations> {
               margin: const EdgeInsets.all(8.0), // Adds spacing around each card
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: const Color(0xff4d2880), // Custom color for the icon background
+                  backgroundColor: AppColors.background, // Custom color for the icon background
                   child: Icon(
                     celebrations[index]['icon'],
                     color: Colors.white, // Icon color
@@ -44,7 +45,7 @@ class _CelebrationsState extends State<Celebrations> {
                 subtitle: Text('${celebrations[index]['date']}'),
                 trailing: IconButton(
                   icon: const Icon(Icons.message),
-                  color: const Color(0xff4d2880), // Custom color for the message icon
+                    color: AppColors.background, // Custom color for the message icon
                   onPressed: () {
                     // Implement messaging functionality
                   },
