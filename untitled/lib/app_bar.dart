@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:untitled/app_colors.dart';
 
-AppBar customAppBar(
-    {required String title,
-    required bool showActions,
-    required bool showLeading,
-    required BuildContext context}) {
+AppBar customAppBar({
+  required String title,
+  required bool showActions,
+  required bool showLeading,
+  required BuildContext context,
+  bool showBackButton = false,
+}) {
   return AppBar(
-    // backgroundColor: const Color(0xff4d2880),
     title: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -16,9 +17,7 @@ AppBar customAppBar(
           'assets/images/hrislogo2.png',
           height: 40.0,
         ),
-        SizedBox(
-          width: 8.0,
-        ),
+        SizedBox(width: 8.0),
         // Text(title),
       ],
     ),
@@ -38,7 +37,6 @@ AppBar customAppBar(
           ),
           Divider(
             color: Colors.black,
-            // height: 1.0,
             thickness: 0.2,
           ),
         ],
@@ -49,41 +47,48 @@ AppBar customAppBar(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
     ),
-    // leading: Builder(
-    //   builder: (BuildContext context) {
-    //     return Padding(
-    //       padding: const EdgeInsets.all(8.0),
-    //       child: IconButton(
-    //         icon: const Icon(
-    //           Icons.menu_outlined,
-    //           color: Color(0xff4d2880),
-    //         ),
-    //         onPressed: () {
-    //           Scaffold.of(context).openDrawer();
-    //         },
-    //       ),
-    //     );
-    //   },
-    // ),
+    leading: showLeading
+        ? showBackButton
+        ? IconButton(
+      icon: Icon(Icons.arrow_back, color: AppColors.background),
+      onPressed: () => Navigator.of(context).pop(),
+    )
+        : Builder(
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: IconButton(
+            icon: const Icon(
+              Icons.menu_outlined,
+              color: AppColors.background,
+            ),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+        );
+      },
+    )
+        : null,
     actions: showActions
         ? [
-            Builder(
-              builder: (BuildContext context) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.menu_outlined,
-                      color: AppColors.background,
-                    ),
-                    onPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                  ),
-                );
+      Builder(
+        builder: (BuildContext context) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+              icon: const Icon(
+                Icons.menu_outlined,
+                color: AppColors.background,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
               },
             ),
-          ]
+          );
+        },
+      ),
+    ]
         : null,
   );
 }
