@@ -4,7 +4,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:untitled/app_bar.dart';
 
 class Attendance extends StatefulWidget {
-  const Attendance({super.key});
+  const Attendance({Key? key}) : super(key: key);
 
   @override
   State<Attendance> createState() => _AttendanceState();
@@ -72,12 +72,6 @@ class _AttendanceState extends State<Attendance> {
                   ),
                 ),
                 SizedBox(height: 10),
-                // TextField(
-                //   controller: _eventController,
-                //   decoration: InputDecoration(
-                //     labelText: "Event Name",
-                //   ),
-                // ),
                 TextField(
                   controller: _startTimeController,
                   decoration: InputDecoration(
@@ -123,7 +117,8 @@ class _AttendanceState extends State<Attendance> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.all(14.0), backgroundColor: Color(0xff4d2880),
+                        padding: EdgeInsets.all(14.0),
+                        backgroundColor: Color(0xff4d2880),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -140,7 +135,6 @@ class _AttendanceState extends State<Attendance> {
                             ];
                           });
 
-                          _eventController.clear();
                           _startTimeController.clear();
                           _leaveTimeController.clear();
                           Navigator.of(context).pop();
@@ -154,7 +148,10 @@ class _AttendanceState extends State<Attendance> {
                           );
                         }
                       },
-                      child: Text("Submit", style: TextStyle(color: Colors.white),),
+                      child: Text(
+                        "Submit",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
@@ -170,7 +167,187 @@ class _AttendanceState extends State<Attendance> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-          title: 'Attendance', showActions: true, showLeading: true, context: context),
+        title: 'Attendance',
+        showActions: true,
+        showLeading: true,
+        context: context,
+        showBackButton: true,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromRGBO(77, 40, 128, 0.5),
+                    Color.fromRGBO(77, 40, 128, 0.5),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Image.asset(
+                      'assets/images/test-bg.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.home_outlined,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+                size: 35,
+              ),
+              title: Text(
+                'Home',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/home');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.event_available,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+                size: 35,
+              ),
+              title: Text('Attendance'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/attendance');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.airplanemode_on_sharp,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+                size: 35,
+              ),
+              title: Text('Leaves'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/leave');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.list_alt,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+                size: 35,
+              ),
+              title: Text('Requests'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/requests');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.person_pin_outlined,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+                size: 35,
+              ),
+              title: Text('Profile'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/profile');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.receipt_long_outlined,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+                size: 35,
+              ),
+              title: Text('News'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/news_screen');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.receipt_long_outlined,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+                size: 35,
+              ),
+              title: Text('PaySlips'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/payslips');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.assignment_turned_in_outlined,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+                size: 35,
+              ),
+              title: Text('Approval Tasks'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/taskScreen');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.group_add_outlined,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+                size: 35,
+              ),
+              title: Text('My Team'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/employee');
+              },
+            ),
+            Divider(
+              thickness: 0.5,
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/login');
+              },
+              contentPadding: EdgeInsets.zero, // Remove default padding
+              title: Center(
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2, color: Colors.red),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.logout, color: Colors.red),
+                      SizedBox(width: 8),
+                      Text(
+                        'Log Out',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4d2880),
         onPressed: () {
