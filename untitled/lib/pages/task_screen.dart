@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
+import 'package:untitled/app_colors.dart';
 
 import '../app_colors.dart';
 
@@ -135,7 +136,7 @@ class TaskScreen extends StatelessWidget {
                                 tasks[index].dateRange,
                                 style: TextStyle(
                                   fontSize: 14.0,
-                                  color: Colors.purple,
+                                    color: AppColors.background,
                                 ),
                               ),
                             ],
