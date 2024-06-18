@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';  // Adjust the import according to your project structure
 import 'pay_slip_data.dart';  // Import the PaySlipData class
 import 'pay_slip_details.dart';  // Import the new PaySlipDetails screen
+import 'package:untitled/app_colors.dart';
 
 class PaySlip extends StatefulWidget {
   const PaySlip({Key? key}) : super(key: key);
@@ -54,12 +55,13 @@ class _PaySlipState extends State<PaySlip> {
         showLeading: true,
         context: context,
       ),
+
       body: Column(
         children: [
           // Year selector
           Container(
             height: 60,
-            color: Color(0xff4d2880),
+            color: AppColors.background,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: List.generate(10, (index) => _yearButton(2023 + index)),
@@ -107,14 +109,14 @@ class _PaySlipState extends State<PaySlip> {
                         children: [
                           Icon(
                             Icons.receipt, // Change this icon to any of the above suggestions
-                            color: Color(0xff4d2880),
+                            color: AppColors.background,
                             size: 30,
                           ),
                           SizedBox(height: 8),
                           Text(
                             _months[index],
                             style: TextStyle(
-                              color: Color(0xff4d2880),
+                              color: AppColors.background,
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                             ),

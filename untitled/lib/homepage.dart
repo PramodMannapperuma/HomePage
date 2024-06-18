@@ -9,6 +9,7 @@ import 'graphs/attendance_bar.dart';
 import 'graphs/attendance_pie_chart.dart';
 import 'home/module_grid.dart';
 import 'home/user_section.dart';
+import 'package:untitled/app_colors.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -47,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: IconButton(
                   icon: const Icon(
                     Icons.menu_outlined,
-                    color: Color(0xff4d2880),
+                    color: AppColors.background,
                   ),
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
@@ -60,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
             IconButton(
               icon: const Icon(
                 Icons.person,
-                color: Color(0xff4d2880),
+                color: AppColors.background,
               ),
               onPressed: () {
                 Navigator.pushNamed(context, '/profile');
@@ -200,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text('Approval Tasks'),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.pushNamed(context, '/approvalTask');
+                  Navigator.pushNamed(context, '/taskScreen');
                 },
               ),
 

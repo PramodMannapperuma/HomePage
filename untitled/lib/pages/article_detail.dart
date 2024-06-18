@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
+import 'package:untitled/app_colors.dart';
 
 class ArticleDetail extends StatefulWidget {
   final Map<String, String> article;
@@ -56,7 +57,7 @@ class _ArticleDetailState extends State<ArticleDetail> {
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Color(0xff4d2880), // Custom color for the title
+                  color: AppColors.background // Custom color for the title
               ),
             ),
             const SizedBox(height: 16),
@@ -73,7 +74,7 @@ class _ArticleDetailState extends State<ArticleDetail> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xff4d2880), // Custom color for the comments section
+                color: AppColors.background, // Custom color for the comments section
               ),
             ),
             const SizedBox(height: 8),
@@ -110,7 +111,7 @@ class _ArticleDetailState extends State<ArticleDetail> {
                 const SizedBox(width: 8),
                 IconButton(
                   icon: const Icon(Icons.send),
-                  color: const Color(0xff4d2880), // Set the color to purple
+                  color: AppColors.background, // Set the color to purple
                   onPressed: () {
                     final comment = _commentController.text;
                     if (comment.isNotEmpty) {

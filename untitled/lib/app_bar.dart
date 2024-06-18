@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:untitled/app_colors.dart';
 
 AppBar customAppBar(
     {required String title,
@@ -73,7 +74,7 @@ AppBar customAppBar(
                   child: IconButton(
                     icon: const Icon(
                       Icons.menu_outlined,
-                      color: Color(0xff4d2880),
+                      color: AppColors.background,
                     ),
                     onPressed: () {
                       Scaffold.of(context).openDrawer();

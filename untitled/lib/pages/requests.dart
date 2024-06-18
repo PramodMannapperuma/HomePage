@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
+import 'package:untitled/app_colors.dart';
 
 class Requests extends StatefulWidget {
   const Requests({Key? key}) : super(key: key);
@@ -33,7 +34,7 @@ class _RequestsState extends State<Requests> {
                 decoration: InputDecoration(
                   labelText: 'Request Type',
                   border: OutlineInputBorder(),
-                  icon: Icon(Icons.request_page, color: Color(0xff4d2880)),
+                  icon: Icon(Icons.request_page, color: AppColors.background),
                 ),
                 items: <String>[
                   'Salary Confirmation',
@@ -56,7 +57,7 @@ class _RequestsState extends State<Requests> {
                 decoration: InputDecoration(
                   labelText: 'Name',
                   border: OutlineInputBorder(),
-                  icon: Icon(Icons.person, color: Color(0xff4d2880)),
+                  icon: Icon(Icons.person, color: AppColors.background),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -71,7 +72,7 @@ class _RequestsState extends State<Requests> {
                 decoration: InputDecoration(
                   labelText: 'Employee ID',
                   border: OutlineInputBorder(),
-                  icon: Icon(Icons.badge, color: Color(0xff4d2880)),
+                  icon: Icon(Icons.badge, color: AppColors.background),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -84,7 +85,7 @@ class _RequestsState extends State<Requests> {
               SizedBox(height: 16),
               ListTile(
                 title: Text('Date: ${_date.toString().split(' ')[0]}'),
-                trailing: Icon(Icons.calendar_today, color: Color(0xff4d2880)),
+                trailing: Icon(Icons.calendar_today, color: AppColors.background),
                 onTap: () async {
                   final DateTime? picked = await showDatePicker(
                     context: context,
@@ -102,7 +103,7 @@ class _RequestsState extends State<Requests> {
               SizedBox(height: 16),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xff4d2880),
+                  backgroundColor: AppColors.background,
                 ),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -133,7 +134,7 @@ class _RequestsState extends State<Requests> {
                 SizedBox(height: 16),
                 Divider(),
                 ListTile(
-                  leading: Icon(Icons.download_rounded, color: Color(0xff4d2880)),
+                  leading: Icon(Icons.download_rounded, color: AppColors.background),
                   title: Text('Download Approval Letter'),
                   subtitle: Text('Tap to download the letter'),
                   onTap: () {
@@ -141,7 +142,7 @@ class _RequestsState extends State<Requests> {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.visibility, color: Color(0xff4d2880)),
+                  leading: Icon(Icons.visibility, color: AppColors.background),
                   title: Text('View Approval Letter'),
                   subtitle: Text('Tap to view the letter'),
                   onTap: () {
