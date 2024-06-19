@@ -217,9 +217,14 @@ class _PolicyScreenState extends State<PolicyScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Leave Policy',
-                  style: TextStyle(fontSize: 18),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/leavePolicy');
+                  },
+                  child: Text(
+                    'Leave Policy',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
                 IconButton(
                   onPressed: () {
@@ -232,9 +237,14 @@ class _PolicyScreenState extends State<PolicyScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Attendance Policy',
-                  style: TextStyle(fontSize: 18),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/leavePolicy');
+                  },
+                  child: Text(
+                    'Attendance Policy',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
                 IconButton(
                   onPressed: () {
@@ -247,9 +257,14 @@ class _PolicyScreenState extends State<PolicyScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Request Policy',
-                  style: TextStyle(fontSize: 18),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/leavePolicy');
+                  },
+                  child: Text(
+                    'Request Policy',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
                 IconButton(
                   onPressed: () {
@@ -262,9 +277,14 @@ class _PolicyScreenState extends State<PolicyScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Leave Policy',
-                  style: TextStyle(fontSize: 18),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/leavePolicy');
+                  },
+                  child: Text(
+                    'Leave Policy',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
                 IconButton(
                   onPressed: () {
@@ -277,9 +297,14 @@ class _PolicyScreenState extends State<PolicyScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Leave Policy',
-                  style: TextStyle(fontSize: 18),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/leavePolicy');
+                  },
+                  child: Text(
+                    'Leave Policy',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
                 IconButton(
                   onPressed: () {
