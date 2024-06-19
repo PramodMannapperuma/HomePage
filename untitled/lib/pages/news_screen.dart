@@ -290,22 +290,22 @@ class NewsScreen extends StatelessWidget {
         ),
         child: Container(
           padding: const EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            gradient: const LinearGradient(
-              colors: [AppColors.background, AppColors.background],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
+          // decoration: BoxDecoration(
+          //   borderRadius: BorderRadius.circular(15),
+          //   gradient: const LinearGradient(
+          //     colors: [AppColors.background, AppColors.background],
+          //     begin: Alignment.topLeft,
+          //     end: Alignment.bottomRight,
+          //   ),
+          //   boxShadow: [
+          //     BoxShadow(
+          //       color: Colors.black.withOpacity(0.2),
+          //       spreadRadius: 2,
+          //       blurRadius: 5,
+          //       offset: const Offset(0, 3), // changes position of shadow
+          //     ),
+          //   ],
+          // ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -315,7 +315,7 @@ class NewsScreen extends StatelessWidget {
                   color: Colors.white.withOpacity(0.2),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Icon(icon, size: 40, color: Colors.white),
+                    child: Icon(icon, size: 40, color: AppColors.background),
                   ),
                 ),
               ),
@@ -324,9 +324,9 @@ class NewsScreen extends StatelessWidget {
                 title,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 10,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppColors.background,
                 ),
               ),
             ],
