@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:untitled/app_bar.dart';
+import 'package:untitled/pages/attendance.dart';
+import 'package:untitled/pages/employee.dart';
+import 'package:untitled/pages/leave.dart';
+import 'package:untitled/pages/users.dart';
 import '../app_colors.dart';
 
 
@@ -19,13 +23,76 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   static List<Widget> _widgetOptions = <Widget>[
-    AttendanceScreen(),
-    LeaveScreen(),
+    Attendance(),
+    Leave(),
     DashboardScreen(),
     TaskScreen(),
-    TrackingScreen(),
+    EmployeeScreen(),
   ];
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today, color: AppColors.background),
+            label: 'Attendance',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.request_page, color: AppColors.background),
+            label: 'Leave',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard, color: AppColors.background),
+            label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.task, color: AppColors.background),
+            label: 'Task',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.timer, color: AppColors.background),
+            label: 'Tracking',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.purple,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}
+
+class AttendanceScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('Attendance Screen'));
+  }
+}
+
+class LeaveScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('Leave Screen'));
+  }
+}
+class TaskScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('Task Screen'));
+  }
+}
+
+class TrackingScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('Tracking Screen'));
+  }
+}
+
+class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -267,69 +334,6 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today, color: AppColors.background),
-            label: 'Attendance',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.request_page, color: AppColors.background),
-            label: 'Leave',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard, color: AppColors.background),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.task, color: AppColors.background),
-            label: 'Task',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.timer, color: AppColors.background),
-            label: 'Tracking',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
-      ),
-    );
-  }
-}
-
-class AttendanceScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Attendance Screen'));
-  }
-}
-
-class LeaveScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Leave Screen'));
-  }
-}
-class TaskScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Task Screen'));
-  }
-}
-
-class TrackingScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Tracking Screen'));
-  }
-}
-
-class DashboardScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

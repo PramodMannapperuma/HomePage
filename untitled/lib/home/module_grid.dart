@@ -120,7 +120,7 @@ class ModuleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppColors.background,
+      color: Colors.grey.shade300,
       margin: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
