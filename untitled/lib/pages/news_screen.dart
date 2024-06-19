@@ -172,7 +172,8 @@ class NewsScreen extends StatelessWidget {
                 contentPadding: EdgeInsets.zero, // Remove default padding
                 title: Center(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 30),
                     decoration: BoxDecoration(
                       border: Border.all(width: 2, color: Colors.red),
                       color: Colors.white,
@@ -230,8 +231,12 @@ class NewsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 10,),
-            const Divider(thickness: 2,),
+            const SizedBox(
+              height: 10,
+            ),
+            const Divider(
+              thickness: 2,
+            ),
             const SizedBox(height: 10),
             const Text(
               'General News',
@@ -243,17 +248,22 @@ class NewsScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _buildNewsCard('New Policy Update', 'Details about the new policy.', Icons.policy),
+                    _buildNewsCard('New Policy Update',
+                        'Details about the new policy.', Icons.policy),
                   ],
                 ),
                 Row(
                   children: [
-                    _buildNewsCard('Upcoming Holiday', 'Information about the upcoming holiday.', Icons.holiday_village),
+                    _buildNewsCard(
+                        'Upcoming Holiday',
+                        'Information about the upcoming holiday.',
+                        Icons.holiday_village),
                   ],
                 ),
                 Row(
                   children: [
-                    _buildNewsCard('Team Outing', 'Details about the team outing.', Icons.people),
+                    _buildNewsCard('Team Outing',
+                        'Details about the team outing.', Icons.people),
                   ],
                 ),
               ],
@@ -328,39 +338,42 @@ class NewsScreen extends StatelessWidget {
 
   Widget _buildNewsCard(String title, String description, IconData icon) {
     return Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    child: Container(
-    width: 368,
-    padding: const EdgeInsets.all(10),
-    child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-    Row(
-    children: [
-    Icon(icon, size: 40, color: AppColors.background),
-    const SizedBox(width: 20),
-    Text(
-    title,
-    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-    textAlign: TextAlign.center,
-    ),
-    ],
-    ),
-    const SizedBox(height: 10,),
-    Row(
-    children: [
-      const SizedBox(width: 20),
-      Text(
-        description,
-        style: const TextStyle(fontSize: 12),
-        textAlign: TextAlign.center,
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Container(
+        width: 340,
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Icon(icon, size: 40, color: AppColors.background),
+                const SizedBox(width: 20),
+                Text(
+                  title,
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                const SizedBox(width: 20),
+                Text(
+                  description,
+                  style: const TextStyle(fontSize: 12),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
-    ],
-    ),
-    ],
-    ),
-    ),
     );
   }
 }
