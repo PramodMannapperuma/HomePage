@@ -88,10 +88,10 @@ class ModuleGrid extends StatelessWidget {
                   route: '/taskScreen',
                 ),
                 ModuleCard(
-                  title: 'Msg',
+                  title: 'Employees',
                   icon: Icons.message,
                   color: AppColors.background,
-                  route: '/msg',
+                  route: '/employee',
                 ),
               ],
             ),
