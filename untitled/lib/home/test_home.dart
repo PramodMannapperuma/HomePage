@@ -85,8 +85,8 @@ class Tile extends StatelessWidget {
   Widget build(BuildContext context) {
     final child = Container(
 
-      color:
-      Colors.grey.shade50,
+      // color:
+      // Colors.grey.shade50,
       // AppColors.background,
       // Colors.deepPurple,
           // .withOpacity(0.60),
@@ -97,7 +97,7 @@ class Tile extends StatelessWidget {
         //   // image: AssetImage(tileInfo.imagePath), // Replace with your image path
         //   fit: BoxFit.cover,
         // ),
-          border: Border.all(color: AppColors.background, width: 2.0), // Add border
+          border: Border.all(color: AppColors.background, width: 1.0, ), // Add border
       ),
       // extent,
       child: Center(
@@ -109,11 +109,11 @@ class Tile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircleAvatar(
-                minRadius: 20,
-                maxRadius: 20,
-                backgroundColor: Colors.white,
+                minRadius: 25,
+                maxRadius: 25,
+                // backgroundColor: Colors.white,
                 foregroundColor: Colors.black,
-                child: Icon(tileInfo.icon, size: 40, color: AppColors.background),
+                child: Icon(tileInfo.icon, size: 40, color: Colors.black),
               ),
               const SizedBox(height: 8),
               const Divider(
