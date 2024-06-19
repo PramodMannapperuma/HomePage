@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:untitled/app_colors.dart';
+import 'package:untitled/styles/app_colors.dart';
 
 class AttendanceData {
   final String month;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:untitled/app_colors.dart';
+import 'package:untitled/styles/app_colors.dart';
 
 class TestHomeApp extends StatefulWidget {
   const TestHomeApp({Key? key}) : super(key: key);

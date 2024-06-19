@@ -5,7 +5,7 @@ import 'package:untitled/pages/attendance.dart';
 import 'package:untitled/pages/employee.dart';
 import 'package:untitled/pages/leave.dart';
 import 'package:untitled/pages/users.dart';
-import '../app_colors.dart';
+import '../styles/app_colors.dart';
 
 
 class MainScreen extends StatefulWidget {

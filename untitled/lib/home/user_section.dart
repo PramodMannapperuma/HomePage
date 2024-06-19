@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/app_colors.dart';
+import 'package:untitled/styles/app_colors.dart';
 
 class UserSection extends StatelessWidget {
   const UserSection({Key? key}) : super(key: key);

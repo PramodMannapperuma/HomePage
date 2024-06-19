@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';  // Ensure this is the correct path to your custom app bar file
-import 'package:untitled/app_colors.dart';  // Ensure this is the correct path to your app colors file
+import 'package:untitled/styles/app_colors.dart';  // Ensure this is the correct path to your app colors file
 
 // Define Employee model with picture URL
 class Employee {

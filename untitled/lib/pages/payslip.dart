@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';  // Adjust the import according to your project structure
 import 'pay_slip_data.dart';  // Import the PaySlipData class
 import 'pay_slip_details.dart';  // Import the new PaySlipDetails screen
-import 'package:untitled/app_colors.dart';
+import 'package:untitled/styles/app_colors.dart';
 
 class PaySlip extends StatefulWidget {
   const PaySlip({Key? key}) : super(key: key);
