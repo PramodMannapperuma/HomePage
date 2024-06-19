@@ -31,7 +31,7 @@ class _PaySlipState extends State<PaySlip> {
       deductions: '50',
       netPay: '1150',
       employeeNumber: 'EMP12345',
-      deductionDetails: 'Tax: 30, Insurance: 20',
+      deductionDetails: 'Tax: 30,',
     ),
     'Feb2023': PaySlipData(
       month: 'Feb',
@@ -41,7 +41,7 @@ class _PaySlipState extends State<PaySlip> {
       deductions: '50',
       netPay: '1150',
       employeeNumber: 'EMP12345',
-      deductionDetails: 'Tax: 30, Insurance: 20',
+      deductionDetails: 'Tax: 30,',
     ),
     // Add more data for other months and years
   };

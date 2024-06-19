@@ -23,7 +23,7 @@ class _TestHomeAppState extends State<TestHomeApp> {
     TileInfo('Policies', Icons.policy,'/policies',Colors.red,
         // 'assets/images/Policies.png'
     ),
-    TileInfo('Request', Icons.request_page,'/requests',Colors.green,
+    TileInfo('Request', Icons.request_page_outlined,'/requests',Colors.green,
         // 'assets/images/Request.png'
     ),
     TileInfo('Celebrations', Icons.celebration, '/celebrations', Colors.teal,
@@ -35,7 +35,7 @@ class _TestHomeAppState extends State<TestHomeApp> {
     TileInfo('Approval Task', Icons.approval,'/taskScreen',Colors.black45,
         // 'assets/images/Approval.png'
     ),
-    TileInfo('Employee', Icons.message,'/employee',Colors.indigo,
+    TileInfo('My Team', Icons.group_add_outlined,'/employee',Colors.indigo,
         // 'assets/images/msg.jpeg'
     ),
   ];
@@ -113,7 +113,7 @@ class Tile extends StatelessWidget {
                 maxRadius: 25,
                 // backgroundColor: Colors.white,
                 foregroundColor: Colors.black,
-                child: Icon(tileInfo.icon, size: 40, color: Colors.black),
+                child: Icon(tileInfo.icon, size: 30, color: Colors.black87),
               ),
               const SizedBox(height: 8),
               const Divider(

@@ -53,11 +53,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 TextButton(
                   onPressed: () {
-                    _pageController.animateToPage(
-                      2,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
+                    Navigator.pushNamed(context, '/login');
                   },
                   child: Text('SKIP'),
                 ),
