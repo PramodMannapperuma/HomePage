@@ -49,46 +49,46 @@ AppBar customAppBar({
     ),
     leading: showLeading
         ? showBackButton
-        ? IconButton(
-      icon: Icon(Icons.arrow_back, color: AppColors.background),
-      onPressed: () => Navigator.of(context).pop(),
-    )
-        : Builder(
-      builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: IconButton(
-            icon: const Icon(
-              Icons.menu_outlined,
-              color: AppColors.background,
-            ),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          ),
-        );
-      },
-    )
+            ? IconButton(
+                icon: Icon(Icons.arrow_back, color: AppColors.background),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            : Builder(
+                builder: (BuildContext context) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.menu_outlined,
+                        color: AppColors.background,
+                      ),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                    ),
+                  );
+                },
+              )
         : null,
     actions: showActions
         ? [
-      Builder(
-        builder: (BuildContext context) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-              icon: const Icon(
-                Icons.menu_outlined,
-                color: AppColors.background,
-              ),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
+            Builder(
+              builder: (BuildContext context) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.menu_outlined,
+                      color: AppColors.background,
+                    ),
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  ),
+                );
               },
             ),
-          );
-        },
-      ),
-    ]
+          ]
         : null,
   );
 }
