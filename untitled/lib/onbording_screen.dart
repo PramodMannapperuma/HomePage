@@ -28,7 +28,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             },
             children: [
               OnboardingPage(
-                imageAsset: 'assets/images/test-bg.png',
+                imageAsset: 'assets/images/WhatsApp Image 2024-06-17 at 15.45.34_6da9dc96.jpg',
                 title: 'Welcome to AcceHR',
                 description: 'This is the first onboarding screen description.',
               ),
