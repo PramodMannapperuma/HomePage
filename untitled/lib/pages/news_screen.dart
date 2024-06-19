@@ -5,7 +5,7 @@ import 'package:untitled/app_bar.dart';
 import 'celebrations.dart';
 import 'news.dart';
 import 'event.dart';
-import 'package:untitled/app_colors.dart';
+import 'package:untitled/styles/app_colors.dart';
 
 class NewsScreen extends StatelessWidget {
   const NewsScreen({Key? key}) : super(key: key);

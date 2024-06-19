@@ -1,7 +1,7 @@
 // ignore_for_file: unused_import, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
-import 'package:untitled/app_colors.dart';
+import 'package:untitled/styles/app_colors.dart';
 import 'package:untitled/graphs/attendance_bar.dart';
 import 'package:untitled/graphs/attendance_pie_chart.dart';
 import 'package:untitled/home/test_home.dart';

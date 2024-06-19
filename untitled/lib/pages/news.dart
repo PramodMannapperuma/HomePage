@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
 import 'article_detail.dart'; // Import the new file
-import 'package:untitled/app_colors.dart';
+import 'package:untitled/styles/app_colors.dart';
 
 class News extends StatefulWidget {
   const News({Key? key}) : super(key: key);

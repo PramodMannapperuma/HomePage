@@ -5,7 +5,7 @@ import 'package:untitled/profile/contact_info.dart';
 import '../auth/login.dart';
 import '../profile/Info.dart';
 import '../profile/personal_info.dart';
-import 'package:untitled/app_colors.dart';
+import 'package:untitled/styles/app_colors.dart';
 
 class ProfilePage extends StatelessWidget {
   @override

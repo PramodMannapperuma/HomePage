@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:untitled/home/Dashboard1.dart';
 import 'package:untitled/home/Dashbord.dart';
 import 'package:untitled/homepage.dart';
-import 'package:untitled/onbording_screen.dart';
+import 'package:untitled/onBordingScreen/onbording_screen.dart';
 import 'package:untitled/pages/policy_pdf.dart';
 import 'package:untitled/routes.dart';
 

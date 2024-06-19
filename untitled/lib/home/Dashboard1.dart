@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:untitled/app_bar.dart';
-import '../app_colors.dart';
+import '../styles/app_colors.dart';
 
 class DashMainScreen extends StatefulWidget {
   @override
