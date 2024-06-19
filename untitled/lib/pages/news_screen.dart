@@ -214,7 +214,7 @@ class NewsScreen extends StatelessWidget {
                   context,
                   title: 'Celebrations',
                   icon: Icons.celebration,
-                  page: const News(),
+                  page: const Celebrations(),
                 ),
                 _buildModuleCard(
                   context,
