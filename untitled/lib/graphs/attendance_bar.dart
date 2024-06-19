@@ -27,8 +27,8 @@ class AttendanceBarGraph extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildLegend('Attended', AppColors.background),
-                _buildLegend('Leave', Colors.yellow),
-                _buildLegend('Absent', Colors.red),
+                _buildLegend('Leave', Colors.blue),
+                _buildLegend('Absent', Colors.purpleAccent),
               ],
             ),
             SizedBox(height: 16),
@@ -135,11 +135,11 @@ class AttendanceBarChart extends StatelessWidget {
           ),
           BarChartRodData(
             toY: attendance.leave.toDouble(),
-            color: Colors.yellow,
+            color: Colors.blueAccent,
           ),
           BarChartRodData(
             toY: attendance.absent.toDouble(),
-            color: Colors.red,
+            color: Colors.purpleAccent,
           ),
         ],
       );
