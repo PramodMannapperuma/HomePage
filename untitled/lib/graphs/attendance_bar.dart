@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:untitled/app_colors.dart';
 
 class AttendanceData {
   final String month;
@@ -25,7 +26,7 @@ class AttendanceBarGraph extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildLegend('Attended', Colors.green),
+                _buildLegend('Attended', AppColors.background),
                 _buildLegend('Leave', Colors.yellow),
                 _buildLegend('Absent', Colors.red),
               ],
@@ -130,7 +131,7 @@ class AttendanceBarChart extends StatelessWidget {
         barRods: [
           BarChartRodData(
             toY: attendance.attended.toDouble(),
-            color: Colors.green,
+            color: AppColors.background,
           ),
           BarChartRodData(
             toY: attendance.leave.toDouble(),

@@ -11,15 +11,33 @@ class TestHomeApp extends StatefulWidget {
 
 class _TestHomeAppState extends State<TestHomeApp> {
   final List<TileInfo> tilesInfo = [
-    TileInfo('Attendance',Icons.event_available,'/attendance',Colors.blue,'assets/images/attendance.jpg'),
-    TileInfo('Leave', Icons.beach_access,'/leave',Colors.pinkAccent, 'assets/images/leave.png'),
-    TileInfo('News', Icons.article,'/news_screen',Colors.cyan, 'assets/images/News.png'),
-    TileInfo('Policies', Icons.policy,'/policies',Colors.red, 'assets/images/Policies.png'),
-    TileInfo('Request', Icons.request_page,'/requests',Colors.green, 'assets/images/Request.png'),
-    TileInfo('Celebrations', Icons.celebration, '/celebrations', Colors.teal,'assets/images/Celebration.png'),
-    TileInfo('Profile View', Icons.person,'/profile',Colors.brown,'assets/images/Profile.jpeg'),
-    TileInfo('Approval Task', Icons.approval,'/taskScreen',Colors.black45,'assets/images/Approval.png'),
-    TileInfo('Employee', Icons.message,'/employee',Colors.indigo,'assets/images/msg.jpeg'),
+    TileInfo('Attendance',Icons.event_available_rounded,'/attendance',Colors.blue,
+        // 'assets/images/attendance.jpg'
+    ),
+    TileInfo('Leave', Icons.beach_access_rounded,'/leave',Colors.pinkAccent,
+        // 'assets/images/leave.png'
+    ),
+    TileInfo('News', Icons.article_rounded,'/news_screen',Colors.cyan,
+        // 'assets/images/News.png'
+    ),
+    TileInfo('Policies', Icons.policy,'/policies',Colors.red,
+        // 'assets/images/Policies.png'
+    ),
+    TileInfo('Request', Icons.request_page,'/requests',Colors.green,
+        // 'assets/images/Request.png'
+    ),
+    TileInfo('Celebrations', Icons.celebration, '/celebrations', Colors.teal,
+        // 'assets/images/Celebration.png'
+    ),
+    TileInfo('Profile View', Icons.person,'/profile',Colors.brown,
+        // 'assets/images/Profile.jpeg'
+    ),
+    TileInfo('Approval Task', Icons.approval,'/taskScreen',Colors.black45,
+        // 'assets/images/Approval.png'
+    ),
+    TileInfo('Employee', Icons.message,'/employee',Colors.indigo,
+        // 'assets/images/msg.jpeg'
+    ),
   ];
 
   @override
@@ -68,17 +86,17 @@ class Tile extends StatelessWidget {
     final child = Container(
 
       color:
-      // Colors.white,
-      AppColors.background,
+      Colors.grey.shade50,
+      // AppColors.background,
       // Colors.deepPurple,
           // .withOpacity(0.60),
       // Color.fromRGBO(77, 40, 120, 0.8),
       height: 120,
       foregroundDecoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(tileInfo.imagePath), // Replace with your image path
-          fit: BoxFit.cover,
-        ),
+        // image: DecorationImage(
+        //   // image: AssetImage(tileInfo.imagePath), // Replace with your image path
+        //   fit: BoxFit.cover,
+        // ),
           border: Border.all(color: AppColors.background, width: 2.0), // Add border
       ),
       // extent,
@@ -95,7 +113,7 @@ class Tile extends StatelessWidget {
                 maxRadius: 20,
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.black,
-                child: Icon(tileInfo.icon, size: 30, color: tileInfo.color),
+                child: Icon(tileInfo.icon, size: 40, color: AppColors.background),
               ),
               const SizedBox(height: 8),
               const Divider(
@@ -104,7 +122,7 @@ class Tile extends StatelessWidget {
               Text(
                 tileInfo.title,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16, color: Colors.white),
+                style: const TextStyle(fontSize: 16, color: AppColors.background),
               ),
             ],
           ),
@@ -134,8 +152,10 @@ class TileInfo {
   final IconData icon;
   final String route;
   final Color color;
-  final String imagePath;
+  // final String imagePath;
 
 
-  TileInfo(this.title, this.icon, this.route, this.color, this.imagePath);
+  TileInfo(this.title, this.icon, this.route, this.color,
+      // this.imagePath
+);
 }
