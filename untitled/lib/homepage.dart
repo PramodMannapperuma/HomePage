@@ -9,7 +9,7 @@ import 'graphs/attendance_bar.dart';
 import 'graphs/attendance_pie_chart.dart';
 import 'home/module_grid.dart';
 import 'home/user_section.dart';
-import 'package:untitled/app_colors.dart';
+import 'package:untitled/styles/app_colors.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});

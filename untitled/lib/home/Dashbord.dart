@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:untitled/app_bar.dart';
 import 'package:untitled/pages/attendance.dart';
 import 'package:untitled/pages/employee.dart';
 import 'package:untitled/pages/leave.dart';
-import 'package:untitled/pages/users.dart';
-import '../app_colors.dart';
-
+import '../pages/task_screen.dart';
+import '../styles/app_colors.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -34,61 +32,39 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today, color: AppColors.background),
-            label: 'Attendance',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.request_page, color: AppColors.background),
-            label: 'Leave',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard, color: AppColors.background),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.task, color: AppColors.background),
-            label: 'Task',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.timer, color: AppColors.background),
-            label: 'Tracking',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.purple,
-        onTap: _onItemTapped,
+      bottomNavigationBar: SizedBox(
+        height: 80,
+        child: BottomNavigationBar(
+          // backgroundColor: Colors.blueAccent,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_month, color: AppColors.background),
+              label: 'Attendance',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.beach_access, color: AppColors.background),
+              label: 'Leave',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard, color: AppColors.background),
+              label: 'Dashboard',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.task, color: AppColors.background),
+              label: 'Task',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.group_add, color: AppColors.background),
+              label: 'Tracking',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.purple,
+
+          onTap: _onItemTapped,
+        ),
       ),
     );
-  }
-}
-
-class AttendanceScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Attendance Screen'));
-  }
-}
-
-class LeaveScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Leave Screen'));
-  }
-}
-class TaskScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Task Screen'));
-  }
-}
-
-class TrackingScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Tracking Screen'));
   }
 }
 
@@ -96,8 +72,8 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  AppBar(
-        // backgroundColor: const Color(0xff4d2880),
+      appBar: AppBar(
+          // backgroundColor: const Color(0xff4d2880),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -309,7 +285,7 @@ class DashboardScreen extends StatelessWidget {
                       border: Border.all(width: 2, color: Colors.red),
                       color: Colors.white,
                       borderRadius:
-                      BorderRadius.circular(10), // Rounded corners
+                          BorderRadius.circular(10), // Rounded corners
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -365,7 +341,10 @@ class DashboardScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 10),
-              Divider(thickness: 2, height: 10,),
+              Divider(
+                thickness: 2,
+                height: 10,
+              ),
               SizedBox(height: 10),
               // Categories
               Text(
@@ -380,24 +359,28 @@ class DashboardScreen extends StatelessWidget {
                 crossAxisCount: 3,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
-                childAspectRatio: 7/5,
+                childAspectRatio: 7 / 5,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 children: [
-                  CategoryCard(title: 'Attendance', icon: Icons.calendar_today),
-                  CategoryCard(title: 'Task', icon: Icons.task_outlined),
+                  CategoryCard(title: 'Attendance', icon: Icons.calendar_today, route: '/attendance',),
+                  CategoryCard(title: 'Task', icon: Icons.task_outlined, route: '/taskScreen',),
+                  CategoryCard(title: 'Leave', icon: Icons.beach_access, route: '/leave',),
                   CategoryCard(
-                      title: 'Leave', icon: Icons.beach_access),
-                  CategoryCard(title: 'Requests', icon: Icons.request_page_outlined),
-                  CategoryCard(title: 'Profile', icon: Icons.person_outline),
-                  CategoryCard(title: 'News', icon: Icons.newspaper),
-                  CategoryCard(title: 'Payslips', icon: Icons.payment),
-                  CategoryCard(title: 'Approval Task', icon: Icons.approval),
-                  CategoryCard(title: 'My Team', icon: Icons.group_add_outlined),
+                      title: 'Requests', icon: Icons.request_page_outlined, route: '/requests'),
+                  CategoryCard(title: 'Profile', icon: Icons.person_outline, route: '/profile',),
+                  CategoryCard(title: 'News', icon: Icons.newspaper, route: '/news_screen',),
+                  CategoryCard(title: 'Payslips', icon: Icons.payment,route: '/payslips'),
+                  CategoryCard(title: 'Approval Task', icon: Icons.approval, route: '/taskScreen',),
+                  CategoryCard(
+                      title: 'My Team', icon: Icons.group_add_outlined, route: '/employee',),
                 ],
               ),
               SizedBox(height: 10),
-              Divider(thickness: 2, height: 10,),
+              Divider(
+                thickness: 2,
+                height: 10,
+              ),
               SizedBox(height: 10),
 
               // Today's Task
@@ -424,11 +407,13 @@ class DashboardScreen extends StatelessWidget {
                       time: '9:00 AM',
                     ),
                   ),
-
                 ],
               ),
               SizedBox(height: 10),
-              Divider(thickness: 2, height: 10,),
+              Divider(
+                thickness: 2,
+                height: 10,
+              ),
               SizedBox(height: 10),
 
               // Recent Leave Request
@@ -448,30 +433,6 @@ class DashboardScreen extends StatelessWidget {
           ),
         ),
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.calendar_today, color: AppColors.background,),
-      //       label: 'Attendance',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.request_page,color: AppColors.background,),
-      //       label: 'Leave',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.dashboard,color: AppColors.background,),
-      //       label: 'Dashboard',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.task,color: AppColors.background,),
-      //       label: 'Task',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.timer,color: AppColors.background,),
-      //       label: 'Tracking',
-      //     ),
-      //   ],
-      // ),
     );
   }
 }
@@ -479,8 +440,9 @@ class DashboardScreen extends StatelessWidget {
 class CategoryCard extends StatelessWidget {
   final String title;
   final IconData icon;
+  final String route;
 
-  const CategoryCard({required this.title, required this.icon});
+  const CategoryCard({required this.title, required this.icon, required this.route});
 
   @override
   Widget build(BuildContext context) {
@@ -489,7 +451,9 @@ class CategoryCard extends StatelessWidget {
       width: 10,
       child: Card(
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.pushNamed(context, route);
+          },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

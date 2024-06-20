@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
-import 'package:untitled/app_colors.dart';
+import 'package:untitled/styles/app_colors.dart';
 
 class ArticleDetail extends StatefulWidget {
   final Map<String, String> article;

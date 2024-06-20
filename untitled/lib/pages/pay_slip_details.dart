@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pay_slip_data.dart';
-import 'package:untitled/app_colors.dart';
+import 'package:untitled/styles/app_colors.dart';
 
 class PaySlipDetails extends StatelessWidget {
   final PaySlipData paySlipData;
