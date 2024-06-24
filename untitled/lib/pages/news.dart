@@ -263,7 +263,7 @@ class _NewsState extends State<News> {
                           commentsList[index]
                               .add(comment); // Add comment to the comments list
                         });
-                      },
+                      }, initialComments: [],
                     ),
                   ),
                 );
