@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/app_bar.dart';
 import 'package:untitled/styles/app_colors.dart';
 
 class ArticleDetail extends StatefulWidget {
   final Map<String, String> article;
-  final List<String> comments;
+  final List<String> initialComments;
   final Function(String) onCommentAdded;
 
   const ArticleDetail({
     required this.article,
-    required this.comments,
+    required this.initialComments,
     required this.onCommentAdded,
-    Key? key,
+    Key? key, required List<String> comments,
   }) : super(key: key);
 
   @override
@@ -20,11 +19,13 @@ class ArticleDetail extends StatefulWidget {
 
 class _ArticleDetailState extends State<ArticleDetail> {
   late TextEditingController _commentController;
+  late List<String> _comments;
 
   @override
   void initState() {
     super.initState();
     _commentController = TextEditingController();
+    _comments = List.from(widget.initialComments);
   }
 
   @override
@@ -33,15 +34,19 @@ class _ArticleDetailState extends State<ArticleDetail> {
     super.dispose();
   }
 
+  void _addComment(String comment) {
+    setState(() {
+      _comments.add(comment);
+    });
+    widget.onCommentAdded(comment);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(widget.article['title']!),
-          // showActions: true,
-          // showLeading: false,
-          // context: context
-          ),
+        title: Text(widget.article['title']!),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -60,18 +65,17 @@ class _ArticleDetailState extends State<ArticleDetail> {
             Text(
               widget.article['title']!,
               style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.background // Custom color for the title
-                  ),
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.background, // Custom color for the title
+              ),
             ),
             const SizedBox(height: 16),
             Text(
               widget.article['description']!,
               style: const TextStyle(
                 fontSize: 18,
-                color:
-                    Colors.black87, // Slightly softer color for the description
+                color: Colors.black87, // Slightly softer color for the description
               ),
             ),
             const SizedBox(height: 16),
@@ -80,21 +84,20 @@ class _ArticleDetailState extends State<ArticleDetail> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: AppColors
-                    .background, // Custom color for the comments section
+                color: AppColors.background, // Custom color for the comments section
               ),
             ),
             const SizedBox(height: 8),
             Expanded(
               child: ListView.builder(
-                itemCount: widget.comments.length,
+                itemCount: _comments.length,
                 itemBuilder: (context, index) {
                   return Card(
                     elevation: 2.0,
                     margin: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(widget.comments[index]),
+                      child: Text(_comments[index]),
                     ),
                   );
                 },
@@ -111,8 +114,7 @@ class _ArticleDetailState extends State<ArticleDetail> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 8.0),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
                     ),
                   ),
                 ),
@@ -123,11 +125,8 @@ class _ArticleDetailState extends State<ArticleDetail> {
                   onPressed: () {
                     final comment = _commentController.text;
                     if (comment.isNotEmpty) {
-                      widget.onCommentAdded(comment);
-                      setState(() {
-                        widget.comments.add(comment);
-                        _commentController.clear();
-                      });
+                      _addComment(comment);
+                      _commentController.clear();
                     }
                   },
                 ),
