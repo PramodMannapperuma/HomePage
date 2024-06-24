@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:untitled/home/Dashbord.dart';
 import '../app_bar.dart';
 import '../homepage.dart';
 
@@ -56,39 +59,98 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isLoading = false;
 
-  void _login() {
+  Future<void> _login() async {
     String username = _usernameController.text;
     String password = _passwordController.text;
 
-    if (username == 'admin' && password == 'pass') {
-      print('Username: $username');
-      print('Password: $password');
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MyHomePage(),
-          ));
-    } else {
-      // If the credentials are incorrect, show an error message
+    if (username.isEmpty || password.isEmpty) {
+      _showErrorDialog('Username and password cannot be empty');
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
       showDialog(
+        barrierDismissible:
+            false, // Prevents the dialog from closing until we manually do it
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Login Failed'),
-            content: Text('Invalid username or password'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
+        builder: (BuildContext context) {
+          return const AlertDialog(
+            content: Row(
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 24),
+                Text("Logging In ... "),
+              ],
+            ),
           );
         },
       );
+
+      final response = await http.post(
+        Uri.parse('http://hris.accelution.lk/api/auth'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'client_id': username,
+          'client_secret': password,
+        }),
+      );
+      Navigator.pop(context);
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final token = data['access_token'];
+
+        // Assuming the token is obtained correctly
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                MainScreen(token: token), // Pass the token to MyHomePage
+          ),
+        );
+        // Navigator.pop(context);
+      } else {
+        final errorData = json.decode(response.body);
+        _showErrorDialog(
+            errorData['message'] ?? 'Invalid username or password');
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      _showErrorDialog('An error occurred. Please try again.');
+      print('Login error: $e'); // Logging for debugging
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Login Failed'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
