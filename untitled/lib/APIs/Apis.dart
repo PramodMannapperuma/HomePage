@@ -13,6 +13,7 @@ class ApiService {
     );
     print('Status code: ${response.statusCode}');
     print('Response body: ${response.body}');
+    print('Token after Function :$token');
 
     if (response.statusCode == 200) {
       return json.decode(response.body);

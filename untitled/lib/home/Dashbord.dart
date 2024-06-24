@@ -17,14 +17,14 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 2; // Default to Dashboard screen
-  late Future<Map<String, dynamic>> futureProfile;
+  // late Future<Map<String, dynamic>> futureProfile;
   late List<Widget> _widgetOptions;
 
   @override
   void initState() {
     super.initState();
     print('Token in Min Screen : ${widget.token}');
-    futureProfile = ApiService.getProfile(widget.token);
+    // futureProfile = ApiService.getProfile(widget.token);
     _widgetOptions = <Widget>[
       // Initialize here
       Attendance(),
