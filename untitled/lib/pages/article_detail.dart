@@ -145,14 +145,14 @@ import 'package:untitled/styles/app_colors.dart';
 
 class ArticleDetail extends StatefulWidget {
   final Map<String, String> article;
-  final List<String> comments;
+  final List<String> initialComments;
   final Function(String) onCommentAdded;
 
   const ArticleDetail({
     required this.article,
-    required this.comments,
+    required this.initialComments,
     required this.onCommentAdded,
-    Key? key,
+    Key? key, required List<String> comments,
   }) : super(key: key);
 
   @override
@@ -161,17 +161,26 @@ class ArticleDetail extends StatefulWidget {
 
 class _ArticleDetailState extends State<ArticleDetail> {
   late TextEditingController _commentController;
+  late List<String> _comments;
 
   @override
   void initState() {
     super.initState();
     _commentController = TextEditingController();
+    _comments = List.from(widget.initialComments);
   }
 
   @override
   void dispose() {
     _commentController.dispose();
     super.dispose();
+  }
+
+  void _addComment(String comment) {
+    setState(() {
+      _comments.add(comment);
+    });
+    widget.onCommentAdded(comment);
   }
 
   @override
@@ -223,14 +232,14 @@ class _ArticleDetailState extends State<ArticleDetail> {
             const SizedBox(height: 8),
             Expanded(
               child: ListView.builder(
-                itemCount: widget.comments.length,
+                itemCount: _comments.length,
                 itemBuilder: (context, index) {
                   return Card(
                     elevation: 2.0,
                     margin: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(widget.comments[index]),
+                      child: Text(_comments[index]),
                     ),
                   );
                 },
@@ -258,7 +267,7 @@ class _ArticleDetailState extends State<ArticleDetail> {
                   onPressed: () {
                     final comment = _commentController.text;
                     if (comment.isNotEmpty) {
-                      widget.onCommentAdded(comment);
+                      _addComment(comment);
                       _commentController.clear();
                     }
                   },
