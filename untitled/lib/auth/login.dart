@@ -109,13 +109,13 @@ class _LoginFormState extends State<LoginForm> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final token = data['access_token'];
+        print('Token In login $token');
 
         // Assuming the token is obtained correctly
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                MainScreen(token: token), // Pass the token to MyHomePage
+            builder: (context) => MainScreen(token: token),
           ),
         );
         // Navigator.pop(context);
