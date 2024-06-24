@@ -222,31 +222,6 @@ class ProfilePage extends StatelessWidget {
                   backgroundImage: const AssetImage(
                       "assets/images/2.-electronic-evan (1).jpg"),
                 ),
-                // Positioned(
-                //   bottom: 2,
-                //   right: 4,
-                //   child: Container(
-                //     width: 28,
-                //     height: 28,
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(100),
-                //       color: Colors.blueGrey.withOpacity(0.8),
-                //     ),
-                //     child: GestureDetector(
-                //       onTap: () {
-                //         showModalBottomSheet(
-                //           context: context,
-                //           builder: ((build) => bottomSheet()),
-                //         );
-                //       },
-                //       child: const Icon(
-                //         Icons.edit,
-                //         color: Colors.black54,
-                //         size: 20,
-                //       ),
-                //     ),
-                //   ),
-                // ),
               ],
             ),
 

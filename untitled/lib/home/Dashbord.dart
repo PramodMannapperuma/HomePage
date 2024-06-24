@@ -36,29 +36,29 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(35.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  widget.token,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Divider(
-                color: Colors.black,
-                thickness: 0.2,
-              ),
-            ],
-          ),
-        ),
-      ),
+      // appBar: AppBar(
+      //   bottom: PreferredSize(
+      //     preferredSize: Size.fromHeight(35.0),
+      //     child: Column(
+      //       children: [
+      //         Padding(
+      //           padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      //           child: Text(
+      //             widget.token,
+      //             style: TextStyle(
+      //               fontSize: 18.0,
+      //               fontWeight: FontWeight.bold,
+      //             ),
+      //           ),
+      //         ),
+      //         Divider(
+      //           color: Colors.black,
+      //           thickness: 0.2,
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: SizedBox(
         height: 80,
