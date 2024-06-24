@@ -12,7 +12,7 @@ import 'home/user_section.dart';
 import 'package:untitled/styles/app_colors.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  const MyHomePage({super.key, required token});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();

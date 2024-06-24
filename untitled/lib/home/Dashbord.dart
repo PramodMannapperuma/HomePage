@@ -7,12 +7,17 @@ import '../pages/task_screen.dart';
 import '../styles/app_colors.dart';
 
 class MainScreen extends StatefulWidget {
+  final String token;
+  const MainScreen({super.key, required this.token});
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
+
   int _selectedIndex = 2; // Default to Dashboard screen
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -31,6 +36,29 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(35.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  widget.token,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Divider(
+                color: Colors.black,
+                thickness: 0.2,
+              ),
+            ],
+          ),
+        ),
+      ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: SizedBox(
         height: 80,
@@ -69,6 +97,8 @@ class _MainScreenState extends State<MainScreen> {
 }
 
 class DashboardScreen extends StatelessWidget {
+  const DashboardScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -316,6 +346,7 @@ class DashboardScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Text('Your Token is: $token'),
               // User Info
               Row(
                 children: [
@@ -363,17 +394,49 @@ class DashboardScreen extends StatelessWidget {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 children: [
-                  CategoryCard(title: 'Attendance', icon: Icons.calendar_today, route: '/attendance',),
-                  CategoryCard(title: 'Task', icon: Icons.task_outlined, route: '/taskScreen',),
-                  CategoryCard(title: 'Leave', icon: Icons.beach_access, route: '/leave',),
                   CategoryCard(
-                      title: 'Requests', icon: Icons.request_page_outlined, route: '/requests'),
-                  CategoryCard(title: 'Profile', icon: Icons.person_outline, route: '/profile',),
-                  CategoryCard(title: 'News', icon: Icons.newspaper, route: '/news_screen',),
-                  CategoryCard(title: 'Payslips', icon: Icons.payment,route: '/payslips'),
-                  CategoryCard(title: 'Approval Task', icon: Icons.approval, route: '/taskScreen',),
+                    title: 'Attendance',
+                    icon: Icons.calendar_today,
+                    route: '/attendance',
+                  ),
                   CategoryCard(
-                      title: 'My Team', icon: Icons.group_add_outlined, route: '/employee',),
+                    title: 'Task',
+                    icon: Icons.task_outlined,
+                    route: '/taskScreen',
+                  ),
+                  CategoryCard(
+                    title: 'Leave',
+                    icon: Icons.beach_access,
+                    route: '/leave',
+                  ),
+                  CategoryCard(
+                      title: 'Requests',
+                      icon: Icons.request_page_outlined,
+                      route: '/requests'),
+                  CategoryCard(
+                    title: 'Profile',
+                    icon: Icons.person_outline,
+                    route: '/profile',
+                  ),
+                  CategoryCard(
+                    title: 'News',
+                    icon: Icons.newspaper,
+                    route: '/news_screen',
+                  ),
+                  CategoryCard(
+                      title: 'Payslips',
+                      icon: Icons.payment,
+                      route: '/payslips'),
+                  CategoryCard(
+                    title: 'Approval Task',
+                    icon: Icons.approval,
+                    route: '/taskScreen',
+                  ),
+                  CategoryCard(
+                    title: 'My Team',
+                    icon: Icons.group_add_outlined,
+                    route: '/employee',
+                  ),
                 ],
               ),
               SizedBox(height: 10),
@@ -442,7 +505,8 @@ class CategoryCard extends StatelessWidget {
   final IconData icon;
   final String route;
 
-  const CategoryCard({required this.title, required this.icon, required this.route});
+  const CategoryCard(
+      {required this.title, required this.icon, required this.route});
 
   @override
   Widget build(BuildContext context) {

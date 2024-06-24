@@ -24,7 +24,7 @@ import 'homepage.dart';
 
 final Map<String, WidgetBuilder> routes = {
   '/login': (context) => Login(),
-  '/home': (context) => MyHomePage(),
+  '/home': (context) => MyHomePage(token: null,),
   '/attendance': (context) => Attendance(),
   '/leave': (context) => Leave(),
   // '/news': (context) => News(),
