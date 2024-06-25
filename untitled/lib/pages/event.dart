@@ -15,17 +15,17 @@ class _EventState extends State<Event> {
     {
       'title': 'Music Concert',
       'description': 'Join us for a night of live music on June 15.',
-      'image': 'assets/images/concert.jpg',
+      // 'image': 'assets/images/concert.jpg',
     },
     {
       'title': 'Art Exhibition',
       'description': 'Explore the new art exhibition starting on June 20.',
-      'image': 'assets/images/exhibition.jpg',
+      // 'image': 'assets/images/exhibition.jpg',
     },
     {
       'title': 'Tech Conference',
       'description': 'Attend the tech conference on June 25.',
-      'image': 'assets/images/conference.jpg',
+      // 'image': 'assets/images/conference.jpg',
     },
   ];
 
