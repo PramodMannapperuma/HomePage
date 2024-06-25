@@ -96,6 +96,10 @@ flutter:
      - assets/images/Profile.jpeg
      - assets/images/Approval.png
      - assets/images/msg.jpeg
+     - assets/images/concert.jpg
+     - assets/images/exhibition.jpg
+     - assets/images/conference.jpeg
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
