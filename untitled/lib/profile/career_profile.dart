@@ -294,7 +294,8 @@ class _CareerProfileState extends State<CareerProfile> {
                     ProfileDetailRow(
                         title: 'Division', value: '${careerData['division']}'),
                     ProfileDetailRow(
-                        title: 'Employee Type', value: '${careerData['employeeType']}'),
+                        title: 'Employee Type',
+                        value: '${careerData['employeeType']}'),
                   ],
                 ),
                 Row(
