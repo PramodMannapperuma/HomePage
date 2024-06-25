@@ -4,7 +4,7 @@ import 'package:untitled/styles/app_colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class Leave extends StatefulWidget {
-  const Leave({Key? key}) : super(key: key);
+  const Leave({super.key});
 
   @override
   State<Leave> createState() => _LeaveState();
@@ -343,9 +343,19 @@ class _LeaveState extends State<Leave> {
                 decoration: InputDecoration(
                   labelText: 'Description',
                   border: OutlineInputBorder(),
+                  errorText: errorMessages['description'],
                 ),
                 maxLines: 3,
+                  onChanged: (value) {
+                    setState(() {
+                      notifyEmployee = value;
+                      if (value.isNotEmpty) {
+                        errorMessages['description'] = null;
+                      }
+                    });
+                  },
               ),
+
               SizedBox(height: 5),
               Row(
                 children: [
