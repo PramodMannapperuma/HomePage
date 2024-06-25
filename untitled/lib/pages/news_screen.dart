@@ -227,7 +227,7 @@ class NewsScreen extends StatelessWidget {
                   context,
                   title: 'Event',
                   icon: Icons.event,
-                  page: const event(),
+                  page: const Event(),
                 ),
               ],
             ),
