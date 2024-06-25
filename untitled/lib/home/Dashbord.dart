@@ -209,7 +209,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       onTap: () {
                         Navigator.pop(context);
-                        Navigator.pushNamed(context, '/home');
+                        Navigator.pushNamed(context, '/dashboard', );
                       },
                     ),
                     // Divider(thickness: 0.2,),
