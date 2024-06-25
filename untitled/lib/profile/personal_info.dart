@@ -34,11 +34,11 @@ class _PersonalInfoState extends State<PersonalInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-          title: 'Personal Information',
-          showActions: true,
-          showLeading: true,
-          context: context,
-          showBackButton: true, // Show back button instead of hamburger icon
+        title: 'Personal Information',
+        showActions: true,
+        showLeading: true,
+        context: context,
+        showBackButton: true, // Show back button instead of hamburger icon
       ),
       drawer: Container(
         width: 300.0, // Adjust the width as needed
@@ -199,7 +199,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                       border: Border.all(width: 2, color: Colors.red),
                       color: Colors.white,
                       borderRadius:
-                      BorderRadius.circular(10), // Rounded corners
+                          BorderRadius.circular(10), // Rounded corners
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -247,7 +247,8 @@ class _PersonalInfoState extends State<PersonalInfo> {
                     SizedBox(
                       child: CircleAvatar(
                         radius: 60.0,
-                        backgroundImage: AssetImage("assets/images/2.-electronic-evan (1).jpg"),
+                        backgroundImage: AssetImage(
+                            "assets/images/2.-electronic-evan (1).jpg"),
                       ),
                     )
                   ],
@@ -258,7 +259,8 @@ class _PersonalInfoState extends State<PersonalInfo> {
                   children: [
                     SizedBox(
                       child: Text(
-                        '${userData['firstName']} ${userData['surname']}'.trim(),
+                        '${userData['firstName']} ${userData['surname']}'
+                            .trim(),
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                     )
@@ -269,30 +271,43 @@ class _PersonalInfoState extends State<PersonalInfo> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    ProfileDetailRow(title: 'First Name', value: '${userData['firstName']}'),
-                    ProfileDetailRow(title: 'Last Name', value: '${userData['surname']}'),
+                    ProfileDetailRow(
+                        title: 'First Name', value: '${userData['firstName']}'),
+                    ProfileDetailRow(
+                        title: 'Last Name', value: '${userData['surname']}'),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    ProfileDetailRow(title: 'UserId', value: '${userData['code']}'),
-                    ProfileDetailRow(title: 'Sex', value: '${userData['gender']}'),
+                    ProfileDetailRow(
+                        title: 'UserId', value: '${userData['code']}'),
+                    ProfileDetailRow(
+                        title: 'Sex', value: '${userData['gender']}'),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    ProfileDetailRow(title: 'Disability Status', value: '${userData['disabilityStatus']}'),
-                    ProfileDetailRow(title: 'Blood Group', value: '${userData['bloodGroup']}'),
+                    ProfileDetailRow(
+                        title: 'Disability Status',
+                        value: '${userData['disabilityStatus']}'),
+                    ProfileDetailRow(
+                        title: 'Blood Group',
+                        value: '${userData['bloodGroup']}'),
                   ],
                 ),
                 const SizedBox(height: 20),
-                ProfileDetailColumn(title: 'Email', value: '${userData['email']}'),
-                ProfileDetailColumn(title: 'Nationality', value: '${userData['nationality']}'),
-                ProfileDetailColumn(title: 'Ethnicity', value: '${userData['ethnicity']}'),
-                ProfileDetailColumn(title: 'Religion', value: '${userData['religion']}'),
-                ProfileDetailColumn(title: 'Address', value: '${userData['permanentAddress']}'),
+                ProfileDetailColumn(
+                    title: 'Email', value: '${userData['email']}'),
+                ProfileDetailColumn(
+                    title: 'Nationality', value: '${userData['nationality']}'),
+                ProfileDetailColumn(
+                    title: 'Ethnicity', value: '${userData['ethnicity']}'),
+                ProfileDetailColumn(
+                    title: 'Religion', value: '${userData['religion']}'),
+                ProfileDetailColumn(
+                    title: 'Address', value: '${userData['permanentAddress']}'),
               ],
             ),
           );
@@ -301,5 +316,3 @@ class _PersonalInfoState extends State<PersonalInfo> {
     );
   }
 }
-
-

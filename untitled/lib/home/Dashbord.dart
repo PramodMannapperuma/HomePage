@@ -162,7 +162,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       color: AppColors.background,
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/profile');
+                      Navigator.pushNamed(context, '/profile', arguments: widget.token);
                     },
                   ),
                 ]),
