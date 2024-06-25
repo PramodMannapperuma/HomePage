@@ -36,7 +36,7 @@ class _NewsState extends State<News> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-          title: 'News',
+          title: 'Anniversaries',
           showActions: true,
           showLeading: true,
           context: context,
