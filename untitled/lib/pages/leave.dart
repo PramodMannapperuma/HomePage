@@ -1,10 +1,10 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled/app_bar.dart';
 import 'package:untitled/styles/app_colors.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class Leave extends StatefulWidget {
-  const Leave({super.key});
+  const Leave({Key? key}) : super(key: key);
 
   @override
   State<Leave> createState() => _LeaveState();
@@ -14,8 +14,16 @@ class _LeaveState extends State<Leave> {
   String? selectedLeaveType;
   DateTime? startDate;
   DateTime? endDate;
-  String? reason;
+  String? description;
+  String? notifyEmployee;
 
+  // Error messages map
+  final Map<String, String?> errorMessages = {
+    'description': null,
+    'startDate': null,
+    'endDate': null,
+    'notifyEmployee': null,
+  };
   final leaveTypes = ['Annual Leave', 'Casual Leave', 'Medical Leave'];
   final leaveDetails = {
     'Entitled': 30,
@@ -370,11 +378,14 @@ class _LeaveState extends State<Leave> {
                         if (picked != null && picked != startDate)
                           setState(() {
                             startDate = picked;
+                            errorMessages['startDate'] = null;
                           });
                       },
-                      child: Text(startDate == null
-                          ? 'Start Date'
-                          : '${startDate!.toLocal()}'.split(' ')[0]),
+                      child: Text(
+                        startDate == null
+                            ? 'Start Date'
+                            : '${startDate!.toLocal()}'.split(' ')[0],
+                      ),
                     ),
                   ),
                   SizedBox(width: 8),
@@ -390,11 +401,14 @@ class _LeaveState extends State<Leave> {
                         if (picked != null && picked != endDate)
                           setState(() {
                             endDate = picked;
+                            errorMessages['endDate'] = null;
                           });
                       },
-                      child: Text(endDate == null
-                          ? 'Due Date'
-                          : '${endDate!.toLocal()}'.split(' ')[0]),
+                      child: Text(
+                        endDate == null
+                            ? 'Due Date'
+                            : '${endDate!.toLocal()}'.split(' ')[0],
+                      ),
                     ),
                   ),
                 ],
@@ -404,15 +418,26 @@ class _LeaveState extends State<Leave> {
                 decoration: InputDecoration(
                   labelText: 'Notify Employee',
                   border: OutlineInputBorder(),
+                  errorText: errorMessages['notifyEmployee'],
                 ),
                 maxLines: 3,
+                onChanged: (value) {
+                  setState(() {
+                    notifyEmployee = value;
+                    if (value.isNotEmpty) {
+                      errorMessages['notifyEmployee'] = null;
+                    }
+                  });
+                },
               ),
               SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context); // Navigate back
+                      },
                       child: Text('Cancel'),
                     ),
                   ),
@@ -420,7 +445,7 @@ class _LeaveState extends State<Leave> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/home');
+                        _submitForm();
                       },
                       child: Text('Save'),
                     ),
@@ -432,6 +457,71 @@ class _LeaveState extends State<Leave> {
         ),
       ),
     );
+  }
+
+  void _submitForm() {
+    // Validate the form
+    if (_validateForm()) {
+      // Form is valid, save or process data
+      Navigator.pushNamed(context, '/home');
+    } else {
+      // Form is not valid, show error messages
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Validation Error'),
+          content: Text('Please fill all required fields.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  bool _validateForm() {
+    bool isValid = true;
+
+    // Validate description
+    if (description == null || description!.isEmpty) {
+      errorMessages['description'] = 'Please enter a description';
+      isValid = false;
+    } else {
+      errorMessages['description'] = null;
+    }
+
+    // Validate startDate
+    if (startDate == null) {
+      errorMessages['startDate'] = 'Please select start date';
+      isValid = false;
+    } else {
+      errorMessages['startDate'] = null;
+    }
+
+    // Validate endDate
+    if (endDate == null) {
+      errorMessages['endDate'] = 'Please select end date';
+      isValid = false;
+    } else {
+      errorMessages['endDate'] = null;
+    }
+
+    // Validate notifyEmployee
+    if (notifyEmployee == null || notifyEmployee!.isEmpty) {
+      errorMessages['notifyEmployee'] = 'Please enter notification details';
+      isValid = false;
+    } else {
+      errorMessages['notifyEmployee'] = null;
+    }
+
+    setState(() {}); // Update UI with error messages
+
+    return isValid;
   }
 
   Widget _buildDetailCard(String title, int value) {
@@ -447,9 +537,10 @@ class _LeaveState extends State<Leave> {
             Text(
               title,
               style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.background),
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: AppColors.background,
+              ),
             ),
             SizedBox(height: 8),
             Text(
