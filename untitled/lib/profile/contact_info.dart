@@ -3,42 +3,46 @@ import 'package:untitled/app_bar.dart';
 import 'package:untitled/profile/profile_detail_column.dart';
 import 'package:untitled/profile/profile_detail_row.dart';
 
+import '../APIs/Apis.dart';
+
 class ContactInfo extends StatefulWidget {
-  const ContactInfo({super.key});
+  final String token;
+
+  const ContactInfo({super.key, required this.token});
 
   @override
   State<ContactInfo> createState() => _ContactInfoState();
 }
 
 class _ContactInfoState extends State<ContactInfo> {
-  final Map<String, dynamic> contactData = {
-    'firstName': 'Demon',
-    'lastName': 'Silva',
-    'DL NO': 'N/A',
-    'PP NO': 'N/A',
-    'Mobile1': '071 123 1232',
-    'Mobile2': '0776767567',
-    'Office Mobile': '0112323456',
-    'Office Mobile 2': '0113434123',
-    'Resident Tel': '0114545456',
-    'Resident Tel2': '0114545765',
-    'Office Tel': '0116767678',
-    'Office Extension': 'N/A',
-    'Personal Email': "demon@gmail.com",
-    'Office Email': 'silva@gmail.com',
-    'Permanent Address': 'No.123/4, Nawala Rd, Rajagiriya.',
-    'Resident Address': 'No 23/8, Kohuwala, Dehiwala.',
-  };
+  // final Map<String, dynamic> contactData = {
+  //   'firstName': 'Demon',
+  //   'lastName': 'Silva',
+  //   'DL NO': 'N/A',
+  //   'PP NO': 'N/A',
+  //   'Mobile1': '071 123 1232',
+  //   'Mobile2': '0776767567',
+  //   'Office Mobile': '0112323456',
+  //   'Office Mobile 2': '0113434123',
+  //   'Resident Tel': '0114545456',
+  //   'Resident Tel2': '0114545765',
+  //   'Office Tel': '0116767678',
+  //   'Office Extension': 'N/A',
+  //   'Personal Email': "demon@gmail.com",
+  //   'Office Email': 'silva@gmail.com',
+  //   'Permanent Address': 'No.123/4, Nawala Rd, Rajagiriya.',
+  //   'Resident Address': 'No 23/8, Kohuwala, Dehiwala.',
+  // };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-          title: 'Contact Information',
-          showActions: true,
-          showLeading: true,
-          context: context,
-          showBackButton: true, // Show back button instead of hamburger icon
+        title: 'Contact Information',
+        showActions: true,
+        showLeading: true,
+        context: context,
+        showBackButton: true, // Show back button instead of hamburger icon
       ),
       drawer: Container(
         width: 300.0, // Adjust the width as needed
@@ -199,7 +203,7 @@ class _ContactInfoState extends State<ContactInfo> {
                       border: Border.all(width: 2, color: Colors.red),
                       color: Colors.white,
                       borderRadius:
-                      BorderRadius.circular(10), // Rounded corners
+                          BorderRadius.circular(10), // Rounded corners
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -224,91 +228,117 @@ class _ContactInfoState extends State<ContactInfo> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: ApiService.getProfile(widget.token),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No data available'));
+          }
+
+          final contactData = snapshot.data!;
+
+          return SingleChildScrollView(
+            child: Column(
               children: [
                 SizedBox(
-                  child: CircleAvatar(
-                    radius: 60.0,
-                    backgroundImage:
-                        AssetImage("assets/images/2.-electronic-evan (1).jpg"),
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      child: CircleAvatar(
+                        radius: 60.0,
+                        backgroundImage: AssetImage(
+                            "assets/images/2.-electronic-evan (1).jpg"),
+                      ),
+                    )
+                  ],
+                ),
                 SizedBox(
-                  child: Text(
-                    '${contactData['firstName']} ${contactData['lastName']}'
-                        .trim(),
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                )
-              ],
-            ),
-            Divider(
-              thickness: 1,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ProfileDetailRow(
-                    title: 'DL Number', value: '${contactData['DL NO']}'),
-                ProfileDetailRow(
-                    title: 'PP Number', value: '${contactData['PP NO']}'),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ProfileDetailRow(
-                  title: 'Mobile No',
-                  value: '${contactData['Mobile1']}',
+                  height: 10,
                 ),
-                ProfileDetailRow(
-                    title: 'Office Mobile', value: '${contactData['Office Mobile']}'),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ProfileDetailRow(
-                  title: 'Resident Tel',
-                  value: '${contactData['Resident Tel']}',
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      child: Text(
+                        '${contactData['firstName']} ${contactData['surname']}'
+                            .trim(),
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    )
+                  ],
                 ),
-                ProfileDetailRow(
-                    title: 'Office Tel',
-                    value: '${contactData['Office Tel']}'),
+                Divider(
+                  thickness: 1,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ProfileDetailRow(
+                        title: 'DL Number', value: '${contactData['dlNo']}'),
+                    ProfileDetailRow(
+                        title: 'PP Number', value: '${contactData['ppNo']}'),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ProfileDetailRow(
+                      title: 'Mobile No',
+                      value: '${contactData['mobile1']}',
+                    ),
+                    ProfileDetailRow(
+                        title: 'Office Mobile',
+                        value: '${contactData['officeMobile']}'),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ProfileDetailRow(
+                      title: 'Resident Tel',
+                      value: '${contactData['residentialTel']}',
+                    ),
+                    ProfileDetailRow(
+                        title: 'Office Tel',
+                        value: '${contactData['officeTel']}'),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                ProfileDetailColumn(
+                    title: 'Office Email',
+                    value: '${contactData['officeEmail']}'),
+                ProfileDetailColumn(
+                    title: 'Personal Email',
+                    value: '${contactData['personalEmail']}'),
+                ProfileDetailColumn(
+                    title: 'Office Mobile 2',
+                    value: '${contactData['mobile2']}'),
+                ProfileDetailColumn(
+                    title: 'Resident Tel 2',
+                    value: '${contactData['otherTel']}'),
+                ProfileDetailColumn(
+                    title: 'Permanent Address',
+                    value: '${contactData['permanentAddress']}'),
+                ProfileDetailColumn(
+                    title: 'Resident Address',
+                    value: '${contactData['residentialAddress']}'),
+                ProfileDetailColumn(
+                    title: 'Office Ext',
+                    value: '${contactData['officeExt']}'),
               ],
             ),
-            const SizedBox(height: 20),
-            ProfileDetailColumn(
-                title: 'Office Email', value: '${contactData['Office Email']}'),
-            ProfileDetailColumn(
-                title: 'Personal Email', value: '${contactData['Personal Email']}'),
-            ProfileDetailColumn(
-                title: 'Office Mobile 2', value: '${contactData['Office Mobile 2']}'),
-            ProfileDetailColumn(
-                title: 'Resident Tel 2', value: '${contactData['Resident Tel2']}'),
-            ProfileDetailColumn(
-                title: 'Permanent Address', value: '${contactData['Permanent Address']}'),
-            ProfileDetailColumn(title: 'Resident Address', value: '${contactData['Resident Address']}'),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

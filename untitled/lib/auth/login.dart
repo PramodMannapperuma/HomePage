@@ -118,11 +118,12 @@ class _LoginFormState extends State<LoginForm> {
             builder: (context) => MainScreen(token: token),
           ),
         );
-        // Navigator.pop(context);
+
       } else {
         final errorData = json.decode(response.body);
         _showErrorDialog(
             errorData['message'] ?? 'Invalid username or password');
+        // Navigator.pop(context);
       }
     } catch (e) {
       setState(() {
@@ -130,6 +131,7 @@ class _LoginFormState extends State<LoginForm> {
       });
       _showErrorDialog('An error occurred. Please try again.');
       print('Login error: $e'); // Logging for debugging
+      // Navigator.pop(context);
     }
   }
 
