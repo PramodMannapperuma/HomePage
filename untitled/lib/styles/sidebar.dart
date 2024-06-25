@@ -45,7 +45,7 @@ class CustomSidebar extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/home');
+                Navigator.pushNamed(context, '/dashboard');
               },
             ),
             ListTile(
