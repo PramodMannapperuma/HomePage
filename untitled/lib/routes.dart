@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/auth/login.dart';
+import 'package:untitled/home/Dashbord.dart';
 //import 'package:untitled/pages/approval_task.dart';
 import 'package:untitled/pages/attendance.dart';
 import 'package:untitled/graphs/attendance_tracker.dart';
@@ -19,7 +20,6 @@ import 'package:untitled/pages/users.dart';
 import 'package:untitled/profile/career_profile.dart';
 import 'package:untitled/profile/contact_info.dart';
 import 'package:untitled/profile/personal_info.dart';
-
 import 'homepage.dart';
 
 final Map<String, WidgetBuilder> routes = {
@@ -44,4 +44,5 @@ final Map<String, WidgetBuilder> routes = {
   '/employeeScreen': (context) => EmployeeGridScreen(),
   '/employee':(context) => EmployeeScreen(),
   '/leavePolicy': (context) => LeavePolicy(),
+  '/dashboard':(context) => MainScreen(token: ''),
 };
