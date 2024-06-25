@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/APIs/Apis.dart';
 import 'package:untitled/app_bar.dart';
 import 'package:untitled/profile/career_profile.dart';
 import 'package:untitled/profile/contact_info.dart';
@@ -7,18 +8,27 @@ import '../profile/Info.dart';
 import '../profile/personal_info.dart';
 import 'package:untitled/styles/app_colors.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  late String token;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      token = ModalRoute.of(context)!.settings.arguments as String;
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Hardcoded user data
-    final Map<String, dynamic> userData = {
-      'firstName': 'Demon',
-      'lastName': 'Silva',
-      'userId': '123456789012345',
-      'gender': 'Male',
-      'email': 'johndoe@example.com',
-    };
-
+    final String token = ModalRoute.of(context)!.settings.arguments as String;
+    print('Token in profile is: $token');
     return Scaffold(
       appBar: customAppBar(
         title: 'Profile',
@@ -186,7 +196,7 @@ class ProfilePage extends StatelessWidget {
                       border: Border.all(width: 2, color: Colors.red),
                       color: Colors.white,
                       borderRadius:
-                      BorderRadius.circular(10), // Rounded corners
+                          BorderRadius.circular(10), // Rounded corners
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -211,128 +221,112 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                CircleAvatar(
-                  radius: 60.0,
-                  backgroundImage: const AssetImage(
-                      "assets/images/2.-electronic-evan (1).jpg"),
-                ),
-              ],
-            ),
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: ApiService.getProfile(token),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return Center(child: Text('No data available'));
+          } else {
+            String name = snapshot.data!['fullName'] ?? 'N/A';
+            String email = snapshot.data!['designation'] ?? 'N/A';
+            String profileImageUrl = snapshot.data!['profileImageUrl'] ?? '';
 
-            const SizedBox(height: 10),
-            Column(
-              children: [
-                Text(
-                  "${userData['firstName']} ${userData['lastName']}",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                Text(
-                  userData['email'],
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            const Divider(thickness: 1),
-            ProfileMenuWidget(
-              title: "Personal Information",
-              icon: Icons.person_2_outlined,
-              onPress: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const PersonalInfo()),
-                );
-              },
-            ),
-            ProfileMenuWidget(
-              title: "Contact Information",
-              icon: Icons.contact_phone_outlined,
-              onPress: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ContactInfo()),
-                );
-              },
-            ),
-            ProfileMenuWidget(
-              title: "Career Profile",
-              icon: Icons.work_history_outlined,
-              onPress: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CareerProfile()),
-                );
-              },
-            ),
-            const Divider(thickness: 1),
-            ProfileMenuWidget(
-              title: "Info",
-              icon: Icons.info,
-              onPress: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => FAQAndPricingScreen()),
-                );
-              },
-            ),
-            ProfileMenuWidget(
-              title: "Log Out",
-              icon: Icons.logout,
-              textColor: Colors.red,
-              endIcon: false,
-              onPress: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Login()),
-                );
-              },
-            ),
-          ],
-        ),
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 60.0,
+                        backgroundImage: const AssetImage(
+                            "assets/images/2.-electronic-evan (1).jpg"),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Column(
+                    children: [
+                      Text(
+                        name,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      Text(
+                        email,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Divider(thickness: 1),
+                  ProfileMenuWidget(
+                    title: "Personal Information",
+                    icon: Icons.person_2_outlined,
+                    onPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PersonalInfo(token:token)),
+                      );
+                    },
+                  ),
+                  ProfileMenuWidget(
+                    title: "Contact Information",
+                    icon: Icons.contact_phone_outlined,
+                    onPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ContactInfo(token: token)),
+                      );
+                    },
+                  ),
+                  ProfileMenuWidget(
+                    title: "Career Profile",
+                    icon: Icons.work_history_outlined,
+                    onPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CareerProfile(token: token)),
+                      );
+                    },
+                  ),
+                  const Divider(thickness: 1),
+                  ProfileMenuWidget(
+                    title: "Info",
+                    icon: Icons.info,
+                    onPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FAQAndPricingScreen()),
+                      );
+                    },
+                  ),
+                  ProfileMenuWidget(
+                    title: "Log Out",
+                    icon: Icons.logout,
+                    textColor: Colors.red,
+                    endIcon: false,
+                    onPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Login()),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          }
+        },
       ),
     );
   }
-
-// Widget bottomSheet() {
-//   return Container(
-//     height: 100.0,
-//     width: double.infinity,
-//     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-//     child: Column(
-//       children: <Widget>[
-//         const Text(
-//           "Choose Profile Photo",
-//           style: TextStyle(fontSize: 20.0),
-//         ),
-//         const SizedBox(height: 20),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             TextButton.icon(
-//               icon: const Icon(Icons.camera),
-//               onPressed: () {},
-//               label: const Text("Camera"),
-//             ),
-//             TextButton.icon(
-//               icon: const Icon(Icons.image),
-//               onPressed: () {},
-//               label: const Text("Gallery"),
-//             ),
-//           ],
-//         )
-//       ],
-//     ),
-//   );
-// }
 }
 
 class ProfileMenuWidget extends StatelessWidget {
@@ -363,7 +357,8 @@ class ProfileMenuWidget extends StatelessWidget {
           color: Colors.blueGrey.withOpacity(0.1),
         ),
         child: Icon(
-          icon, color: AppColors.background,
+          icon,
+          color: AppColors.background,
         ),
       ),
       title: Text(title,
@@ -373,17 +368,17 @@ class ProfileMenuWidget extends StatelessWidget {
               ?.copyWith(color: textColor, fontSize: 17.0)),
       trailing: endIcon
           ? Container(
-        width: 30,
-        height: 30,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: Colors.black.withOpacity(0.1),
-        ),
-        child: const Icon(
-          Icons.keyboard_arrow_right,
-          color: Color.fromRGBO(77, 40, 128, 0.5),
-        ),
-      )
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: Colors.black.withOpacity(0.1),
+              ),
+              child: const Icon(
+                Icons.keyboard_arrow_right,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+              ),
+            )
           : null,
     );
   }

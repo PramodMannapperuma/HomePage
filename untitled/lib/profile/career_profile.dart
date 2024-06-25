@@ -4,7 +4,9 @@ import 'package:untitled/profile/profile_detail_column.dart';
 import 'package:untitled/profile/profile_detail_row.dart';
 
 class CareerProfile extends StatefulWidget {
-  const CareerProfile({super.key});
+  final String token;
+
+  const CareerProfile({super.key, required this.token});
 
   @override
   State<CareerProfile> createState() => _CareerProfileState();

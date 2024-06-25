@@ -418,44 +418,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           title: 'Attendance',
                           icon: Icons.calendar_today,
                           route: '/attendance',
+                          token: widget.token,
                         ),
                         CategoryCard(
                           title: 'Task',
                           icon: Icons.task_outlined,
                           route: '/taskScreen',
+                          token: widget.token,
                         ),
                         CategoryCard(
                           title: 'Leave',
                           icon: Icons.beach_access,
                           route: '/leave',
+                          token: widget.token,
                         ),
                         CategoryCard(
-                            title: 'Requests',
-                            icon: Icons.request_page_outlined,
-                            route: '/requests'),
+                          title: 'Requests',
+                          icon: Icons.request_page_outlined,
+                          route: '/requests',
+                          token: widget.token,
+                        ),
                         CategoryCard(
                           title: 'Profile',
                           icon: Icons.person_outline,
                           route: '/profile',
+                          token: widget.token,
                         ),
                         CategoryCard(
                           title: 'News',
                           icon: Icons.newspaper,
                           route: '/news_screen',
+                          token: widget.token,
                         ),
                         CategoryCard(
-                            title: 'Payslips',
-                            icon: Icons.payment,
-                            route: '/payslips'),
+                          title: 'Payslips',
+                          icon: Icons.payment,
+                          route: '/payslips',
+                          token: widget.token,
+                        ),
                         CategoryCard(
                           title: 'Approval Task',
                           icon: Icons.approval,
                           route: '/taskScreen',
+                          token: widget.token,
                         ),
                         CategoryCard(
                           title: 'My Team',
                           icon: Icons.group_add_outlined,
                           route: '/employee',
+                          token: widget.token,
                         ),
                       ],
                     ),
@@ -527,9 +538,13 @@ class CategoryCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final String route;
+  final String token;
 
   const CategoryCard(
-      {required this.title, required this.icon, required this.route});
+      {required this.title,
+      required this.icon,
+      required this.route,
+      required this.token});
 
   @override
   Widget build(BuildContext context) {
@@ -539,7 +554,11 @@ class CategoryCard extends StatelessWidget {
       child: Card(
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, route);
+            Navigator.pushNamed(
+              context,
+              route,
+              arguments: token,
+            );
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
