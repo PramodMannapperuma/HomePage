@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:untitled/app_bar.dart';
+import 'package:untitled/styles/sidebar.dart';
+import '../APIs/Apis.dart';
+import '../models/attendance_model.dart';
 import '../styles/app_colors.dart';
 
 class DashMainScreen extends StatefulWidget {
+  final String token;
+
+  DashMainScreen({super.key, required this.token});
+
   @override
   _DashMainScreenState createState() => _DashMainScreenState();
 }
 
 class _DashMainScreenState extends State<DashMainScreen> {
-  int _selectedIndex = 2; // Default to Dashboard screen
+  late Future<DashboardData> futureDashboardData;
+  final ApiService apiService = ApiService();
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    futureDashboardData = apiService.fetchDashboardData(widget.token);
   }
-
-  static List<Widget> _widgetOptions = <Widget>[
-    AttendanceScreen(),
-    LeaveScreen(),
-    DashboardScreen(),
-    TaskScreen(),
-    TrackingScreen(),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -75,461 +74,163 @@ class _DashMainScreenState extends State<DashMainScreen> {
           ),
         ],
       ),
-      drawer: Container(
-        width: 300.0, // Adjust the width as needed
-        child: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color.fromRGBO(77, 40, 128, 0.5),
-                      Color.fromRGBO(77, 40, 128, 0.5),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: Image.asset(
-                        'assets/images/test-bg.png',
-                        fit: BoxFit.cover,
+      drawer: CustomSidebar(),
+      body: FutureBuilder<DashboardData>(
+        future: futureDashboardData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return Center(child: Text('No data available'));
+          }
+
+          DashboardData data = snapshot.data!;
+
+          // Extract attendance data
+          String present = data.attendance?.attendance?.attendance?.toString() ?? '0';
+          String absent = data.attendance?.attendance?.rejected?.toString() ?? '0';
+          String onLeave = data.attendance?.attendance?.pending?.toString() ?? '0';
+          String noPay = data.attendance?.nopay?.toString() ?? '0';
+
+          // Extract leave balance data
+          String annualLeave = data.attendance?.leave?.active?.toString() ?? '0';
+          String sickLeave = data.attendance?.leave?.pending?.toString() ?? '0';
+          String casualLeave = data.attendance?.leave?.rejected?.toString() ?? '0';
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // User Info
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: AssetImage(
+                            'assets/images/2.-electronic-evan (1).jpg'),
                       ),
+                      SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            data.employee?.name ?? 'N/A',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(data.employee?.designation ?? 'N/A'),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+
+                  // Dashboard title
+                  Text(
+                    'Dashboard',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.home_outlined,
-                  color: Color.fromRGBO(77, 40, 128, 0.5),
-                  size: 35,
-                ),
-                title: Text(
-                  'Home',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/home');
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.event_available,
-                  color: Color.fromRGBO(77, 40, 128, 0.5),
-                  size: 35,
-                ),
-                title: Text('Attendance'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/attendance');
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.airplanemode_on_sharp,
-                  color: Color.fromRGBO(77, 40, 128, 0.5),
-                  size: 35,
-                ),
-                title: Text('Leaves'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/leave');
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.list_alt,
-                  color: Color.fromRGBO(77, 40, 128, 0.5),
-                  size: 35,
-                ),
-                title: Text('Requests'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/requests');
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.person_pin_outlined,
-                  color: Color.fromRGBO(77, 40, 128, 0.5),
-                  size: 35,
-                ),
-                title: Text('Profile'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/profile');
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.receipt_long_outlined,
-                  color: Color.fromRGBO(77, 40, 128, 0.5),
-                  size: 35,
-                ),
-                title: Text('News'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/news_screen');
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.receipt_long_outlined,
-                  color: Color.fromRGBO(77, 40, 128, 0.5),
-                  size: 35,
-                ),
-                title: Text('PaySlips'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/payslips');
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.assignment_turned_in_outlined,
-                  color: Color.fromRGBO(77, 40, 128, 0.5),
-                  size: 35,
-                ),
-                title: Text('Approval Tasks'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/taskScreen');
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.group_add_outlined,
-                  color: Color.fromRGBO(77, 40, 128, 0.5),
-                  size: 35,
-                ),
-                title: Text('My Team'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/employee');
-                },
-              ),
-              Divider(
-                thickness: 0.5,
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.pop(
-                    context,
-                  );
-                  Navigator.pushNamed(context, '/login');
-                },
-                contentPadding: EdgeInsets.zero, // Remove default padding
-                title: Center(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                  ),
+                  SizedBox(height: 20),
+
+                  // Attendance section
+                  Container(
+                    padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      border: Border.all(width: 2, color: Colors.red),
                       color: Colors.white,
-                      borderRadius:
-                      BorderRadius.circular(10), // Rounded corners
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.logout, color: Colors.red),
-                        SizedBox(width: 8),
                         Text(
-                          'Log Out',
+                          'Attendance',
                           style: TextStyle(
-                            color: Colors.red,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
                           ),
                         ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildAttendanceItem('Present', present, Colors.green),
+                            _buildAttendanceItem('Absent', absent, Colors.red),
+                            _buildAttendanceItem(
+                                'On Leave', onLeave, Colors.orange),
+                            _buildAttendanceItem(
+                                'no pay', noPay, Colors.orange),
+                          ],
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today, color: AppColors.background),
-            label: 'Attendance',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.request_page, color: AppColors.background),
-            label: 'Leave',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard, color: AppColors.background),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.task, color: AppColors.background),
-            label: 'Task',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.timer, color: AppColors.background),
-            label: 'Tracking',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
-      ),
-    );
-  }
-}
+                  SizedBox(height: 20),
 
-class AttendanceScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Attendance Screen'));
-  }
-}
-
-class LeaveScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Leave Screen'));
-  }
-}
-
-class TaskScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Task Screen'));
-  }
-}
-
-class TrackingScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Tracking Screen'));
-  }
-}
-
-class DashboardScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // User Info
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage:
-                    AssetImage('assets/images/2.-electronic-evan (1).jpg'),
-                  ),
-                  SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'John Doe',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                  // Leave section
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3), // changes position of shadow
                         ),
-                      ),
-                      Text('UI/UX Designer'),
-                    ],
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Leave Balance',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildLeaveItem('Annual Leave', annualLeave),
+                            _buildLeaveItem('Sick Leave', sickLeave),
+                            _buildLeaveItem('Casual Leave', casualLeave),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
+                  SizedBox(height: 20),
                 ],
               ),
-              SizedBox(height: 20),
-
-              // Dashboard title
-              Text(
-                'Dashboard',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 20),
-
-              // Profile overview section
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Profile Overview',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        _buildProfileInfoItem(
-                            'Hours Worked', '150', Colors.blue),
-                        _buildProfileInfoItem('Tasks Completed', '30',
-                            Colors.green),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        _buildProfileInfoItem('Projects', '5', Colors.orange),
-                        _buildProfileInfoItem('Overdue Tasks', '2', Colors.red),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-
-              // Attendance section
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Attendance',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildAttendanceItem(
-                            'Present', '20', Colors.green),
-                        _buildAttendanceItem('Absent', '2', Colors.red),
-                        _buildAttendanceItem(
-                            'On Leave', '1', Colors.orange),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-
-              // Leave section
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Leave Balance',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildLeaveItem('Annual Leave', '10'),
-                        _buildLeaveItem('Sick Leave', '5'),
-                        _buildLeaveItem('Casual Leave', '3'),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-
-              // Tasks section
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Tasks',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    _buildTaskItem(
-                        'Design new UI', 'Deadline: Tomorrow', Colors.orange),
-                    _buildTaskItem(
-                        'Update Flutter dependencies', 'Deadline: Today',
-                        Colors.red),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildProfileInfoItem(
-      String title, String value, Color color) {
+  Widget _buildProfileInfoItem(String title, String value, Color color) {
     return Expanded(
       child: Column(
         children: [
@@ -554,8 +255,7 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAttendanceItem(
-      String title, String value, Color color) {
+  Widget _buildAttendanceItem(String title, String value, Color color) {
     return Column(
       children: [
         Text(
@@ -601,8 +301,7 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTaskItem(
-      String title, String subtitle, Color color) {
+  Widget _buildTaskItem(String title, String subtitle, Color color) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(

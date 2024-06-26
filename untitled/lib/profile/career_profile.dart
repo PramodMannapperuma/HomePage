@@ -16,21 +16,6 @@ class CareerProfile extends StatefulWidget {
 }
 
 class _CareerProfileState extends State<CareerProfile> {
-  // final Map<String, dynamic> careerData = {
-  //   'firstName': 'Demon',
-  //   'lastName': 'Silva',
-  //   'higherEducation': 'BSc in Software Engineering',
-  //   'professionalCertificates': 'LinkedIn Certificates',
-  //   'PreviousWork1': 'Intern SE At ABC',
-  //   'PreviousWork2': 'Associate SE At ABC',
-  //   'PreviousWork3': 'Software Engineer At ABC',
-  //   'Current Position': 'Senior SE',
-  //   'Department': 'IT Deparment',
-  //   'Division':'Daily Paid',
-  //   'Type': 'Permanent',
-  //   'Level':'Corporate Mgt',
-  //   'Grade': 'Grade 2',
-  // };
 
   @override
   Widget build(BuildContext context) {
