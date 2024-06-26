@@ -277,6 +277,7 @@ class _EventState extends State<Event> {
   }
 }
 
+//---------------------Code with the end point to get the events----------------------
 
 // import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
