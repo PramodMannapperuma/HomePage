@@ -163,19 +163,20 @@ class _ArticleDetailState extends State<ArticleDetail> {
 
 // import 'package:flutter/material.dart';
 // import 'package:untitled/styles/app_colors.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
+// import 'api_service.dart'; // Import the ApiService
 
 // class ArticleDetail extends StatefulWidget {
 //   final Map<String, String> article;
 //   final List<String> initialComments;
 //   final Function(String) onCommentAdded;
+//   final String token; // Add token parameter
 
 //   const ArticleDetail({
 //     required this.article,
 //     required this.initialComments,
 //     required this.onCommentAdded,
-//     Key? key, required List<String> comments,
+//     required this.token, // Initialize token
+//     Key? key,
 //   }) : super(key: key);
 
 //   @override
@@ -213,14 +214,10 @@ class _ArticleDetailState extends State<ArticleDetail> {
 //       _isLoading = true;
 //     });
 
-//     // Send comment to backend
-//     final response = await http.post(
-//       Uri.parse('https://your-backend-endpoint.com/comments'),
-//       headers: {'Content-Type': 'application/json'},
-//       body: jsonEncode(newComment),
-//     );
+//     try {
+//       // Send comment to backend
+//       await ApiService.sendComment(widget.token, comment);
 
-//     if (response.statusCode == 200) {
 //       // Add comment to local list and update UI
 //       setState(() {
 //         _comments.add(newComment);
@@ -232,7 +229,7 @@ class _ArticleDetailState extends State<ArticleDetail> {
 
 //       // Clear the comment text field
 //       _commentController.clear();
-//     } else {
+//     } catch (e) {
 //       // Handle error
 //       setState(() {
 //         _isLoading = false;
