@@ -44,5 +44,5 @@ final Map<String, WidgetBuilder> routes = {
   '/employeeScreen': (context) => EmployeeGridScreen(),
   '/employee':(context) => EmployeeScreen(),
   '/leavePolicy': (context) => LeavePolicy(),
-  '/dashboard':(context) => MainScreen(token: ''),
+  // '/dashboard':(context) => MainScreen(token: ''),
 };

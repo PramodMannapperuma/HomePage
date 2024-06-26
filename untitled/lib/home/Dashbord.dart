@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:untitled/APIs/Apis.dart';
+import 'package:untitled/home/Dashboard1.dart';
 import 'package:untitled/pages/attendance.dart';
 import 'package:untitled/pages/employee.dart';
 import 'package:untitled/pages/leave.dart';
@@ -30,7 +31,8 @@ class _MainScreenState extends State<MainScreen> {
       Attendance(),
       Leave(),
       DashboardScreen(token: widget.token), // Pass token to DashboardScreen
-      TaskScreen(),
+      // TaskScreen(),
+      DashMainScreen(token: widget.token),
       EmployeeScreen(),
     ];
   }
@@ -40,14 +42,6 @@ class _MainScreenState extends State<MainScreen> {
       _selectedIndex = index;
     });
   }
-
-  // static List<Widget> _widgetOptions = <Widget>[
-  //   Attendance(),
-  //   Leave(),
-  //   DashboardScreen(token: widget.token),
-  //   TaskScreen(),
-  //   EmployeeScreen(),
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -209,7 +203,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       onTap: () {
                         Navigator.pop(context);
-                        Navigator.pushNamed(context, '/dashboard', );
+                        Navigator.pushNamed(context, '/home');
                       },
                     ),
                     // Divider(thickness: 0.2,),
