@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/auth/login.dart';
-import 'package:untitled/home/Dashbord.dart';
-//import 'package:untitled/pages/approval_task.dart';
-import 'package:untitled/pages/attendance.dart';
-import 'package:untitled/graphs/attendance_tracker.dart';
-import 'package:untitled/pages/celebrations.dart';
-import 'package:untitled/pages/employee.dart';
-import 'package:untitled/pages/leave.dart';
-import 'package:untitled/pages/news.dart';
-import 'package:untitled/pages/news_screen.dart';
-import 'package:untitled/pages/payslip.dart';
-import 'package:untitled/pages/policies.dart';
-import 'package:untitled/pages/policy_pdf.dart';
-import 'package:untitled/pages/profile.dart';
-import 'package:untitled/pages/requests.dart';
-import 'package:untitled/pages/task_screen.dart';
-import 'package:untitled/pages/team_task.dart';
-import 'package:untitled/pages/users.dart';
-import 'package:untitled/profile/career_profile.dart';
-import 'package:untitled/profile/contact_info.dart';
-import 'package:untitled/profile/personal_info.dart';
-import 'homepage.dart';
+import 'Frontend/graphs/attendance_tracker.dart';
+import 'Frontend/pages/celebrations.dart';
+import 'Frontend/pages/employee.dart';
+import 'Frontend/pages/leave.dart';
+import 'Frontend/pages/attendance.dart';
+import 'Frontend/auth/login.dart';
+import 'Frontend/homepage.dart';
+import 'Frontend/pages/news_screen.dart';
+import 'Frontend/pages/payslip.dart';
+import 'Frontend/pages/policies.dart';
+import 'Frontend/pages/policy_pdf.dart';
+import 'Frontend/pages/profile.dart';
+import 'Frontend/pages/requests.dart';
+import 'Frontend/pages/task_screen.dart';
+import 'Frontend/pages/team_task.dart';
+import 'Frontend/pages/users.dart';
+import 'Frontend/profile/career_profile.dart';
+import 'Frontend/profile/contact_info.dart';
+import 'Frontend/profile/personal_info.dart';
 
 final Map<String, WidgetBuilder> routes = {
   '/login': (context) => Login(),
