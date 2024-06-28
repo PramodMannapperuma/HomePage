@@ -79,6 +79,7 @@ class _LeaveState extends State<Leave> {
               // ),
               // SizedBox(height: 4),
               // Leave Details Section
+
               Text('Leave Details',
                   style: TextStyle(
                       fontSize: 18,
@@ -170,22 +171,21 @@ class _LeaveState extends State<Leave> {
                   errorText: errorMessages['description'],
                 ),
                 maxLines: 3,
-                  onChanged: (value) {
-                    setState(() {
-                      notifyEmployee = value;
-                      if (value.isNotEmpty) {
-                        errorMessages['description'] = null;
-                      }
-                    });
-                  },
+                onChanged: (value) {
+                  setState(() {
+                    description = value;
+                    if (value.isNotEmpty) {
+                      errorMessages['description'] = null;
+                    }
+                  });
+                },
               ),
-
               SizedBox(height: 5),
               Row(
                 children: [
                   Text('Dates',
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   Spacer(),
                   TextButton(
                     onPressed: () {
@@ -201,48 +201,70 @@ class _LeaveState extends State<Leave> {
               Row(
                 children: [
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                        );
-                        if (picked != null && picked != startDate)
-                          setState(() {
-                            startDate = picked;
-                            errorMessages['startDate'] = null;
-                          });
-                      },
-                      child: Text(
-                        startDate == null
-                            ? 'Start Date'
-                            : '${startDate!.toLocal()}'.split(' ')[0],
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            final picked = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2101),
+                            );
+                            if (picked != null && picked != startDate) {
+                              setState(() {
+                                startDate = picked;
+                                errorMessages['startDate'] = null;
+                              });
+                            }
+                          },
+                          child: Text(
+                            startDate == null
+                                ? 'Start Date'
+                                : '${startDate!.toLocal()}'.split(' ')[0],
+                          ),
+                        ),
+                        if (errorMessages['startDate'] != null)
+                          Text(
+                            errorMessages['startDate']!,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                      ],
                     ),
                   ),
                   SizedBox(width: 8),
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                        );
-                        if (picked != null && picked != endDate)
-                          setState(() {
-                            endDate = picked;
-                            errorMessages['endDate'] = null;
-                          });
-                      },
-                      child: Text(
-                        endDate == null
-                            ? 'Due Date'
-                            : '${endDate!.toLocal()}'.split(' ')[0],
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            final picked = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2101),
+                            );
+                            if (picked != null && picked != endDate) {
+                              setState(() {
+                                endDate = picked;
+                                errorMessages['endDate'] = null;
+                              });
+                            }
+                          },
+                          child: Text(
+                            endDate == null
+                                ? 'End Date'
+                                : '${endDate!.toLocal()}'.split(' ')[0],
+                          ),
+                        ),
+                        if (errorMessages['endDate'] != null)
+                          Text(
+                            errorMessages['endDate']!,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                      ],
                     ),
                   ),
                 ],
@@ -297,7 +319,22 @@ class _LeaveState extends State<Leave> {
     // Validate the form
     if (_validateForm()) {
       // Form is valid, save or process data
-      Navigator.pushNamed(context, '/home');
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Leave Request Submitted'),
+          content: Text('Your leave request has been successfully submitted.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pop(context); // Navigate back
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     } else {
       // Form is not valid, show error messages
       showDialog(
