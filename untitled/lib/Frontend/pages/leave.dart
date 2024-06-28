@@ -58,6 +58,28 @@ class _LeaveState extends State<Leave> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // SizedBox(height: 8),
+              // Text('Leave Chart',
+              //     style: TextStyle(
+              //         fontSize: 18,
+              //         fontWeight: FontWeight.bold,
+              //         color: Colors.purple)),
+              // SizedBox(height: 8),
+              // SizedBox(
+              //   height: 200,
+              //   child: LeaveBar(
+              //     leaveData: leaveDetails.values.toList(),
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 4,
+              // ),
+              // Divider(
+              //   thickness: 1,
+              // ),
+              // SizedBox(height: 4),
+              // Leave Details Section
+
               Text('Leave Details',
                   style: TextStyle(
                       fontSize: 18,
