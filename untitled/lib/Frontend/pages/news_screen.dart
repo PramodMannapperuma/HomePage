@@ -4,7 +4,7 @@ import '../app_bar.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 import 'celebrations.dart';
-import 'news.dart';
+import 'Anniversaries.dart';
 import 'event.dart';
 
 class NewsScreen extends StatelessWidget {
