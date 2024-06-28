@@ -99,6 +99,9 @@ flutter:
      - assets/images/concert.jpg
      - assets/images/exhibition.jpg
      - assets/images/conference.jpeg
+     - assets/images/officeparty.png
+     - assets/images/employmonth.jpg
+     - assets/images/TEAMWORK.jpg
 
   #   - images/a_dot_ham.jpeg
 
