@@ -14,19 +14,19 @@ class News extends StatefulWidget {
 class _NewsState extends State<News> {
   final List<Map<String, String>> newsArticles = [
     {
-      'title': 'Today is Monday!',
-      'description': 'Date is June 10.',
-      'image': 'assets/images/Monday.jpg',
+      'title': 'Work Anniversary: John Doe',
+      'description': 'Celebrating 5 years of excellence.',
+      'image': 'assets/images/work-anniversaries.png',
     },
     {
-      'title': 'Happy Birthday',
-      'description': 'Today is your birthday.',
-      'image': 'assets/images/Birthday.jpeg',
+      'title': 'Promotion Anniversary: Jane Smith',
+      'description': 'One year since promotion to Team Lead.',
+      'image': 'assets/images/Promotion.png',
     },
     {
-      'title': 'Tomorrow is Tuesday!',
-      'description': 'Date is June 11.',
-      'image': 'assets/images/Tuesday.jpg',
+      'title': 'Company Founding Day',
+      'description': 'Commemorating 10 years since our founding.',
+      'image': 'assets/images/founder.jpeg',
     },
   ];
 
