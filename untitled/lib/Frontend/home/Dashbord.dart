@@ -278,44 +278,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       thickness: 2,
                       height: 10,
                     ),
-                    SizedBox(height: 10),
+                    // SizedBox(height: 10),
 
-                    // Today's Task
-                    Text(
-                      'Today\'s Task',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TaskCard(
-                            title: 'Lorem Ipsum Dolor',
-                            time: '9:00 AM',
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: TaskCard(
-                            title: 'Lorem Ipsum Dolor',
-                            time: '9:00 AM',
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Divider(
-                      thickness: 2,
-                      height: 10,
-                    ),
+                    // // Today's Task
+                    // Text(
+                    //   'Today\'s Task',
+                    //   style: TextStyle(
+                    //     fontSize: 18,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
+                    // SizedBox(height: 5),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: TaskCard(
+                    //         title: 'Lorem Ipsum Dolor',
+                    //         time: '9:00 AM',
+                    //       ),
+                    //     ),
+                    //     SizedBox(width: 10),
+                    //     Expanded(
+                    //       child: TaskCard(
+                    //         title: 'Lorem Ipsum Dolor',
+                    //         time: '9:00 AM',
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(height: 10),
+                    // Divider(
+                    //   thickness: 2,
+                    //   height: 10,
+                    // ),
                     SizedBox(height: 10),
 
                     // Recent Leave Request
                     Text(
-                      'Recent Leave Request',
+                      'Recent Requests',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -324,6 +324,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(height: 10),
                     RecentLeaveRequestCard(
                       leaveType: '3 Days Leave',
+                      status: 'Processing',
+                    ),RecentLeaveRequestCard(
+                      leaveType: 'Attendance',
+                      status: 'Processing',
+                    ),RecentLeaveRequestCard(
+                      leaveType: 'Visa Letter',
                       status: 'Processing',
                     ),
                   ],
@@ -377,41 +383,41 @@ class CategoryCard extends StatelessWidget {
   }
 }
 
-class TaskCard extends StatelessWidget {
-  final String title;
-  final String time;
-
-  const TaskCard({required this.title, required this.time});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 145,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: TextStyle(fontSize: 16)),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(time, style: TextStyle(color: Colors.grey)),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text('View'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+// class TaskCard extends StatelessWidget {
+//   final String title;
+//   final String time;
+//
+//   const TaskCard({required this.title, required this.time});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return SizedBox(
+//       height: 145,
+//       child: Card(
+//         child: Padding(
+//           padding: const EdgeInsets.all(16.0),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Text(title, style: TextStyle(fontSize: 16)),
+//               SizedBox(height: 10),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Text(time, style: TextStyle(color: Colors.grey)),
+//                   TextButton(
+//                     onPressed: () {},
+//                     child: Text('View'),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class RecentLeaveRequestCard extends StatelessWidget {
   final String leaveType;
