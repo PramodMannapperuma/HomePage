@@ -258,7 +258,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -268,30 +268,30 @@ class _DashMainScreenState extends State<DashMainScreen> {
     );
   }
 
-  Widget _buildProfileInfoItem(String title, String value, Color color) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildProfileInfoItem(String title, String value, Color color) {
+  //   return Expanded(
+  //     child: Column(
+  //       children: [
+  //         Text(
+  //           value,
+  //           style: TextStyle(
+  //             fontSize: 24,
+  //             fontWeight: FontWeight.bold,
+  //             color: color,
+  //           ),
+  //         ),
+  //         SizedBox(height: 5),
+  //         Text(
+  //           title,
+  //           style: TextStyle(
+  //             fontSize: 16,
+  //             color: Colors.grey,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildAttendanceItem(String title, String value, Color color) {
     return Column(
@@ -338,36 +338,36 @@ class _DashMainScreenState extends State<DashMainScreen> {
       ],
     );
   }
-
-  Widget _buildTaskItem(String title, String subtitle, Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Icon(Icons.check_circle_outline, color: color),
-          SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  //
+  // Widget _buildTaskItem(String title, String subtitle, Color color) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //     child: Row(
+  //       children: [
+  //         Icon(Icons.check_circle_outline, color: color),
+  //         SizedBox(width: 10),
+  //         Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Text(
+  //               title,
+  //               style: TextStyle(
+  //                 fontSize: 16,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             SizedBox(height: 5),
+  //             Text(
+  //               subtitle,
+  //               style: TextStyle(
+  //                 fontSize: 14,
+  //                 color: Colors.grey,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

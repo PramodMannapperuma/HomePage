@@ -315,7 +315,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     // Recent Leave Request
                     Text(
-                      'Recent Leave Request',
+                      'Recent Requests',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
