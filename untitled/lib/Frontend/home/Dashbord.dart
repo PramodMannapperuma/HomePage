@@ -224,9 +224,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           token: widget.token,
                         ),
                         CategoryCard(
-                          title: 'Task',
+                          title: 'Policy',
                           icon: Icons.task_outlined,
-                          route: '/taskScreen',
+                          route: '/policies',
                           token: widget.token,
                         ),
                         CategoryCard(

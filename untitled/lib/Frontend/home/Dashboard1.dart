@@ -88,16 +88,19 @@ class _DashMainScreenState extends State<DashMainScreen> {
 
           DashboardData data = snapshot.data!;
 
+          String workingDays = data.attendance?.working?.toString() ?? 'N/A' ;
+          String noPay = data.attendance?.nopay?.toString() ?? 'N/A';
+
           // Extract attendance data
-          String present = data.attendance?.attendance?.attendance?.toString() ?? '0';
-          String absent = data.attendance?.attendance?.rejected?.toString() ?? '0';
-          String onLeave = data.attendance?.attendance?.pending?.toString() ?? '0';
-          String noPay = data.attendance?.nopay?.toString() ?? '0';
+          String complete = data.attendance?.attendance?.attendance?.toString() ?? 'N/A';
+          String incomplete = data.attendance?.attendance?.rejected?.toString() ?? 'N/A';
+          String pending = data.attendance?.attendance?.pending?.toString() ?? 'N/A';
+          String rejected = data.attendance?.attendance?.rejected?.toString() ?? 'N/A';
 
           // Extract leave balance data
-          String annualLeave = data.attendance?.leave?.active?.toString() ?? '0';
-          String sickLeave = data.attendance?.leave?.pending?.toString() ?? '0';
-          String casualLeave = data.attendance?.leave?.rejected?.toString() ?? '0';
+          String leaveTaken = data.attendance?.leave?.active?.toString() ?? 'N/A';
+          String leavePending = data.attendance?.leave?.pending?.toString() ?? 'N/A';
+          String leaveRejected = data.attendance?.leave?.rejected?.toString() ?? 'N/A';
 
           return SingleChildScrollView(
             child: Padding(
@@ -141,6 +144,43 @@ class _DashMainScreenState extends State<DashMainScreen> {
                   ),
                   SizedBox(height: 20),
 
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Working Days and No Pay',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildAttendanceItem('Working Days', workingDays, Colors.green),
+                            _buildAttendanceItem('No Pay', noPay, Colors.red),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+
                   // Attendance section
                   Container(
                     padding: EdgeInsets.all(16),
@@ -170,12 +210,10 @@ class _DashMainScreenState extends State<DashMainScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _buildAttendanceItem('Present', present, Colors.green),
-                            _buildAttendanceItem('Absent', absent, Colors.red),
-                            _buildAttendanceItem(
-                                'On Leave', onLeave, Colors.orange),
-                            _buildAttendanceItem(
-                                'no pay', noPay, Colors.orange),
+                            _buildAttendanceItem('Complete', complete, Colors.green),
+                            _buildAttendanceItem('Incomplete', incomplete, Colors.orange),
+                            _buildAttendanceItem('Pending', pending, Colors.blue),
+                            _buildAttendanceItem('Rejected', rejected, Colors.red),
                           ],
                         ),
                       ],
@@ -212,9 +250,9 @@ class _DashMainScreenState extends State<DashMainScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _buildLeaveItem('Annual Leave', annualLeave),
-                            _buildLeaveItem('Sick Leave', sickLeave),
-                            _buildLeaveItem('Casual Leave', casualLeave),
+                            _buildLeaveItem('Taken', leaveTaken),
+                            _buildLeaveItem('Pending', leavePending),
+                            _buildLeaveItem('Rejected', leaveRejected),
                           ],
                         ),
                       ],
