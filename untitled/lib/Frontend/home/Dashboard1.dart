@@ -83,7 +83,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data == null) {
-            return Center(child: Text('No data available'));
+            return const Center(child: Text('No data available'));
           }
 
           DashboardData data = snapshot.data!;
