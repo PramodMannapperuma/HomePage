@@ -30,7 +30,7 @@ class _MainScreenState extends State<MainScreen> {
     // futureProfile = ApiService.getProfile(widget.token);
     _widgetOptions = <Widget>[
       // Initialize here
-      Attendance(),
+      Attendance(token: widget.token,),
       Leave(),
       DashboardScreen(token: widget.token), // Pass token to DashboardScreen
       // TaskScreen(),
