@@ -22,7 +22,7 @@ import 'Frontend/profile/personal_info.dart';
 final Map<String, WidgetBuilder> routes = {
   '/login': (context) => Login(),
   '/home': (context) => MyHomePage(token: null,),
-  '/attendance': (context) => Attendance(),
+  '/attendance': (context) => Attendance(token: '',),
   '/leave': (context) => Leave(),
   // '/news': (context) => News(),
   '/news_screen': (context) => NewsScreen(),
