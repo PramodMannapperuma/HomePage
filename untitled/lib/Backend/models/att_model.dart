@@ -4,7 +4,7 @@ class AttendanceData {
   final String? amdOut;
   final String? comment;
   final String? recOut;
-  final String date;
+  final String? date;
   final String? status;
 
   AttendanceData({
@@ -13,17 +13,19 @@ class AttendanceData {
     this.amdOut,
     this.comment,
     this.recOut,
-    required this.date,
+    this.date,
     this.status,
   });
 
   factory AttendanceData.fromJson(Map<String, dynamic> json) {
+    final data = json['data'];
+
     return AttendanceData(
-      amdIn: json['data']['amd_in'],
-      recIn: json['data']['rec_in'],
-      amdOut: json['data']['amd_out'],
-      comment: json['data']['comment'],
-      recOut: json['data']['rec_out'],
+      amdIn: data['amd_in'],
+      recIn: data['rec_in'],
+      amdOut: data['amd_out'],
+      comment: data['comment'],
+      recOut: data['rec_out'],
       date: json['date'],
       status: json['status'],
     );
