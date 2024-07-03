@@ -217,12 +217,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       children: [
-                        CategoryCard(
-                          title: 'Attendance',
-                          icon: Icons.calendar_today,
-                          route: '/attendance',
-                          token: widget.token,
-                        ),
+                        // CategoryCard(
+                        //   title: 'Attendance',
+                        //   icon: Icons.calendar_today,
+                        //   route: '/attendance',
+                        //   token: widget.token,
+                        // ),
                         CategoryCard(
                           title: 'Policy',
                           icon: Icons.task_outlined,

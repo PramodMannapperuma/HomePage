@@ -61,6 +61,7 @@ class _AttendanceState extends State<Attendance> {
         _selectedEvents.value = _getEventsForDay(selectedDate);
         futureAttendanceData =
             apiService.fetchAttendanceData(widget.token, selectedDate);
+        print('Token in ondayselected${widget.token}');
       });
     }
   }
