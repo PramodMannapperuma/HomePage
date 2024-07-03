@@ -17,6 +17,7 @@ class Attendance extends StatefulWidget {
 class _AttendanceState extends State<Attendance> {
 
   // final String? token = widget.token;
+  // final token = widget.token;
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
@@ -40,7 +41,9 @@ class _AttendanceState extends State<Attendance> {
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
     futureAttendanceData =
         apiService.fetchAttendanceData(widget.token, _selectedDay!);
+    print('Token in attendance is ${widget.token}');
   }
+
 
   @override
   void dispose() {
@@ -58,6 +61,7 @@ class _AttendanceState extends State<Attendance> {
         _selectedEvents.value = _getEventsForDay(selectedDate);
         futureAttendanceData =
             apiService.fetchAttendanceData(widget.token, selectedDate);
+        print('Token in ondayselected${widget.token}');
       });
     }
   }
@@ -237,10 +241,6 @@ class _AttendanceState extends State<Attendance> {
           Divider(
             thickness: 1,
           ),
-          // Text(
-          //   'Selected Date = ' + today.toString().split(" ")[0],
-          //   style: TextStyle(fontSize: 16),
-          // ),
           SizedBox(
             height: 8.0,
           ),
