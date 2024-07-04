@@ -60,4 +60,25 @@ class ApiService {
       throw Exception('Failed to get d attendance');
     }
   }
+
+  Future<List<AttendanceData>> fetchLeaveData(
+      String token, DateTime selectedDate) async {
+    final response = await http.get(
+      Uri.parse('http://hris.accelution.lk/api/leave/$selectedDate'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    print('Status code: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    print('Token after Function :$token');
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body)['data'];
+      return data.map((item) => AttendanceData.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to get leave');
+    }
+  }
 }
