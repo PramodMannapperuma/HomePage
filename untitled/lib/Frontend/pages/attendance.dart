@@ -4,7 +4,7 @@ import 'package:untitled/Backend/APIs/Apis.dart';
 import '../../Backend/models/att_model.dart';
 import '../app_bar.dart';
 import '../styles/sidebar.dart';
-//import 'location_service.dart'; // Import the location service
+// import 'location_service.dart'; // Import the location service
 
 class Attendance extends StatefulWidget {
   final String token;
@@ -36,7 +36,7 @@ class _AttendanceState extends State<Attendance> {
   final ApiService apiService = ApiService();
   // final LocationService locationService = LocationService();
 
-  // String? currentLocation;
+  String? currentLocation;
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _AttendanceState extends State<Attendance> {
     futureAttendanceData =
         apiService.fetchAttendanceData(widget.token, _selectedDay!);
     print('Token in attendance is ${widget.token}');
-    //_fetchLocation(); // Fetch location on initialization
+    // _fetchLocation(); // Fetch location on initialization
   }
 
   //   Future<void> _fetchLocation() async {
