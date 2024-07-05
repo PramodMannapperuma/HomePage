@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:untitled/Frontend/pages/calender_page.dart';
+// import '../../Backend/models/dash_model.dart';
 import '../../Backend/APIs/Apis.dart';
 import '../../../Frontend/pages/attendance.dart';
 import '../../../Frontend/pages/leave.dart';
@@ -30,12 +31,13 @@ class _MainScreenState extends State<MainScreen> {
     // futureProfile = ApiService.getProfile(widget.token);
     _widgetOptions = <Widget>[
       // Initialize here
-      Attendance(token: widget.token,),
+      Attendance(token: widget.token),
       Leave(),
       DashboardScreen(token: widget.token), // Pass token to DashboardScreen
       // TaskScreen(),
       DashMainScreen(token: widget.token),
-      EmployeeScreen(),
+      // EmployeeScreen(),
+      CalendarPage(token: widget.token),
     ];
   }
 
