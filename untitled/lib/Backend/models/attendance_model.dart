@@ -58,7 +58,7 @@ class Employee {
 
 class Attendance {
   Leave? leave;
-  double? nopay;
+  int? nopay;
   int? working;
   AttendanceDetails? attendance;
 
@@ -67,8 +67,8 @@ class Attendance {
   factory Attendance.fromJson(Map<String, dynamic> json) {
     return Attendance(
       leave: json['leave'] != null ? Leave.fromJson(json['leave']) : null,
-      nopay: json['nopay'],
-      working: json['working'],
+      nopay: json['nopay']?.toInt(),
+      working: json['working']?.toInt(),
       attendance: json['attendance'] != null
           ? AttendanceDetails.fromJson(json['attendance'])
           : null,
@@ -77,35 +77,35 @@ class Attendance {
 }
 
 class Leave {
-  double? active;
-  double? pending;
-  double? rejected;
+  int? active;
+  int? pending;
+  int? rejected;
 
   Leave({this.active, this.pending, this.rejected});
 
   factory Leave.fromJson(Map<String, dynamic> json) {
     return Leave(
-      active: json['active'],
-      pending: json['pending'],
-      rejected: json['rejected'],
+      active: json['active']?.toInt(),
+      pending: json['pending']?.toInt(),
+      rejected: json['rejected']?.toInt(),
     );
   }
 }
 
 class AttendanceDetails {
-  double? pending;
-  double? rejected;
-  double? attendance;
+  int? pending;
+  int? rejected;
+  int? attendance;
   int? incomplete;
 
   AttendanceDetails({this.pending, this.rejected, this.attendance, this.incomplete});
 
   factory AttendanceDetails.fromJson(Map<String, dynamic> json) {
     return AttendanceDetails(
-      pending: json['pending'],
-      rejected: json['rejected'],
-      attendance: json['attendance'],
-      incomplete: json['incomplete'],
+      pending: json['pending']?.toInt(),
+      rejected: json['rejected']?.toInt(),
+      attendance: json['attendance']?.toInt(),
+      incomplete: json['incomplete']?.toInt(),
     );
   }
 }
@@ -113,7 +113,7 @@ class AttendanceDetails {
 class Attendance6m {
   Leave? leave;
   String? month;
-  double? nopay;
+  int? nopay;
   int? working;
   AttendanceDetails? attendance;
 
@@ -123,8 +123,8 @@ class Attendance6m {
     return Attendance6m(
       leave: json['leave'] != null ? Leave.fromJson(json['leave']) : null,
       month: json['month'],
-      nopay: json['nopay'],
-      working: json['working'],
+      nopay: json['nopay']?.toInt(),
+      working: json['working']?.toInt(),
       attendance: json['attendance'] != null
           ? AttendanceDetails.fromJson(json['attendance'])
           : null,
