@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:untitled/Backend/models/leave_model.dart';
 import '../models/att_model.dart';
-import '../models/attendance_model.dart';
+import '../models/dash_model.dart';
 
 class ApiService {
   static Future<Map<String, dynamic>> getProfile(String token) async {

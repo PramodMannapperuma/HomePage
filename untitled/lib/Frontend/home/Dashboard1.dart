@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 // import '../../Backend/APIs/Apis.dart';
-// import '../../Backend/models/attendance_model.dart';
+// import '../../Backend/models/dash_model.dart';
 // import '../styles/app_colors.dart';
 // import '../styles/sidebar.dart';
 
@@ -377,8 +377,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:untitled/Frontend/pages/calender_page.dart';
 import '../../Backend/APIs/Apis.dart';
-import '../../Backend/models/attendance_model.dart';
+import '../../Backend/models/dash_model.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
@@ -483,7 +484,6 @@ class _DashMainScreenState extends State<DashMainScreen> {
           String leaveTaken = data.attendance?.leave?.active?.toString() ?? 'N/A';
           String leavePending = data.attendance?.leave?.pending?.toString() ?? 'N/A';
           String leaveRejected = data.attendance?.leave?.rejected?.toString() ?? 'N/A';
-          // String Month = data.attendance6m?.
 
           return SingleChildScrollView(
             child: Padding(
@@ -528,10 +528,11 @@ class _DashMainScreenState extends State<DashMainScreen> {
                   SizedBox(height: 20),
 
                   // Calendar Section
+                  // CalendarPage(token:widget.token),
                   Container(
                     margin: const EdgeInsets.only(bottom: 20.0),
                     child: TableCalendar(
-                      rowHeight: 45,
+                      rowHeight: 35,
                       headerStyle: HeaderStyle(
                         titleCentered: true,
                       ),
@@ -564,7 +565,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
                       },
                     ),
                   ),
-                  
+
                   // Working Days and No Pay section
                   Container(
                     padding: EdgeInsets.all(16),
