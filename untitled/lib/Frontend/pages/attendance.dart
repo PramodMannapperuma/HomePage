@@ -4,7 +4,7 @@ import 'package:untitled/Backend/APIs/Apis.dart';
 import '../../Backend/models/att_model.dart';
 import '../app_bar.dart';
 import '../styles/sidebar.dart';
-// import 'location_service.dart'; // Import the location service
+
 
 class Attendance extends StatefulWidget {
   final String token;
@@ -34,9 +34,7 @@ class _AttendanceState extends State<Attendance> {
   late Future<List<AttendanceData>> futureAttendanceData;
 
   final ApiService apiService = ApiService();
-  // final LocationService locationService = LocationService();
 
-  String? currentLocation;
 
   @override
   void initState() {
@@ -46,23 +44,9 @@ class _AttendanceState extends State<Attendance> {
     futureAttendanceData =
         apiService.fetchAttendanceData(widget.token, _selectedDay!);
     print('Token in attendance is ${widget.token}');
-    // _fetchLocation(); // Fetch location on initialization
+
   }
 
-  //   Future<void> _fetchLocation() async {
-  //   try {
-  //     final locationData = await locationService.getLocation();
-  //     final placemarks =
-  //         await locationService.getPlacemark(locationData);
-  //     setState(() {
-  //       currentLocation = placemarks.first.locality ?? 'Unknown location';
-  //     });
-  //   } catch (e) {
-  //     setState(() {
-  //       currentLocation = 'Error fetching location';
-  //     });
-  //   }
-  // }
 
   @override
   void dispose() {
@@ -96,7 +80,7 @@ class _AttendanceState extends State<Attendance> {
       builder: (BuildContext context) {
         return Padding(
           padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -182,7 +166,7 @@ class _AttendanceState extends State<Attendance> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content:
-                                  Text("Please enter Start and Leaving times"),
+                              Text("Please enter Start and Leaving times"),
                               duration: Duration(seconds: 2),
                             ),
                           );
@@ -263,11 +247,6 @@ class _AttendanceState extends State<Attendance> {
           SizedBox(
             height: 8.0,
           ),
-          // if (currentLocation != null)
-          //   Padding(
-          //     padding: const EdgeInsets.all(8.0),
-          //     child: Text('Current Location: $currentLocation'),
-          //   ),
           Expanded(
             child: FutureBuilder<List<AttendanceData>>(
               future: futureAttendanceData,
@@ -281,8 +260,8 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                      (element) =>
-                          element.date == _selectedDay.toString().split(" ")[0],
+                          (element) =>
+                      element.date == _selectedDay.toString().split(" ")[0],
                       orElse: () => AttendanceData(
                           amdIn: 'N/A',
                           recIn: 'N/A',
