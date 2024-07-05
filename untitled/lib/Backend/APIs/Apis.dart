@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:untitled/Backend/models/leave_model.dart';
 import '../models/att_model.dart';
 import '../models/attendance_model.dart';
 
@@ -61,7 +62,7 @@ class ApiService {
     }
   }
 
-  Future<List<AttendanceData>> fetchLeaveData(
+  Future<List<LeaveData>> fetchLeaveData(
       String token, DateTime selectedDate) async {
     final response = await http.get(
       Uri.parse('http://hris.accelution.lk/api/leave/$selectedDate'),
@@ -76,7 +77,7 @@ class ApiService {
     print('Token after Function :$token');
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body)['data'];
-      return data.map((item) => AttendanceData.fromJson(item)).toList();
+      return data.map((item) => LeaveData.fromJson(item)).toList();
     } else {
       throw Exception('Failed to get leave');
     }

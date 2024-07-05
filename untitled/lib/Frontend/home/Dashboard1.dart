@@ -475,7 +475,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
 
           // Extract attendance data
           String complete = data.attendance?.attendance?.attendance?.toString() ?? 'N/A';
-          String incomplete = data.attendance?.attendance?.rejected?.toString() ?? 'N/A';
+          String incomplete = data.attendance?.attendance?.incomplete?.toString() ?? 'N/A';
           String pending = data.attendance?.attendance?.pending?.toString() ?? 'N/A';
           String rejected = data.attendance?.attendance?.rejected?.toString() ?? 'N/A';
 
@@ -483,6 +483,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
           String leaveTaken = data.attendance?.leave?.active?.toString() ?? 'N/A';
           String leavePending = data.attendance?.leave?.pending?.toString() ?? 'N/A';
           String leaveRejected = data.attendance?.leave?.rejected?.toString() ?? 'N/A';
+          // String Month = data.attendance6m?.
 
           return SingleChildScrollView(
             child: Padding(
