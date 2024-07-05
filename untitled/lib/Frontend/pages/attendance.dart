@@ -34,7 +34,7 @@ class _AttendanceState extends State<Attendance> {
   late Future<List<AttendanceData>> futureAttendanceData;
 
   final ApiService apiService = ApiService();
- 
+
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _AttendanceState extends State<Attendance> {
     futureAttendanceData =
         apiService.fetchAttendanceData(widget.token, _selectedDay!);
     print('Token in attendance is ${widget.token}');
-    
+
   }
 
 
@@ -80,7 +80,7 @@ class _AttendanceState extends State<Attendance> {
       builder: (BuildContext context) {
         return Padding(
           padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -166,7 +166,7 @@ class _AttendanceState extends State<Attendance> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content:
-                                  Text("Please enter Start and Leaving times"),
+                              Text("Please enter Start and Leaving times"),
                               duration: Duration(seconds: 2),
                             ),
                           );
@@ -260,8 +260,8 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                      (element) =>
-                          element.date == _selectedDay.toString().split(" ")[0],
+                          (element) =>
+                      element.date == _selectedDay.toString().split(" ")[0],
                       orElse: () => AttendanceData(
                           amdIn: 'N/A',
                           recIn: 'N/A',
