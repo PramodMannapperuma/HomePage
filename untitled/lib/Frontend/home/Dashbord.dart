@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:untitled/Frontend/geolocation.dart';
 import 'package:untitled/Frontend/pages/calender_page.dart';
 // import '../../Backend/models/dash_model.dart';
 import '../../Backend/APIs/Apis.dart';
@@ -32,7 +33,8 @@ class _MainScreenState extends State<MainScreen> {
     _widgetOptions = <Widget>[
       // Initialize here
       Attendance(token: widget.token),
-      Leave(),
+      // Leave(),
+      GeoLocation(token: widget.token),
       DashboardScreen(token: widget.token), // Pass token to DashboardScreen
       // TaskScreen(),
       DashMainScreen(token: widget.token),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/Frontend/geolocation.dart';
 import 'Frontend/graphs/attendance_tracker.dart';
 import 'Frontend/pages/celebrations.dart';
 import 'Frontend/pages/employee.dart';
@@ -25,6 +26,7 @@ final Map<String, WidgetBuilder> routes = {
   '/attendance': (context) => Attendance(token: '',),
   '/leave': (context) => Leave(),
   // '/news': (context) => News(),
+  '/geolocation': (context) => GeoLocation(token:''),
   '/news_screen': (context) => NewsScreen(),
   '/policies': (context) => Policies(),
   '/requests': (context) => Requests(),
