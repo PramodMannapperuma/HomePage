@@ -18,7 +18,7 @@ class _GeoLocationState extends State<GeoLocation> {
   String _currentAddress = "";
 
   Future<Position> _getCurrentLocation() async {
-    servicePermission =await Geolocator.isLocationServiceEnabled();
+    servicePermission = await Geolocator.isLocationServiceEnabled();
     if (!servicePermission) {
       print('Srvice desabled');
     }
@@ -29,23 +29,24 @@ class _GeoLocationState extends State<GeoLocation> {
     return await Geolocator.getCurrentPosition();
   }
 
-  _getAddressFromCoordinates() async{
-    try{
-      List<Placemark> placemarks = await placemarkFromCoordinates(_currentLocation!.latitude, _currentLocation!.longitude);
+  _getAddressFromCoordinates() async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          _currentLocation!.latitude, _currentLocation!.longitude);
 
       Placemark place = placemarks[0];
 
       setState(() {
-        _currentAddress = "${place.street}, ${place.locality }, ${place.country}";
+        _currentAddress =
+            "${place.street}, ${place.locality}, ${place.country}";
       });
     } catch (e) {
       print(e);
     }
   }
+
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: customAppBar(
           title: 'location',
@@ -64,7 +65,8 @@ class _GeoLocationState extends State<GeoLocation> {
             SizedBox(
               height: 6,
             ),
-            Text('Latitude = ${_currentLocation?.latitude} ; Longitude = ${_currentLocation?.longitude}'),
+            Text(
+                'Latitude = ${_currentLocation?.latitude} ; Longitude = ${_currentLocation?.longitude}'),
             SizedBox(
               height: 30.0,
             ),
