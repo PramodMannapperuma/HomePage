@@ -112,9 +112,9 @@ class _CalendarPageState extends State<CalendarPage> {
 
       ),
       body: Container(
-        margin: const EdgeInsets.all(16.0),
+        margin: const EdgeInsets.only(bottom: 20.0),
         child: TableCalendar(
-          rowHeight: 50,
+          rowHeight: 45,
           headerStyle: HeaderStyle(
             titleCentered: true,
             formatButtonVisible: true,
