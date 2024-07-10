@@ -255,7 +255,7 @@ class _AttendanceState extends State<Attendance> {
           ),
         ],
       ),
-      drawer: CustomSidebar(),
+      drawer: CustomSidebar(token: widget.token,),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4d2880),
         onPressed: () {

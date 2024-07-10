@@ -42,7 +42,7 @@ class _NewsState extends State<News> {
           showLeading: true,
           context: context,
           showBackButton: true),
-      drawer: CustomSidebar(),
+      drawer: CustomSidebar(token: '',),
       body: ListView.builder(
         itemCount: newsArticles.length,
         itemBuilder: (context, index) {

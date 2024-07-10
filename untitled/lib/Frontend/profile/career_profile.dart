@@ -27,7 +27,7 @@ class _CareerProfileState extends State<CareerProfile> {
         context: context,
         showBackButton: true, // Show back button instead of hamburger icon
       ),
-      drawer: CustomSidebar(),
+      drawer: CustomSidebar(token: widget.token,),
       body: FutureBuilder<Map<String, dynamic>>(
         future: ApiService.getProfile(widget.token),
         builder: (context, snapshot) {

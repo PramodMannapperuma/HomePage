@@ -64,7 +64,7 @@ class TaskScreen extends StatelessWidget {
         context: context,
         showBackButton: true, // Show back button instead of hamburger icon
       ),
-      drawer: CustomSidebar(),
+      drawer: CustomSidebar(token: '',),
       body: Container(
         color: Colors.grey[200],
         padding: EdgeInsets.all(16.0),

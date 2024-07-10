@@ -166,7 +166,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     },
                   ),
                 ]),
-            drawer: CustomSidebar(),
+            drawer: CustomSidebar(token: widget.token),
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),

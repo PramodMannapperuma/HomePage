@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomSidebar extends StatelessWidget {
-  const CustomSidebar({super.key});
+  final String token;
+  const CustomSidebar({super.key, required this.token});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,7 @@ class CustomSidebar extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/dashboard');
+                Navigator.pushNamed(context, '/dashboard', arguments: token);
               },
             ),
             ListTile(
@@ -57,7 +58,7 @@ class CustomSidebar extends StatelessWidget {
               title: Text('Attendance'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/attendance');
+                Navigator.pushNamed(context, '/attendance',arguments: token);
               },
             ),
             ListTile(
@@ -69,7 +70,7 @@ class CustomSidebar extends StatelessWidget {
               title: Text('Leaves'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/leave');
+                Navigator.pushNamed(context, '/leave',arguments: token);
               },
             ),
             ListTile(
@@ -93,7 +94,7 @@ class CustomSidebar extends StatelessWidget {
               title: Text('Profile'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/profile');
+                Navigator.pushNamed(context, '/profile',arguments: token);
               },
             ),
             ListTile(

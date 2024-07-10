@@ -43,7 +43,7 @@ class _EventState extends State<Event> {
           showLeading: true,
           context: context,
           showBackButton: true),
-      drawer: CustomSidebar(),
+      drawer: CustomSidebar(token: '',),
       body: ListView.builder(
         itemCount: eventArticles.length,
         itemBuilder: (context, index) {

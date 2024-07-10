@@ -20,7 +20,7 @@ class NewsScreen extends StatelessWidget {
         context: context,
         showBackButton: true,
       ),
-      drawer: CustomSidebar(),
+      drawer: CustomSidebar(token: '',),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
