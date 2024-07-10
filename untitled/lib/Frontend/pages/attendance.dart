@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:untitled/Backend/APIs/Apis.dart';
 import '../../Backend/models/att_model.dart';
 import '../app_bar.dart';
+import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
 
@@ -190,12 +192,52 @@ class _AttendanceState extends State<Attendance> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(
-        title: 'Attendance',
-        showActions: true,
-        showLeading: true,
-        context: context,
-        showBackButton: true,
+      appBar: AppBar(
+        // backgroundColor: const Color(0xff4d2880),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/hrislogo2.png',
+              height: 40.0,
+            ),
+            SizedBox(
+              width: 8.0,
+            ),
+          ],
+        ),
+        centerTitle: true,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.menu_outlined,
+                  color: AppColors.background,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              ),
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.person,
+              color: AppColors.background,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile',arguments: widget.token);
+            },
+          ),
+        ],
       ),
       drawer: CustomSidebar(),
       floatingActionButton: FloatingActionButton(
@@ -212,9 +254,31 @@ class _AttendanceState extends State<Attendance> {
         children: [
           Container(
             child: TableCalendar(
-              rowHeight: 45,
+              rowHeight: 40,
               headerStyle: HeaderStyle(
                 titleCentered: true,
+                formatButtonVisible: true,
+                formatButtonShowsNext: false,
+                formatButtonDecoration: BoxDecoration(
+                  color: Color(0xff4d2880),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                formatButtonTextStyle: TextStyle(
+                  color: Colors.white,
+                ),
+                titleTextStyle: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff4d2880),
+                ),
+                leftChevronIcon: Icon(
+                  Icons.chevron_left,
+                  color: Color(0xff4d2880),
+                ),
+                rightChevronIcon: Icon(
+                  Icons.chevron_right,
+                  color: Color(0xff4d2880),
+                ),
               ),
               focusedDay: _focusedDay,
               startingDayOfWeek: StartingDayOfWeek.monday,
@@ -227,6 +291,18 @@ class _AttendanceState extends State<Attendance> {
               eventLoader: _getEventsForDay,
               calendarStyle: CalendarStyle(
                 outsideDaysVisible: false,
+                todayDecoration: BoxDecoration(
+                  color: Color(0xff4d2880),
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Color(0xff9575cd),
+                  shape: BoxShape.circle,
+                ),
+                markerDecoration: BoxDecoration(
+                  color: Color(0xff9575cd),
+                  shape: BoxShape.circle,
+                ),
               ),
               onFormatChanged: (format) {
                 if (_calendarFormat != format) {

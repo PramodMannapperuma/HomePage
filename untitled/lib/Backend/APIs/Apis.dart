@@ -47,7 +47,7 @@ class ApiService {
       String token, DateTime selectedDate) async {
     final formattedDate = _formatDate(selectedDate);
     final response = await http.get(
-      Uri.parse('$_baseUrl/attendance/2024-07-01'),
+      Uri.parse('$_baseUrl/attendance/$formattedDate'),
       headers: _headers(token),
     );
 

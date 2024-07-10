@@ -452,7 +452,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
               color: AppColors.background,
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/profile');
+              Navigator.pushNamed(context, '/profile',arguments: widget.token);
             },
           ),
         ],
@@ -535,6 +535,48 @@ class _DashMainScreenState extends State<DashMainScreen> {
                       rowHeight: 35,
                       headerStyle: HeaderStyle(
                         titleCentered: true,
+                        formatButtonVisible: true,
+                        formatButtonShowsNext: false,
+                        formatButtonDecoration: BoxDecoration(
+                          color: Color(0xff4d2880),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        formatButtonTextStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                        titleTextStyle: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff4d2880),
+                        ),
+                        leftChevronIcon: Icon(
+                          Icons.chevron_left,
+                          color: Color(0xff4d2880),
+                        ),
+                        rightChevronIcon: Icon(
+                          Icons.chevron_right,
+                          color: Color(0xff4d2880),
+                        ),
+                      ),
+                      calendarStyle: CalendarStyle(
+                        outsideDaysVisible: false,
+                        todayDecoration: BoxDecoration(
+                          color: Color(0xff4d2880),
+                          shape: BoxShape.circle,
+                        ),
+                        selectedDecoration: BoxDecoration(
+                          color: Color(0xff9575cd),
+                          shape: BoxShape.circle,
+                        ),
+                        markerDecoration: BoxDecoration(
+                          color: Color(0xff9575cd),
+                          shape: BoxShape.circle,
+                        ),
+                        holidayTextStyle: TextStyle(color: Colors.red),
+                        holidayDecoration: BoxDecoration(
+                          border: Border.all(color: Colors.red),
+                          shape: BoxShape.circle,
+                        ),
                       ),
                       focusedDay: _focusedDay,
                       startingDayOfWeek: StartingDayOfWeek.monday,
@@ -550,9 +592,6 @@ class _DashMainScreenState extends State<DashMainScreen> {
                       firstDay: DateTime.utc(2023, 01, 01),
                       lastDay: DateTime.utc(3030, 12, 31),
                       calendarFormat: _calendarFormat,
-                      calendarStyle: CalendarStyle(
-                        outsideDaysVisible: false,
-                      ),
                       onFormatChanged: (format) {
                         if (_calendarFormat != format) {
                           setState(() {
