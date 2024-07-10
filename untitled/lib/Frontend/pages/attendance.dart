@@ -7,7 +7,6 @@ import '../app_bar.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
-
 class Attendance extends StatefulWidget {
   final String token;
 
@@ -18,7 +17,6 @@ class Attendance extends StatefulWidget {
 }
 
 class _AttendanceState extends State<Attendance> {
-
   // final String? token = widget.token;
   // final token = widget.token;
 
@@ -37,7 +35,6 @@ class _AttendanceState extends State<Attendance> {
 
   final ApiService apiService = ApiService();
 
-
   @override
   void initState() {
     super.initState();
@@ -46,9 +43,7 @@ class _AttendanceState extends State<Attendance> {
     futureAttendanceData =
         apiService.fetchAttendanceData(widget.token, _selectedDay!);
     print('Token in attendance is ${widget.token}');
-
   }
-
 
   @override
   void dispose() {
@@ -82,7 +77,7 @@ class _AttendanceState extends State<Attendance> {
       builder: (BuildContext context) {
         return Padding(
           padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -168,7 +163,7 @@ class _AttendanceState extends State<Attendance> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content:
-                              Text("Please enter Start and Leaving times"),
+                                  Text("Please enter Start and Leaving times"),
                               duration: Duration(seconds: 2),
                             ),
                           );
@@ -336,8 +331,8 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                          (element) =>
-                      element.date == _selectedDay.toString().split(" ")[0],
+                      (element) =>
+                          element.date == _selectedDay.toString().split(" ")[0],
                       orElse: () => AttendanceData(
                           amdIn: 'N/A',
                           recIn: 'N/A',
@@ -346,24 +341,87 @@ class _AttendanceState extends State<Attendance> {
                           recOut: 'N/A',
                           date: _selectedDay.toString().split(" ")[0],
                           status: 'N/A'));
-                  return ListView(
-                    children: [
-                      ListTile(
-                        title: Text('Date: ${selectedDateData.date}'),
-                        subtitle: Column(
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('AMD In: ${selectedDateData.amdIn}'),
-                            Text('Rec In: ${selectedDateData.recIn}'),
-                            Text('AMD Out: ${selectedDateData.amdOut}'),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Date: ${selectedDateData.date}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  'Status: ${selectedDateData.status}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: selectedDateData.status == 'N/A'
+                                        ? Colors.red
+                                        : Colors.green,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Divider(thickness: 1),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('AMD In: ${selectedDateData.amdIn}'),
+                                    SizedBox(height: 4.0),
+                                    Text('AMD Out: ${selectedDateData.amdOut}'),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Rec In: ${selectedDateData.recIn}'),
+                                    SizedBox(height: 4.0),
+                                    Text('Rec Out: ${selectedDateData.recOut}'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Divider(thickness: 1),
                             Text('Comment: ${selectedDateData.comment}'),
-                            Text('Rec Out: ${selectedDateData.recOut}'),
-                            Text('Status: ${selectedDateData.status}'),
                           ],
                         ),
                       ),
-                    ],
+                    ),
                   );
+                  // return ListView(
+                  //   children: [
+                  //     ListTile(
+                  //       title: Text('Date: ${selectedDateData.date}'),
+                  //       subtitle: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Text('AMD In: ${selectedDateData.amdIn}'),
+                  //           Text('Rec In: ${selectedDateData.recIn}'),
+                  //           Text('AMD Out: ${selectedDateData.amdOut}'),
+                  //           Text('Comment: ${selectedDateData.comment}'),
+                  //           Text('Rec Out: ${selectedDateData.recOut}'),
+                  //           Text('Status: ${selectedDateData.status}'),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // );
                 }
               },
             ),
