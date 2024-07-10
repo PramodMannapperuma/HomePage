@@ -201,6 +201,27 @@ class _AttendanceState extends State<Attendance> {
             ),
           ],
         ),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(35.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  "Attendance",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Divider(
+                color: Colors.black,
+                thickness: 0.2,
+              ),
+            ],
+          ),
+        ),
         centerTitle: true,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
