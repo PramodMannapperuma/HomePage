@@ -22,26 +22,37 @@ import 'Frontend/profile/personal_info.dart';
 
 final Map<String, WidgetBuilder> routes = {
   '/login': (context) => Login(),
-  '/home': (context) => MyHomePage(token: null,),
-  '/attendance': (context) => Attendance(token: '',),
+  '/home': (context) => MyHomePage(
+        token: null,
+      ),
+  '/attendance': (context) => Attendance(
+        token:
+            "eyJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjUsInRlbmV0IjoiYWNjZWx1dGlvbi5sayIsInN1YiI6Imd1cnVnZUBhY2NlbHV0aW9uLmxrIiwiaWF0IjoxNzIwNjAyNzk4LCJleHAiOjE3MjA2ODkxOTh9.85sjhUAYzfiNJC4qxrCUNx0OvrepgVgHJw84OY3pv_s",
+      ),
   '/leave': (context) => Leave(),
   // '/news': (context) => News(),
-  '/geolocation': (context) => GeoLocation(token:''),
+  '/geolocation': (context) => GeoLocation(token: ''),
   '/news_screen': (context) => NewsScreen(),
   '/policies': (context) => Policies(),
   '/requests': (context) => Requests(),
   '/celebrations': (context) => Celebrations(),
-  '/personalInfo': (context) => PersonalInfo(token: '',),
+  '/personalInfo': (context) => PersonalInfo(
+        token: '',
+      ),
   '/payslips': (context) => PaySlip(),
   //'/approvalTask': (context) => ApprovalTask(),
-  '/careerProfile': (context) => CareerProfile(token: '',),
+  '/careerProfile': (context) => CareerProfile(
+        token: '',
+      ),
   '/profile': (context) => ProfilePage(),
-  '/contactInfo': (context) => ContactInfo(token: '',),
+  '/contactInfo': (context) => ContactInfo(
+        token: '',
+      ),
   '/attendanceTracker': (context) => AttendanceTracker(),
-  '/taskScreen':(context) => TaskScreen(),
-  '/taskList':(context) => TaskListScreen(),
+  '/taskScreen': (context) => TaskScreen(),
+  '/taskList': (context) => TaskListScreen(),
   '/employeeScreen': (context) => EmployeeGridScreen(),
-  '/employee':(context) => EmployeeScreen(),
+  '/employee': (context) => EmployeeScreen(),
   '/leavePolicy': (context) => LeavePolicy(),
   // '/dashboard':(context) => MainScreen(token: ''),
 };

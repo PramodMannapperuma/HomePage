@@ -457,7 +457,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
           ),
         ],
       ),
-      drawer: CustomSidebar(),
+      drawer: CustomSidebar(token: widget.token,),
       body: FutureBuilder<DashboardData>(
         future: futureDashboardData,
         builder: (context, snapshot) {

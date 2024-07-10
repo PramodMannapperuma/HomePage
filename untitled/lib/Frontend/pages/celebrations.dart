@@ -42,7 +42,7 @@ class _CelebrationsState extends State<Celebrations> {
           showLeading: true,
           context: context,
           showBackButton: true),
-      drawer: CustomSidebar(),
+      drawer: CustomSidebar(token: '',),
       body: ListView.builder(
         itemCount: celebrationArticles.length,
         itemBuilder: (context, index) {

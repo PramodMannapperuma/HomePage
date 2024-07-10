@@ -51,7 +51,7 @@ class _LeaveState extends State<Leave> {
         context: context,
         showBackButton: true,
       ),
-      drawer: CustomSidebar(),
+      drawer: CustomSidebar(token: '',),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

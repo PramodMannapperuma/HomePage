@@ -26,7 +26,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
         context: context,
         showBackButton: true, // Show back button instead of hamburger icon
       ),
-      drawer: CustomSidebar(),
+      drawer: CustomSidebar(token: '',),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

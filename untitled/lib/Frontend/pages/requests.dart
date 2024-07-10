@@ -29,7 +29,7 @@ class _RequestsState extends State<Requests> {
           showLeading: true,
           context: context,
           showBackButton: true),
-      drawer: CustomSidebar(),
+      drawer: CustomSidebar(token: '',),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(

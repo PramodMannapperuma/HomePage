@@ -81,7 +81,7 @@ class EmployeeScreen extends StatelessWidget {
         context: context,
         showBackButton: true, // Show back button instead of hamburger icon
       ),
-      drawer: CustomSidebar(),
+      drawer: CustomSidebar(token: '',),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

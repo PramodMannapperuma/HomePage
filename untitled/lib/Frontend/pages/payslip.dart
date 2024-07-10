@@ -56,7 +56,7 @@ class _PaySlipState extends State<PaySlip> {
         context: context,
         showBackButton: true,  // Show back button instead of hamburger icon
       ),
-      drawer: CustomSidebar(),  // Use the custom sidebar here
+      drawer: CustomSidebar(token: '',),  // Use the custom sidebar here
       body: Column(
         children: [
           // Year selector
