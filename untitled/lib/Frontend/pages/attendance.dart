@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:untitled/Backend/APIs/Apis.dart';
 import '../../Backend/models/att_model.dart';
 import '../app_bar.dart';
+import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
 class Attendance extends StatefulWidget {
@@ -185,12 +187,52 @@ class _AttendanceState extends State<Attendance> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(
-        title: 'Attendance',
-        showActions: true,
-        showLeading: true,
-        context: context,
-        showBackButton: true,
+      appBar: AppBar(
+        // backgroundColor: const Color(0xff4d2880),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/hrislogo2.png',
+              height: 40.0,
+            ),
+            SizedBox(
+              width: 8.0,
+            ),
+          ],
+        ),
+        centerTitle: true,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.menu_outlined,
+                  color: AppColors.background,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              ),
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.person,
+              color: AppColors.background,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile',arguments: widget.token);
+            },
+          ),
+        ],
       ),
       drawer: CustomSidebar(),
       floatingActionButton: FloatingActionButton(
@@ -207,9 +249,31 @@ class _AttendanceState extends State<Attendance> {
         children: [
           Container(
             child: TableCalendar(
-              rowHeight: 45,
+              rowHeight: 40,
               headerStyle: HeaderStyle(
                 titleCentered: true,
+                formatButtonVisible: true,
+                formatButtonShowsNext: false,
+                formatButtonDecoration: BoxDecoration(
+                  color: Color(0xff4d2880),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                formatButtonTextStyle: TextStyle(
+                  color: Colors.white,
+                ),
+                titleTextStyle: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff4d2880),
+                ),
+                leftChevronIcon: Icon(
+                  Icons.chevron_left,
+                  color: Color(0xff4d2880),
+                ),
+                rightChevronIcon: Icon(
+                  Icons.chevron_right,
+                  color: Color(0xff4d2880),
+                ),
               ),
               focusedDay: _focusedDay,
               startingDayOfWeek: StartingDayOfWeek.monday,
@@ -222,6 +286,18 @@ class _AttendanceState extends State<Attendance> {
               eventLoader: _getEventsForDay,
               calendarStyle: CalendarStyle(
                 outsideDaysVisible: false,
+                todayDecoration: BoxDecoration(
+                  color: Color(0xff4d2880),
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Color(0xff9575cd),
+                  shape: BoxShape.circle,
+                ),
+                markerDecoration: BoxDecoration(
+                  color: Color(0xff9575cd),
+                  shape: BoxShape.circle,
+                ),
               ),
               onFormatChanged: (format) {
                 if (_calendarFormat != format) {
@@ -266,64 +342,67 @@ class _AttendanceState extends State<Attendance> {
                           date: _selectedDay.toString().split(" ")[0],
                           status: 'N/A'));
                   return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Date: ${selectedDateData.date}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                    padding: const EdgeInsets.only(top: 8.0,bottom: 140.0,left: 8.0,right: 8.0),
+                    child: SizedBox(
+                      height: 100,
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Date: ${selectedDateData.date}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  'Status: ${selectedDateData.status}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: selectedDateData.status == 'N/A'
-                                        ? Colors.red
-                                        : Colors.green,
+                                  Text(
+                                    'Status: ${selectedDateData.status}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: selectedDateData.status == 'leave'
+                                          ? Colors.red
+                                          : Colors.green,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Divider(thickness: 1),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('AMD In: ${selectedDateData.amdIn}'),
-                                    SizedBox(height: 4.0),
-                                    Text('AMD Out: ${selectedDateData.amdOut}'),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Rec In: ${selectedDateData.recIn}'),
-                                    SizedBox(height: 4.0),
-                                    Text('Rec Out: ${selectedDateData.recOut}'),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Divider(thickness: 1),
-                            Text('Comment: ${selectedDateData.comment}'),
-                          ],
+                                ],
+                              ),
+                              Divider(thickness: 1),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('AMD In: ${selectedDateData.amdIn}', style: TextStyle(fontSize: 16),),
+                                      SizedBox(height: 4.0),
+                                      Text('AMD Out: ${selectedDateData.amdOut}', style: TextStyle(fontSize: 16),),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Rec In: ${selectedDateData.recIn}', style: TextStyle(fontSize: 16),),
+                                      SizedBox(height: 4.0),
+                                      Text('Rec Out: ${selectedDateData.recOut}', style: TextStyle(fontSize: 16),),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Divider(thickness: 1),
+                              Text('Comment: ${selectedDateData.comment}', style: TextStyle(fontSize: 16),),
+                            ],
+                          ),
                         ),
                       ),
                     ),
