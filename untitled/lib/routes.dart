@@ -27,7 +27,7 @@ final Map<String, WidgetBuilder> routes = {
       ),
   '/attendance': (context) => Attendance(
         token:
-            "eyJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjUsInRlbmV0IjoiYWNjZWx1dGlvbi5sayIsInN1YiI6Imd1cnVnZUBhY2NlbHV0aW9uLmxrIiwiaWF0IjoxNzIwNjAyNzk4LCJleHAiOjE3MjA2ODkxOTh9.85sjhUAYzfiNJC4qxrCUNx0OvrepgVgHJw84OY3pv_s",
+            "",
       ),
   '/leave': (context) => Leave(),
   // '/news': (context) => News(),
