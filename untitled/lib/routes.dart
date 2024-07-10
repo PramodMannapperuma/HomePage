@@ -26,8 +26,7 @@ final Map<String, WidgetBuilder> routes = {
         token: null,
       ),
   '/attendance': (context) => Attendance(
-        token:
-            "",
+        token: "",
       ),
   '/leave': (context) => Leave(),
   // '/news': (context) => News(),
