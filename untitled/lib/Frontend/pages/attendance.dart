@@ -308,6 +308,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/Backend/APIs/Apis.dart';
 import '../../Backend/models/att_model.dart';
+import '../../Backend/models/leave_model.dart';
 import '../app_bar.dart';
 import '../styles/sidebar.dart';
 
@@ -326,6 +327,7 @@ class _AttendanceState extends State<Attendance> {
   TextEditingController _leaveTimeController = TextEditingController();
 
   late Future<List<AttendanceData>> futureAttendanceData;
+  late Future<List<LeaveData>> futureLeaveData;
   final ApiService apiService = ApiService();
 
   @override
@@ -333,6 +335,7 @@ class _AttendanceState extends State<Attendance> {
     super.initState();
     futureAttendanceData =
         apiService.fetchAttendanceData(widget.token, _selectedDay);
+    futureLeaveData = apiService.fetchLeaveData(widget.token, _selectedDay);
     print('Token in attendance is ${widget.token}');
   }
 
@@ -347,9 +350,10 @@ class _AttendanceState extends State<Attendance> {
     if (_startTimeController.text.isNotEmpty &&
         _leaveTimeController.text.isNotEmpty) {
       // Assuming you have a method to submit the attendance data to the backend
-      setState(() {
-        futureAttendanceData = apiService.fetchAttendanceData(widget.token, _selectedDay);
-      });
+      // setState(() {
+      //   futureAttendanceData =
+      //       apiService.fetchAttendanceData(widget.token, _selectedDay);
+      // });
       _startTimeController.clear();
       _leaveTimeController.clear();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -433,7 +437,8 @@ class _AttendanceState extends State<Attendance> {
                           initialTime: TimeOfDay.now(),
                         );
                         if (pickedTime != null) {
-                          _startTimeController.text = pickedTime.format(context);
+                          _startTimeController.text =
+                              pickedTime.format(context);
                         }
                       },
                     ),
@@ -462,7 +467,8 @@ class _AttendanceState extends State<Attendance> {
                           initialTime: TimeOfDay.now(),
                         );
                         if (pickedTime != null) {
-                          _leaveTimeController.text = pickedTime.format(context);
+                          _leaveTimeController.text =
+                              pickedTime.format(context);
                         }
                       },
                     ),

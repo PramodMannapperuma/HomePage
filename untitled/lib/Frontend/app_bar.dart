@@ -9,7 +9,7 @@ AppBar customAppBar({
   required BuildContext context,
   bool showBackButton = false,
 }) {
-  
+
   return AppBar(
     title: Row(
       mainAxisAlignment: MainAxisAlignment.center,
