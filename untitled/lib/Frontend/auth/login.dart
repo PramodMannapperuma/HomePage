@@ -128,7 +128,7 @@ class _LoginFormState extends State<LoginForm> {
       setState(() {
         _isLoading = false;
       });
-      _showErrorDialog('An error occurred. Please try again.');
+      _showErrorDialog('An error occurred. Please try again. $e');
       print('Login error: $e'); // Logging for debugging
       // Navigator.pop(context);
     }
