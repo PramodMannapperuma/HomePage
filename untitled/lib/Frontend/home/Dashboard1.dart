@@ -504,6 +504,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
+                            
                             data.employee?.name ?? 'N/A',
                             style: TextStyle(
                               fontSize: 18,
