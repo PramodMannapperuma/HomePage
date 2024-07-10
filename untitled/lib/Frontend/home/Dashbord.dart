@@ -38,8 +38,8 @@ class _MainScreenState extends State<MainScreen> {
       DashboardScreen(token: widget.token), // Pass token to DashboardScreen
       // TaskScreen(),
       DashMainScreen(token: widget.token),
-      // EmployeeScreen(),
-      CalendarPage(token: widget.token),
+      EmployeeScreen(),
+      // CalendarPage(token: widget.token),
     ];
   }
 
@@ -175,28 +175,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     // Text('Your Token is: $token'),
                     // User Info
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: AssetImage(
-                              'assets/images/2.-electronic-evan (1).jpg'),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '$name',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/profile', arguments: widget.token);
+                      },
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundImage: AssetImage(
+                                'assets/images/2.-electronic-evan (1).jpg'),
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '$name',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text('$email'),
-                          ],
-                        ),
-                      ],
+                              Text('$email'),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 10),
                     Divider(
