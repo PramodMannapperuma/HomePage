@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../app_bar.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
@@ -76,10 +77,52 @@ class EmployeeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: 'Team',  showActions: true,
-        showLeading: true,
-        context: context,
-        showBackButton: true, // Show back button instead of hamburger icon
+      appBar: AppBar(
+        // backgroundColor: const Color(0xff4d2880),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/hrislogo2.png',
+              height: 40.0,
+            ),
+            SizedBox(
+              width: 8.0,
+            ),
+          ],
+        ),
+        centerTitle: true,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.menu_outlined,
+                  color: AppColors.background,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              ),
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.person,
+              color: AppColors.background,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile');
+            },
+          ),
+        ],
       ),
       drawer: CustomSidebar(token: '',),
       body: Padding(

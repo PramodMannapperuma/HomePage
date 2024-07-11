@@ -69,7 +69,7 @@ class NewsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     _buildNewsCard('New Policy Update',
-                        'Details about the new policy.', Icons.policy),
+                        'Details about the new policy.', Icons.policy, context),
                   ],
                 ),
                 Row(
@@ -77,13 +77,13 @@ class NewsScreen extends StatelessWidget {
                     _buildNewsCard(
                         'Upcoming Holiday',
                         'Information about the upcoming holiday.',
-                        Icons.holiday_village),
+                        Icons.holiday_village, context),
                   ],
                 ),
                 Row(
                   children: [
                     _buildNewsCard('Team Outing',
-                        'Details about the team outing.', Icons.people),
+                        'Details about the team outing.', Icons.people,context),
                   ],
                 ),
               ],
@@ -156,12 +156,12 @@ class NewsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNewsCard(String title, String description, IconData icon) {
+  Widget _buildNewsCard(String title, String description, IconData icon, BuildContext context) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Container(
-        width: 365,
+        width: MediaQuery.of(context).size.width * 0.89,
         padding: const EdgeInsets.all(10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
