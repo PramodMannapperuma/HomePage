@@ -33,8 +33,8 @@ class _MainScreenState extends State<MainScreen> {
     _widgetOptions = <Widget>[
       // Initialize here
       Attendance(token: widget.token),
-      // Leave(),
-      GeoLocation(token: widget.token),
+      Leave(token: widget.token),
+      // GeoLocation(token: widget.token),
       DashboardScreen(token: widget.token), // Pass token to DashboardScreen
       // TaskScreen(),
       DashMainScreen(token: widget.token),

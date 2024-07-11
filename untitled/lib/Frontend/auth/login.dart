@@ -237,6 +237,12 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
+
+    var mediaQuery = MediaQuery.of(context);
+    var screenWidth = mediaQuery.size.width;
+    var screenHeight = mediaQuery.size.height;
+    var isTabletOrLarger = screenWidth >= 600;
+
     return Scaffold(
       appBar: customAppBar(
           title: '', showActions: false, showLeading: false, context: context),
@@ -246,24 +252,26 @@ class _LoginState extends State<Login> {
             top: 0,
             child: Image.asset(
               'assets/images/hrislogo2.png', // Replace with your image path
-              width: 380.0, // Adjust the width as needed
-              height: 220.0, // Adjust the height as needed
+              width: screenWidth * 0.9, // Make the image width responsive
+              height: screenHeight * 0.2, // Make the image height responsive
             ),
           ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 120.0),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: LoginForm(),
-                  ),
-                  SizedBox(height: 10.0),
-                ],
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: screenHeight *0.135),
+                    Padding(
+                      padding: EdgeInsets.all(1.0),
+                      child: LoginForm(),
+                    ),
+                    SizedBox(height: 10.0),
+                  ],
+                ),
               ),
             ),
           ),
