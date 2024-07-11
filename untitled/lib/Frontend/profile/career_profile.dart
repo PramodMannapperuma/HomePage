@@ -40,6 +40,13 @@ class _CareerProfileState extends State<CareerProfile> {
           }
 
           final careerData = snapshot.data!;
+          final String Designation = careerData['designation'];
+          List<String> words = Designation.split('');
+          String firstWords = words.take(22).join('');
+
+          final String Level = careerData['level'];
+          List<String> lev = Level.split('');
+          String Levels = lev.take(18).join('');
 
           return SingleChildScrollView(
             child: Column(
@@ -85,7 +92,7 @@ class _CareerProfileState extends State<CareerProfile> {
                   children: [
                     ProfileDetailRow(
                         title: 'Designation',
-                        value: '${careerData['designation']}'),
+                        value: firstWords),
                     ProfileDetailRow(
                         title: 'Department',
                         value: '${careerData['department']}'),
@@ -105,7 +112,7 @@ class _CareerProfileState extends State<CareerProfile> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ProfileDetailRow(
-                        title: 'Level', value: '${careerData['level']}'),
+                        title: 'Level', value: Levels),
                     ProfileDetailRow(
                         title: 'Grade', value: '${careerData['grade']}'),
                   ],
