@@ -17,29 +17,30 @@ class _LoginState extends State<Login> {
     var mediaQuery = MediaQuery.of(context);
     var screenWidth = mediaQuery.size.width;
     var screenHeight = mediaQuery.size.height;
-    var textFieldHeight = screenHeight * 0.06;
-    var buttonHeight = screenHeight * 0.06;
+    var textFieldHeight = screenHeight * 0.05; // Reduced height
+    var buttonHeight = screenHeight * 0.05; // Reduced height
     var fontSize = screenWidth * 0.04;
 
     return Scaffold(
       appBar: customAppBar(
           title: '', showActions: false, showLeading: false, context: context),
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            height: screenHeight * 0.3, // Adjust image height
-            child: Image.asset(
-              'assets/images/test-bg.png', // Replace with your image path
-              fit: BoxFit.cover,
-            ),
-          ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: screenHeight * 0.30, // Adjust image height
+                  child: Image.asset(
+                    'assets/images/test-bg.png', // Replace with your image path
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
+                  ),
+                ),
+                SizedBox(height: 16.0), // Space between the image and the form
+                Container(
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(77, 40, 128, 0.2), // Updated background color
                     borderRadius: BorderRadius.circular(15.0),
@@ -61,10 +62,10 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -151,7 +152,6 @@ class _LoginFormState extends State<LoginForm> {
         final errorData = json.decode(response.body);
         _showErrorDialog(
             errorData['message'] ?? 'Invalid username or password');
-        // Navigator.pop(context);
       }
     } catch (e) {
       setState(() {
@@ -159,7 +159,6 @@ class _LoginFormState extends State<LoginForm> {
       });
       _showErrorDialog('An error occurred. Please try again. $e');
       print('Login error: $e'); // Logging for debugging
-      // Navigator.pop(context);
     }
   }
 
@@ -201,7 +200,7 @@ class _LoginFormState extends State<LoginForm> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 5.0), // Add some space between the label and the text field
+              SizedBox(height: 10.0), // Add some space between the label and the text field
               Container(
                 height: widget.textFieldHeight,
                 decoration: BoxDecoration(
@@ -233,7 +232,7 @@ class _LoginFormState extends State<LoginForm> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 5.0), // Add some space between the label and the text field
+              SizedBox(height: 10.0), // Add some space between the label and the text field
               Container(
                 height: widget.textFieldHeight,
                 decoration: BoxDecoration(
@@ -299,8 +298,6 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 }
-
-
 
 
 // import 'dart:convert';
