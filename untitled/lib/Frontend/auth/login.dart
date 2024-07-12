@@ -17,6 +17,9 @@ class _LoginState extends State<Login> {
     var mediaQuery = MediaQuery.of(context);
     var screenWidth = mediaQuery.size.width;
     var screenHeight = mediaQuery.size.height;
+    var textFieldHeight = screenHeight * 0.06;
+    var buttonHeight = screenHeight * 0.06;
+    var fontSize = screenWidth * 0.04;
 
     return Scaffold(
       appBar: customAppBar(
@@ -35,7 +38,7 @@ class _LoginState extends State<Login> {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(77, 40, 128, 0.2), // Updated background color
@@ -51,7 +54,11 @@ class _LoginState extends State<Login> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: LoginForm(),
+                    child: LoginForm(
+                      textFieldHeight: textFieldHeight,
+                      buttonHeight: buttonHeight,
+                      fontSize: fontSize,
+                    ),
                   ),
                 ),
               ),
@@ -64,6 +71,16 @@ class _LoginState extends State<Login> {
 }
 
 class LoginForm extends StatefulWidget {
+  final double textFieldHeight;
+  final double buttonHeight;
+  final double fontSize;
+
+  LoginForm({
+    required this.textFieldHeight,
+    required this.buttonHeight,
+    required this.fontSize,
+  });
+
   @override
   _LoginFormState createState() => _LoginFormState();
 }
@@ -169,39 +186,72 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.center, // Center vertically
+      crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch horizontally
       children: [
-        Container(
-          margin: const EdgeInsets.only(bottom: 15.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(color: Colors.grey.withOpacity(0.5)),
-          ),
-          child: TextField(
-            controller: _usernameController,
-            decoration: InputDecoration(
-              labelText: 'Username',
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-            ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 5.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Username',
+                style: TextStyle(
+                  fontSize: widget.fontSize,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 5.0), // Add some space between the label and the text field
+              Container(
+                height: widget.textFieldHeight,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  border: Border.all(color: Colors.grey.withOpacity(0.5)),
+                ),
+                child: TextField(
+                  controller: _usernameController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                  ),
+                  style: TextStyle(fontSize: widget.fontSize),
+                ),
+              ),
+            ],
           ),
         ),
-        Container(
-          margin: const EdgeInsets.only(bottom: 15.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(color: Colors.grey.withOpacity(0.5)),
-          ),
-          child: TextField(
-            controller: _passwordController,
-            obscureText: true,
-            decoration: InputDecoration(
-              labelText: 'Password',
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-            ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Password',
+                style: TextStyle(
+                  fontSize: widget.fontSize,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 5.0), // Add some space between the label and the text field
+              Container(
+                height: widget.textFieldHeight,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  border: Border.all(color: Colors.grey.withOpacity(0.5)),
+                ),
+                child: TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                  ),
+                  style: TextStyle(fontSize: widget.fontSize),
+                ),
+              ),
+            ],
           ),
         ),
         GestureDetector(
@@ -211,28 +261,31 @@ class _LoginFormState extends State<LoginForm> {
           },
           child: Text(
             'Forgot Password?',
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.center, // Center the text
             style: TextStyle(
               color: Colors.blue,
-              fontSize: 16.0,
+              fontSize: widget.fontSize,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
         SizedBox(height: 20.0),
-        ElevatedButton(
-          onPressed: _login,
-          style: ElevatedButton.styleFrom(
-            primary: Colors.deepPurple, // Gradient background
-            padding: EdgeInsets.symmetric(vertical: 15.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              side: BorderSide(color: Colors.deepPurple),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: ElevatedButton(
+            onPressed: _login,
+            style: ElevatedButton.styleFrom(
+              primary: Colors.deepPurple, // Background color
+              padding: EdgeInsets.symmetric(vertical: widget.buttonHeight * 0.3),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(color: Colors.deepPurple),
+              ),
             ),
-          ),
-          child: Text(
-            'Login',
-            style: TextStyle(fontSize: 18.0, color: Colors.white),
+            child: Text(
+              'Login',
+              style: TextStyle(fontSize: widget.fontSize, color: Colors.white),
+            ),
           ),
         ),
       ],
@@ -246,6 +299,7 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 }
+
 
 
 
