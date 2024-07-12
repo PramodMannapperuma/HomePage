@@ -24,23 +24,24 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: customAppBar(
           title: '', showActions: false, showLeading: false, context: context),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: screenHeight * 0.30, // Adjust image height
-                  child: Image.asset(
-                    'assets/images/test-bg.png', // Replace with your image path
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
+      body: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            height: screenHeight * 0.30, // Adjust image height
+            child: Image.asset(
+              'assets/images/test-bg.png', // Replace with your image path
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: SingleChildScrollView(
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth * 0.9, // Optional: limit container width
                   ),
-                ),
-                SizedBox(height: 16.0), // Space between the image and the form
-                Container(
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(77, 40, 128, 0.2), // Updated background color
                     borderRadius: BorderRadius.circular(15.0),
@@ -62,10 +63,10 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -298,6 +299,9 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 }
+
+
+
 
 
 // import 'dart:convert';
