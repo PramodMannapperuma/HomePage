@@ -21,41 +21,38 @@ class _LoginState extends State<Login> {
     var screenHeight = mediaQuery.size.height;
     var textFieldHeight = screenHeight * 0.05; // Reduced height
     var buttonHeight = screenHeight * 0.05; // Reduced height
-    var fontSize = screenWidth * 0.037;
+    var fontSize = screenWidth * 0.035;
 
     return Scaffold(
       appBar: customAppBar(
-          title: '',
-          showActions: false,
-          showLeading: false,
-          context: context
+        title: '',
+        showActions: false,
+        showLeading: false,
+        context: context,
       ),
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            height: screenHeight * 0.22, // Adjust image height
-            child: Image.asset(
-              'assets/images/test-bg.png', // Replace with your image path
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0), // Adjusted padding
-                child: SingleChildScrollView(
-                  child: LoginForm(
-                    textFieldHeight: textFieldHeight,
-                    buttonHeight: buttonHeight,
-                    fontSize: fontSize,
-                  ),
-                ),
+      body: SingleChildScrollView(
+        child: Container(
+          height: screenHeight,
+          width: screenWidth,
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: screenHeight * 0.1),
+              Image.asset(
+                'assets/images/test-bg.png',
+                height: screenHeight * 0.3, // Adjust image height
+                fit: BoxFit.cover,
               ),
-            ),
+              SizedBox(height: screenHeight * 0.05),
+              LoginForm(
+                textFieldHeight: textFieldHeight,
+                buttonHeight: buttonHeight,
+                fontSize: fontSize,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -95,7 +92,7 @@ class _LoginFormState extends State<LoginForm> {
 
     try {
       showDialog(
-        barrierDismissible: false, // Prevents the dialog from closing until we manually do it
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return const AlertDialog(
@@ -130,11 +127,9 @@ class _LoginFormState extends State<LoginForm> {
         final token = data['access_token'];
         print('Token In login $token');
 
-        // Store the last login time
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('lastLogin', DateTime.now().toString());
 
-        // Assuming the token is obtained correctly
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -144,16 +139,14 @@ class _LoginFormState extends State<LoginForm> {
 
       } else {
         final errorData = json.decode(response.body);
-        _showErrorDialog(
-            errorData['message'] ?? 'Invalid username or password'
-        );
+        _showErrorDialog(errorData['message'] ?? 'Invalid username or password');
       }
     } catch (e) {
       setState(() {
         _isLoading = false;
       });
       _showErrorDialog('An error occurred. Please try again. $e');
-      print('Login error: $e'); // Logging for debugging
+      print('Login error: $e');
     }
   }
 
@@ -180,74 +173,60 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center, // Center vertically
-      crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch horizontally
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 5.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Username',
-                style: TextStyle(
-                  fontSize: widget.fontSize,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10.0), // Add some space between the label and the text field
-              Container(
-                height: widget.textFieldHeight,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                  border: Border.all(color: Colors.grey.withOpacity(0.5)),
-                ),
-                child: TextField(
-                  controller: _usernameController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                  ),
-                  style: TextStyle(fontSize: widget.fontSize),
-                ),
-              ),
-            ],
+        SizedBox(height: 10.0),
+        Text(
+          'Username',
+          style: TextStyle(
+            fontSize: widget.fontSize,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Password',
-                style: TextStyle(
-                  fontSize: widget.fontSize,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10.0), // Add some space between the label and the text field
-              Container(
-                height: widget.textFieldHeight,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                  border: Border.all(color: Colors.grey.withOpacity(0.5)),
-                ),
-                child: TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                  ),
-                  style: TextStyle(fontSize: widget.fontSize),
-                ),
-              ),
-            ],
+        SizedBox(height: 10.0),
+        Container(
+          height: widget.textFieldHeight,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(color: Colors.grey.withOpacity(0.5)),
+          ),
+          child: TextField(
+            controller: _usernameController,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+            ),
+            style: TextStyle(fontSize: widget.fontSize),
           ),
         ),
+        SizedBox(height: 20.0),
+        Text(
+          'Password',
+          style: TextStyle(
+            fontSize: widget.fontSize,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          height: widget.textFieldHeight,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(color: Colors.grey.withOpacity(0.5)),
+          ),
+          child: TextField(
+            controller: _passwordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+            ),
+            style: TextStyle(fontSize: widget.fontSize),
+          ),
+        ),
+        SizedBox(height: 20.0),
         GestureDetector(
           onTap: () {
             // Add your forgot password logic here
@@ -255,7 +234,7 @@ class _LoginFormState extends State<LoginForm> {
           },
           child: Text(
             'Forgot Password?',
-            textAlign: TextAlign.center, // Center the text
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.blue,
               fontSize: widget.fontSize,
@@ -264,22 +243,23 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
         SizedBox(height: 20.0),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: ElevatedButton(
-            onPressed: _login,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xff4d2880), // Background color
-              padding: EdgeInsets.symmetric(vertical: widget.buttonHeight * 0.3),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: BorderSide(color: Color(0xff4d2880)),
-              ),
+        ElevatedButton(
+          onPressed: _login,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xff4d2880),
+            padding: EdgeInsets.symmetric(vertical: widget.buttonHeight * 0.3),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              side: BorderSide(color: Color(0xff4d2880)),
             ),
-            child: Text(
-              'Login',
-              style: TextStyle(fontSize: widget.fontSize, color: Colors.white),
-            ),
+          ),
+          child: _isLoading
+              ? CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          )
+              : Text(
+            'Login',
+            style: TextStyle(fontSize: widget.fontSize, color: Colors.white),
           ),
         ),
       ],
@@ -293,6 +273,8 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 }
+
+
 
 
 // import 'dart:convert';
