@@ -1,8 +1,10 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled/Frontend/home/Dashbord.dart';
+
 import '../app_bar.dart';
-import '../home/Dashbord.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -141,6 +143,10 @@ class _LoginFormState extends State<LoginForm> {
         final token = data['access_token'];
         print('Token In login $token');
 
+        // Store the last login time
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('lastLogin', DateTime.now().toString());
+
         // Assuming the token is obtained correctly
         Navigator.pushReplacement(
           context,
@@ -275,7 +281,7 @@ class _LoginFormState extends State<LoginForm> {
           child: ElevatedButton(
             onPressed: _login,
             style: ElevatedButton.styleFrom(
-              primary: Colors.deepPurple, // Background color
+              backgroundColor: Colors.deepPurple, // Background color
               padding: EdgeInsets.symmetric(vertical: widget.buttonHeight * 0.3),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
@@ -299,8 +305,6 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 }
-
-
 
 
 
