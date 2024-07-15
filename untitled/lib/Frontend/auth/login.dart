@@ -275,7 +275,7 @@ class _LoginFormState extends State<LoginForm> {
           child: ElevatedButton(
             onPressed: _login,
             style: ElevatedButton.styleFrom(
-              primary: Colors.deepPurple, // Background color
+              backgroundColor: Colors.deepPurple, // Background color
               padding: EdgeInsets.symmetric(vertical: widget.buttonHeight * 0.3),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
