@@ -177,56 +177,79 @@ class _LoginFormState extends State<LoginForm> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(height: 10.0),
-        Text(
-          'Username',
-          style: TextStyle(
-            fontSize: widget.fontSize,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 10.0),
+        Text('Username', style: TextStyle(fontSize: widget.fontSize,),),
         Container(
-          height: widget.textFieldHeight,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5.0),
-            border: Border.all(color: Colors.grey.withOpacity(0.5)),
-          ),
+          height: widget.textFieldHeight * 1.2,
           child: TextField(
             controller: _usernameController,
             decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+              // labelText: 'UserName',
+              border: OutlineInputBorder(),
             ),
-            style: TextStyle(fontSize: widget.fontSize),
           ),
         ),
         SizedBox(height: 20.0),
-        Text(
-          'Password',
-          style: TextStyle(
-            fontSize: widget.fontSize,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 10.0),
+        Text('Password', style: TextStyle(fontSize: widget.fontSize,),),
         Container(
-          height: widget.textFieldHeight,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5.0),
-            border: Border.all(color: Colors.grey.withOpacity(0.5)),
-          ),
+          height: widget.textFieldHeight * 1.2,
           child: TextField(
             controller: _passwordController,
-            obscureText: true,
             decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+              // labelText: 'Password',
+              border: OutlineInputBorder(),
             ),
-            style: TextStyle(fontSize: widget.fontSize),
           ),
         ),
+        // Text(
+        //   'Username',
+        //   style: TextStyle(
+        //     fontSize: widget.fontSize,
+        //     fontWeight: FontWeight.bold,
+        //   ),
+        // ),
+        // SizedBox(height: 10.0),
+        // Container(
+        //   height: widget.textFieldHeight,
+        //   decoration: BoxDecoration(
+        //     color: Colors.white,
+        //     borderRadius: BorderRadius.circular(5.0),
+        //     border: Border.all(color: Colors.grey.withOpacity(0.5)),
+        //   ),
+        //   child: TextField(
+        //     controller: _usernameController,
+        //     decoration: InputDecoration(
+        //       border: InputBorder.none,
+        //       contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+        //     ),
+        //     style: TextStyle(fontSize: widget.fontSize),
+        //   ),
+        // ),
+        // SizedBox(height: 20.0),
+        // Text(
+        //   'Password',
+        //   style: TextStyle(
+        //     fontSize: widget.fontSize,
+        //     fontWeight: FontWeight.bold,
+        //   ),
+        // ),
+        // SizedBox(height: 10.0),
+        // Container(
+        //   height: widget.textFieldHeight,
+        //   decoration: BoxDecoration(
+        //     color: Colors.white,
+        //     borderRadius: BorderRadius.circular(5.0),
+        //     border: Border.all(color: Colors.grey.withOpacity(0.5)),
+        //   ),
+        //   child: TextField(
+        //     controller: _passwordController,
+        //     obscureText: true,
+        //     decoration: InputDecoration(
+        //       border: InputBorder.none,
+        //       contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+        //     ),
+        //     style: TextStyle(fontSize: widget.fontSize),
+        //   ),
+        // ),
         SizedBox(height: 20.0),
         GestureDetector(
           onTap: () {
