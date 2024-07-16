@@ -349,7 +349,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       final DateTime dateTime = DateTime.parse(dateTimeString);
       final DateFormat dateFormat = DateFormat('yMd'); // Format date to 'YYYY-MM-DD'
-      final DateFormat timeFormat = DateFormat('Hm'); // Format time to 'HH:mm'
+      final DateFormat timeFormat = DateFormat('h:mm a'); // Format time to 'HH:mm'
       final String formattedDate = dateFormat.format(dateTime.toLocal());
       final String formattedTime = timeFormat.format(dateTime.toLocal());
       return '$formattedDate\n$formattedTime'; // Display date and time on separate lines
