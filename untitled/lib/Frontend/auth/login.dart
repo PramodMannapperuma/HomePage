@@ -194,6 +194,7 @@ class _LoginFormState extends State<LoginForm> {
           height: widget.textFieldHeight * 1.2,
           child: TextField(
             controller: _passwordController,
+            obscureText: true,
             decoration: InputDecoration(
               // labelText: 'Password',
               border: OutlineInputBorder(),
