@@ -172,7 +172,7 @@ class ApiService {
     }
   }
 
-  Future<LeaveBalanceData> fetchLeaveBalance(String token) async {
+  Future<List<LeaveBalanceData>> fetchLeaveBalance(String token) async {
     final response = await http.get(
       Uri.parse('$_baseUrl/leavebalance'),
       headers: _headers(token),
@@ -181,7 +181,17 @@ class ApiService {
     _logResponse(response);
 
     if (response.statusCode == 200) {
-      return LeaveBalanceData.fromJson(jsonDecode(response.body)['data']);
+      // Parse response body
+      final jsonResponse = jsonDecode(response.body);
+      final dataString = jsonResponse['data'] as String; // Assuming data is a string in the response
+      final dataList = jsonDecode(dataString) as List<dynamic>;
+
+      // Map JSON objects to LeaveBalanceData objects
+      List<LeaveBalanceData> leaveBalanceList = dataList.map((item) {
+        return LeaveBalanceData.fromJson(item);
+      }).toList();
+
+      return leaveBalanceList;
     } else {
       throw Exception('Failed to get leave balance: ${response.reasonPhrase}');
     }

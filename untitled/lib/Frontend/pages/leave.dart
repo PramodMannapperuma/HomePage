@@ -536,7 +536,7 @@ import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
 class Leave extends StatefulWidget {
-  final String token; // Added token parameter
+  final String token; // Added token 
 
   const Leave({super.key, required this.token}); // Required token parameter
 
@@ -561,7 +561,7 @@ class _LeaveState extends State<Leave> {
 
   final leaveTypes = ['Annual Leave', 'Casual Leave', 'Medical Leave'];
 
-  LeaveBalanceData? leaveBalanceData;
+  List<LeaveBalanceData>? leaveBalanceData;
   bool isLoading = true;
 
   @override
@@ -574,6 +574,7 @@ class _LeaveState extends State<Leave> {
     try {
       final data = await ApiService().fetchLeaveBalance(widget.token); // Use token from widget
       setState(() {
+        print(data);
         leaveBalanceData = data;
         isLoading = false;
       });
@@ -610,15 +611,28 @@ class _LeaveState extends State<Leave> {
               SizedBox(height: 10),
               isLoading
                   ? Center(child: CircularProgressIndicator())
-                  : leaveBalanceData != null
-                      ? LeaveBar(
-                          leaveData: [
-                            leaveBalanceData!.entitled.toInt(),
-                            leaveBalanceData!.utilized.toInt(),
-                            leaveBalanceData!.pending.toInt(),
-                            leaveBalanceData!.available.toInt(),
-                          ],
-                        )
+                  : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
+                      ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: leaveBalanceData!.map((data) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Leave Type: ${data.leave}'),
+                      SizedBox(height: 4),
+                      Text('Total: ${data.total}'),
+                      SizedBox(height: 4),
+                      Text('Pending: ${data.pending}'),
+                      SizedBox(height: 4),
+                      Text('Utilized: ${data.utilized}'),
+                      SizedBox(height: 4),
+                      Text('Available: ${data.available}'),
+                      Divider(),
+                    ],
+                  );
+                }).toList(),
+              )
+
                       : Center(child: Text('No leave balance data available.')),
               SizedBox(height: 5),
               Divider(
