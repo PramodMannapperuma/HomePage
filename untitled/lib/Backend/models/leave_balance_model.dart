@@ -1,24 +1,30 @@
 // lib/Backend/models/leave_balance_model.dart
 
 class LeaveBalanceData {
-  final int entitled;
-  final int utilized;
-  final int pending;
-  final int available;
+  final String leave;
+  final double total;
+  final int leaveId;
+  final double pending;
+  final double utilized;
+  final double available;
 
   LeaveBalanceData({
-    required this.entitled,
-    required this.utilized,
+    required this.leave,
+    required this.total,
+    required this.leaveId,
     required this.pending,
+    required this.utilized,
     required this.available,
   });
 
   factory LeaveBalanceData.fromJson(Map<String, dynamic> json) {
     return LeaveBalanceData(
-      entitled: json['Entitled'] ?? 0,
-      utilized: json['Utilized'] ?? 0,
-      pending: json['Pending'] ?? 0,
-      available: json['Available'] ?? 0,
+      leave: json['leave'],
+      total: json['total'].toDouble(),
+      leaveId: json['leaveId'],
+      pending: json['pending'].toDouble(),
+      utilized: json['utilized'].toDouble(),
+      available: json['available'].toDouble(),
     );
   }
 }
