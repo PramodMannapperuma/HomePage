@@ -177,7 +177,7 @@ class _LoginFormState extends State<LoginForm> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(height: 10.0),
-        Text('Username', style: TextStyle(fontSize: widget.fontSize,),),
+        Text('Username', style: TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.bold),),
         Container(
           height: widget.textFieldHeight * 1.2,
           child: TextField(
@@ -189,7 +189,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
         SizedBox(height: 20.0),
-        Text('Password', style: TextStyle(fontSize: widget.fontSize,),),
+        Text('Password', style: TextStyle(fontSize: widget.fontSize,fontWeight: FontWeight.bold),),
         Container(
           height: widget.textFieldHeight * 1.2,
           child: TextField(
@@ -284,7 +284,7 @@ class _LoginFormState extends State<LoginForm> {
               : Text(
                   'Login',
                   style:
-                      TextStyle(fontSize: widget.fontSize, color: Colors.white),
+                      TextStyle(fontSize: widget.fontSize * 1.2, color: Colors.white),
                 ),
         ),
         SizedBox(
