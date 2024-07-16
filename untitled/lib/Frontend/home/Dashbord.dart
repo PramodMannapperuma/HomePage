@@ -163,11 +163,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
               actions: [
                 IconButton(
                   icon: const Icon(
+                    Icons.notifications_active_outlined,
+                    color: AppColors.background,
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context,'news_screen', arguments: widget.token);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(
                     Icons.person,
                     color: AppColors.background,
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/profile', arguments: widget.token);
+                    Navigator.pushNamed(context,'/profile', arguments: widget.token);
                   },
                 ),
               ],
