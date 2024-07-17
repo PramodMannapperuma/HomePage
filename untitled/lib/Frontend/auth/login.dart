@@ -419,15 +419,15 @@ class _LoginFormState extends State<LoginForm> {
 
       final response = await http
           .post(
-        Uri.parse('http://hris.accelution.lk/api/auth'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'client_id': username,
-          'client_secret': password,
-        }),
-      )
+            Uri.parse('http://hris.accelution.lk/api/auth'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(<String, String>{
+              'client_id': username,
+              'client_secret': password,
+            }),
+          )
           .timeout(const Duration(seconds: 10)); // Add a timeout duration
 
       Navigator.pop(context);
@@ -497,7 +497,11 @@ class _LoginFormState extends State<LoginForm> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(height: 10.0),
-        Text('Username', style: TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.bold),),
+        Text(
+          'Username',
+          style:
+              TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.bold),
+        ),
         Container(
           height: widget.textFieldHeight * 1.2,
           child: TextField(
@@ -508,7 +512,11 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
         SizedBox(height: 20.0),
-        Text('Password', style: TextStyle(fontSize: widget.fontSize,fontWeight: FontWeight.bold),),
+        Text(
+          'Password',
+          style:
+              TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.bold),
+        ),
         Container(
           height: widget.textFieldHeight * 1.2,
           child: TextField(
@@ -542,28 +550,30 @@ class _LoginFormState extends State<LoginForm> {
             backgroundColor: Color(0xff4d2880),
             padding: EdgeInsets.symmetric(vertical: widget.buttonHeight * 0.3),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
+              borderRadius: BorderRadius.circular(20.0),
               side: BorderSide(color: Color(0xff4d2880)),
             ),
           ),
           child: _isLoading
               ? CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          )
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                )
               : Text(
-            'Login',
-            style:
-            TextStyle(fontSize: widget.fontSize * 1.2, color: Colors.white),
-          ),
+                  'Login',
+                  style: TextStyle(
+                      fontSize: widget.fontSize * 1.2, color: Colors.white),
+                ),
         ),
-        SizedBox(
-          height: 25,
-        ),
+        SizedBox(height: 25,),
+        Divider(thickness: 2,),
+        // SizedBox(
+        //   height: 20,
+        // ),
         Center(
             child: Text(
-              ' © 2023 - Accelution',
-              style: TextStyle(fontSize: 16, color: Colors.black87),
-            )),
+          ' © 2023 - Accelution',
+          style: TextStyle(fontSize: 16, color: Colors.black87),
+        )),
       ],
     );
   }
