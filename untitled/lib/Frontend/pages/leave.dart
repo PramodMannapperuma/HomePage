@@ -536,7 +536,7 @@ import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
 class Leave extends StatefulWidget {
-  final String token;//added token
+  final String token; //added token
 
   const Leave({super.key, required this.token}); // Required token parameter
 
