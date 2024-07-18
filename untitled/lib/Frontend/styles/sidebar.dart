@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomSidebar extends StatelessWidget {
   final String token;
-  const CustomSidebar({super.key, required this.token});
+  const CustomSidebar({Key? key, required this.token}) : super(key: key);
+
+  Future<void> _logout(BuildContext context) async {
+    // Clear session-related data from SharedPreferences
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('lastLogin');
+    await prefs.remove('cookies');
+
+    // Navigate to the login screen
+    Navigator.pop(context); // Close the sidebar
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +70,7 @@ class CustomSidebar extends StatelessWidget {
               title: Text('Attendance'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/attendance',arguments: token);
+                Navigator.pushNamed(context, '/attendance', arguments: token);
               },
             ),
             ListTile(
@@ -70,7 +82,7 @@ class CustomSidebar extends StatelessWidget {
               title: Text('Leaves'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/leave',arguments: token);
+                Navigator.pushNamed(context, '/leave', arguments: token);
               },
             ),
             ListTile(
@@ -94,7 +106,7 @@ class CustomSidebar extends StatelessWidget {
               title: Text('Profile'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/profile',arguments: token);
+                Navigator.pushNamed(context, '/profile', arguments: token);
               },
             ),
             ListTile(
@@ -149,10 +161,7 @@ class CustomSidebar extends StatelessWidget {
               thickness: 0.5,
             ),
             ListTile(
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/login');
-              },
+              onTap: () => _logout(context),
               contentPadding: EdgeInsets.zero,
               title: Center(
                 child: Container(

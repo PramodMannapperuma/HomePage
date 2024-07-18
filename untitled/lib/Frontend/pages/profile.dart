@@ -203,6 +203,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Backend/APIs/Apis.dart';
 import '../app_bar.dart';
 import '../auth/login.dart';
@@ -228,6 +229,16 @@ class _ProfilePageState extends State<ProfilePage> {
       token = ModalRoute.of(context)!.settings.arguments as String;
       setState(() {});
     });
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    // Clear session-related data from SharedPreferences
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('lastLogin');
+    await prefs.remove('cookies');
+
+    // Navigate to the login screen
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
 
   @override
@@ -354,12 +365,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   icon: Icons.logout,
                   textColor: Colors.red,
                   endIcon: false,
-                  onPress: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Login()),
-                    );
-                  },
+                  onPress: () => _logout(context),
                 ),
               ],
             ),
@@ -372,14 +378,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
 class ProfileMenuWidget extends StatelessWidget {
   const ProfileMenuWidget({
-    super.key,
+    Key? key,
     required this.title,
     required this.icon,
     required this.onPress,
     this.endIcon = true,
     this.textColor,
-  });
-
+  }) : super(key: key);
 
   final String title;
   final IconData icon;
