@@ -45,7 +45,6 @@ dependencies:
   geolocator: ^11.1.0
   geocoding: ^3.0.0
   shared_preferences: ^2.2.3
-  url_launcher: ^6.0.20
 
 
 dev_dependencies:
