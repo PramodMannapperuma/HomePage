@@ -536,9 +536,9 @@ import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
 class Leave extends StatefulWidget {
-  final String token; // Added token
+  final String token;
 
-  const Leave({super.key, required this.token}); // Required token parameter
+  const Leave({Key? key, required this.token}) : super(key: key);
 
   @override
   State<Leave> createState() => _LeaveState();
@@ -556,9 +556,8 @@ class _LeaveState extends State<Leave> {
 
   Future<void> _fetchLeaveBalance() async {
     try {
-      final data = await ApiService().fetchLeaveBalance(widget.token); // Use token from widget
+      final data = await ApiService().fetchLeaveBalance(widget.token);
       setState(() {
-        print(data);
         leaveBalanceData = data;
         isLoading = false;
       });
@@ -597,14 +596,22 @@ class _LeaveState extends State<Leave> {
                   color: Color(0xff4d2880),
                 ),
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 16),
               isLoading
                   ? Center(child: CircularProgressIndicator())
                   : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
-                      ? Column(
-                          children: leaveBalanceData!.map((data) {
-                            return LeaveDetailCard(data: data);
-                          }).toList(),
+                      ? Card(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: _buildLeaveTable(),
+                            ),
+                          ),
                         )
                       : Center(
                           child: Text(
@@ -612,9 +619,9 @@ class _LeaveState extends State<Leave> {
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               Divider(thickness: 1),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               Text(
                 'Request Leaves',
                 style: TextStyle(
@@ -633,113 +640,26 @@ class _LeaveState extends State<Leave> {
       ),
     );
   }
-}
 
-class LeaveDetailCard extends StatelessWidget {
-  final LeaveBalanceData data;
-
-  const LeaveDetailCard({Key? key, required this.data}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 3,
-      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(6.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            Divider(height: 1, thickness: 1, color: Colors.grey[300]),
-            _buildDataRow(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Table(
-        columnWidths: {
-          0: FlexColumnWidth(1),
-          1: FlexColumnWidth(1),
-          2: FlexColumnWidth(1),
-          3: FlexColumnWidth(1),
-          4: FlexColumnWidth(1),
-        },
-        children: [
-          TableRow(
-            decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-            ),
-            children: [
-              _buildHeaderCell('Leave'),
-              _buildHeaderCell('Entitled'),
-              _buildHeaderCell('Utilized'),
-              _buildHeaderCell('Pending'),
-              _buildHeaderCell('Available'),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDataRow() {
-    return Table(
-      columnWidths: {
-        0: FlexColumnWidth(1),
-        1: FlexColumnWidth(1),
-        2: FlexColumnWidth(1),
-        3: FlexColumnWidth(1),
-        4: FlexColumnWidth(1),
-      },
-      children: [
-        TableRow(
-          children: [
-            _buildCell(data.leave),
-            _buildCell(data.total.toString()),
-            _buildCell(data.utilized.toString()),
-            _buildCell(data.pending.toString()),
-            _buildCell(data.available.toString()),
-          ],
-        ),
+  Widget _buildLeaveTable() {
+    return DataTable(
+      columnSpacing: 16,
+      columns: [
+        DataColumn(label: Text('Leave')),
+        DataColumn(label: Text('Entitled')),
+        DataColumn(label: Text('Utilized')),
+        DataColumn(label: Text('Pending')),
+        DataColumn(label: Text('Available')),
       ],
-    );
-  }
-
-  Widget _buildHeaderCell(String text) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
-          color: Colors.black87,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  Widget _buildCell(String text) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.black87,
-        ),
-        textAlign: TextAlign.center,
-      ),
+      rows: leaveBalanceData!.map((data) {
+        return DataRow(cells: [
+          DataCell(Text(data.leave)),
+          DataCell(Text(data.total.toString())),
+          DataCell(Text(data.utilized.toString())),
+          DataCell(Text(data.pending.toString())),
+          DataCell(Text(data.available.toString())),
+        ]);
+      }).toList(),
     );
   }
 }
