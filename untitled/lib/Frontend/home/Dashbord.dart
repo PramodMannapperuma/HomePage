@@ -135,6 +135,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Image.asset(
                     'assets/images/hrislogo2.png',
                     height: 40.0,
+
                   ),
                   SizedBox(width: 8.0),
                 ],
@@ -195,7 +196,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: Row(
                         children: [
                           CircleAvatar(
-                            radius: 30,
+                            radius: 55,
                             backgroundImage: AssetImage(
                                 'assets/images/2.-electronic-evan (1).jpg'),
                           ),

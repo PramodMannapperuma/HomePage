@@ -419,15 +419,15 @@ class _LoginFormState extends State<LoginForm> {
 
       final response = await http
           .post(
-            Uri.parse('http://hris.accelution.lk/api/auth'),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode(<String, String>{
-              'client_id': username,
-              'client_secret': password,
-            }),
-          )
+        Uri.parse('http://hris.accelution.lk/api/auth'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'client_id': username,
+          'client_secret': password,
+        }),
+      )
           .timeout(const Duration(seconds: 10)); // Add a timeout duration
 
       Navigator.pop(context);
@@ -443,6 +443,13 @@ class _LoginFormState extends State<LoginForm> {
 
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('lastLogin', DateTime.now().toString());
+
+        // Save the session cookies
+        List<String> cookies = response.headers['set-cookie']?.split(',') ?? [];
+        await prefs.setStringList('cookies', cookies);
+
+        // Verify session cookies by fetching the user profile
+        await fetchUserProfile();
 
         Navigator.pushReplacement(
           context,
@@ -468,6 +475,27 @@ class _LoginFormState extends State<LoginForm> {
       });
       _showErrorDialog('An error occurred. Please try again later.');
       print('Login error: $e');
+    }
+  }
+
+  Future<void> fetchUserProfile() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> cookies = prefs.getStringList('cookies') ?? [];
+    String cookieHeader = cookies.join('; ');
+
+    final response = await http.get(
+      Uri.parse('http://hris.accelution.lk/api/user/profile'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Cookie': cookieHeader,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print('User Profile: $data');
+    } else {
+      print('Failed to fetch user profile');
     }
   }
 
@@ -500,7 +528,7 @@ class _LoginFormState extends State<LoginForm> {
         Text(
           'Username',
           style:
-              TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.bold),
+          TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.bold),
         ),
         Container(
           height: widget.textFieldHeight * 1.2,
@@ -515,7 +543,7 @@ class _LoginFormState extends State<LoginForm> {
         Text(
           'Password',
           style:
-              TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.bold),
+          TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.bold),
         ),
         Container(
           height: widget.textFieldHeight * 1.2,
@@ -556,24 +584,21 @@ class _LoginFormState extends State<LoginForm> {
           ),
           child: _isLoading
               ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                )
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          )
               : Text(
-                  'Login',
-                  style: TextStyle(
-                      fontSize: widget.fontSize * 1.2, color: Colors.white),
-                ),
+            'Login',
+            style: TextStyle(
+                fontSize: widget.fontSize * 1.2, color: Colors.white),
+          ),
         ),
         SizedBox(height: 25,),
         Divider(thickness: 2,),
-        // SizedBox(
-        //   height: 20,
-        // ),
         Center(
             child: Text(
-          ' © 2023 - Accelution',
-          style: TextStyle(fontSize: 16, color: Colors.black87),
-        )),
+              ' © 2023 - Accelution',
+              style: TextStyle(fontSize: 16, color: Colors.black87),
+            )),
       ],
     );
   }
