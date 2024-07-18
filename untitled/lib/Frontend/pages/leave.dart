@@ -676,7 +676,7 @@ class LeaveDetailCard extends StatelessWidget {
         children: [
           TableRow(
             decoration: BoxDecoration(
-              color: Colors.grey[200],
+              color: Colors.grey.shade300,
             ),
             children: [
               _buildHeaderCell('Leave'),
