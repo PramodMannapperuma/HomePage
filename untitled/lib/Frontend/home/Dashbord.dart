@@ -137,7 +137,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     height: 40.0,
 
                   ),
-                  SizedBox(width: 15.0),
+                  SizedBox(width: 8.0),
                 ],
               ),
               centerTitle: true,
