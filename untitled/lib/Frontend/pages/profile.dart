@@ -168,13 +168,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
 class ProfileMenuWidget extends StatelessWidget {
   const ProfileMenuWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.onPress,
     this.endIcon = true,
     this.textColor,
-  }) : super(key: key);
+  });
+
 
   final String title;
   final IconData icon;
