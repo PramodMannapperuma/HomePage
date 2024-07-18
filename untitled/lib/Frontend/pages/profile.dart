@@ -48,99 +48,118 @@ class _ProfilePageState extends State<ProfilePage> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data == null) {
             return Center(child: Text('No data available'));
-          } else {
-            String name = snapshot.data!['fullName'] ?? 'N/A';
-            String email = snapshot.data!['designation'] ?? 'N/A';
-            String profileImageUrl = snapshot.data!['profileImageUrl'] ?? '';
-
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 60.0,
-                        backgroundImage: const AssetImage(
-                            "assets/images/2.-electronic-evan (1).jpg"),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Column(
-                    children: [
-                      Text(
-                        name,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      Text(
-                        email,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  const Divider(thickness: 1),
-                  ProfileMenuWidget(
-                    title: "Personal Information",
-                    icon: Icons.person_2_outlined,
-                    onPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PersonalInfo(token:token)),
-                      );
-                    },
-                  ),
-                  ProfileMenuWidget(
-                    title: "Contact Information",
-                    icon: Icons.contact_phone_outlined,
-                    onPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ContactInfo(token: token)),
-                      );
-                    },
-                  ),
-                  ProfileMenuWidget(
-                    title: "Career Profile",
-                    icon: Icons.work_history_outlined,
-                    onPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CareerProfile(token: token)),
-                      );
-                    },
-                  ),
-                  const Divider(thickness: 1),
-                  ProfileMenuWidget(
-                    title: "Info",
-                    icon: Icons.info,
-                    onPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FAQAndPricingScreen()),
-                      );
-                    },
-                  ),
-                  ProfileMenuWidget(
-                    title: "Log Out",
-                    icon: Icons.logout,
-                    textColor: Colors.red,
-                    endIcon: false,
-                    onPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Login()),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            );
           }
+
+          final userData = snapshot.data!;
+          String name = userData['fullName'] ?? 'N/A';
+          String designation = userData['designation'] ?? 'N/A';
+          String profileImageUrl = userData['profileImageUrl'] ?? '';
+
+          return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 60.0,
+                      backgroundImage: AssetImage("assets/images/2.-electronic-evan (1).jpg"),
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            name,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          Text(
+                            designation,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          SizedBox(height: 10), // Gap between designation and email
+                          Text(
+                            'Email: ${userData['personalEmail']}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          Text(
+                            'Contact No: ${userData['mobile1']}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          Text(
+                            'EPF Number: ${userData['epfnumber']}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          Text(
+                            'Supervisor: ${userData['supervisorName']}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Divider(thickness: 1),
+                ProfileMenuWidget(
+                  title: "Personal Information",
+                  icon: Icons.person_2_outlined,
+                  onPress: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PersonalInfo(token: token)),
+                    );
+                  },
+                ),
+                ProfileMenuWidget(
+                  title: "Contact Information",
+                  icon: Icons.contact_phone_outlined,
+                  onPress: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ContactInfo(token: token)),
+                    );
+                  },
+                ),
+                ProfileMenuWidget(
+                  title: "Career Profile",
+                  icon: Icons.work_history_outlined,
+                  onPress: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CareerProfile(token: token)),
+                    );
+                  },
+                ),
+                Divider(thickness: 1),
+                ProfileMenuWidget(
+                  title: "Info",
+                  icon: Icons.info,
+                  onPress: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FAQAndPricingScreen()),
+                    );
+                  },
+                ),
+                ProfileMenuWidget(
+                  title: "Log Out",
+                  icon: Icons.logout,
+                  textColor: Colors.red,
+                  endIcon: false,
+                  onPress: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Login()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
         },
       ),
     );
@@ -156,6 +175,7 @@ class ProfileMenuWidget extends StatelessWidget {
     this.endIcon = true,
     this.textColor,
   });
+
 
   final String title;
   final IconData icon;
@@ -179,24 +199,26 @@ class ProfileMenuWidget extends StatelessWidget {
           color: AppColors.background,
         ),
       ),
-      title: Text(title,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(color: textColor, fontSize: 17.0)),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 17.0,
+          color: textColor,
+        ),
+      ),
       trailing: endIcon
           ? Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: Colors.black.withOpacity(0.1),
-              ),
-              child: const Icon(
-                Icons.keyboard_arrow_right,
-                color: Color.fromRGBO(77, 40, 128, 0.5),
-              ),
-            )
+        width: 30,
+        height: 30,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100),
+          color: Colors.black.withOpacity(0.1),
+        ),
+        child: const Icon(
+          Icons.keyboard_arrow_right,
+          color: Color.fromRGBO(77, 40, 128, 0.5),
+        ),
+      )
           : null,
     );
   }
