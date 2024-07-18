@@ -29,6 +29,7 @@ class _AttendanceState extends State<Attendance> {
   TextEditingController _eventController = TextEditingController();
   TextEditingController _startTimeController = TextEditingController();
   TextEditingController _leaveTimeController = TextEditingController();
+  TextEditingController _commentController = TextEditingController();
 
   late final ValueNotifier<List<Event>> _selectedEvents;
   late Future<List<AttendanceData>> futureAttendanceData;
@@ -50,6 +51,7 @@ class _AttendanceState extends State<Attendance> {
     _eventController.dispose();
     _startTimeController.dispose();
     _leaveTimeController.dispose();
+    _commentController.dispose();
     super.dispose();
   }
 
@@ -76,8 +78,7 @@ class _AttendanceState extends State<Attendance> {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -121,6 +122,12 @@ class _AttendanceState extends State<Attendance> {
                     }
                   },
                 ),
+                TextField(
+                  controller: _commentController,
+                  decoration: InputDecoration(
+                    labelText: "Comment",
+                  ),
+                ),
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -144,26 +151,27 @@ class _AttendanceState extends State<Attendance> {
                       ),
                       onPressed: () {
                         if (_startTimeController.text.isNotEmpty &&
-                            _leaveTimeController.text.isNotEmpty) {
+                            _leaveTimeController.text.isNotEmpty &&
+                            _commentController.text.isNotEmpty) {
                           setState(() {
                             events[_selectedDay!] = [
                               Event(
                                 _startTimeController.text,
                                 _leaveTimeController.text,
+                                _commentController.text,
                               )
                             ];
                           });
 
                           _startTimeController.clear();
                           _leaveTimeController.clear();
+                          _commentController.clear();
                           Navigator.of(context).pop();
-                          _selectedEvents.value =
-                              _getEventsForDay(_selectedDay!);
+                          _selectedEvents.value = _getEventsForDay(_selectedDay!);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content:
-                                  Text("Please enter Start and Leaving times"),
+                              content: Text("Please enter all fields"),
                               duration: Duration(seconds: 2),
                             ),
                           );
@@ -183,6 +191,7 @@ class _AttendanceState extends State<Attendance> {
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -459,9 +468,11 @@ class _AttendanceState extends State<Attendance> {
 class Event {
   final String startTime;
   final String leaveTime;
+  final String comment;
 
-  Event(this.startTime, this.leaveTime);
+  Event(this.startTime, this.leaveTime, this.comment);
 }
+
 //
 // import 'package:flutter/material.dart';
 // import 'package:untitled/Backend/APIs/Apis.dart';
