@@ -18,6 +18,7 @@ class Leave extends StatefulWidget {
 class _LeaveState extends State<Leave> {
   List<LeaveBalanceData>? leaveBalanceData;
   bool isLoading = true;
+  String selectedLeaveType = 'Casual';
 
   @override
   void initState() {
@@ -40,6 +41,13 @@ class _LeaveState extends State<Leave> {
     }
   }
 
+  List<LeaveBalanceData>? getSelectedLeaveData() {
+    if (leaveBalanceData == null) return null;
+    return leaveBalanceData!
+        .where((data) => data.leave == selectedLeaveType)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,83 +63,115 @@ class _LeaveState extends State<Leave> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Leave Details',
-                style: TextStyle(
-                  fontSize: 18.5,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff4d2880),
-                ),
-              ),
-              SizedBox(height: 16),
-              isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
-                      ? Card(
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: SizedBox(
-                              width: double.infinity,
-                              child: _buildLeaveTable(),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Leave Details',
+                    style: TextStyle(
+                      fontSize: 18.5,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff4d2880),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  DropdownButton<String>(
+                    value: selectedLeaveType,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedLeaveType = newValue!;
+                      });
+                    },
+                    items: <String>['Annual', 'Casual', 'Medical']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 16),
+                  isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
+                          ? Card(
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Center(
+                                  child: _buildLeaveTable(),
+                                ),
+                              ),
+                            )
+                          : Center(
+                              child: Text(
+                                'No leave balance data available.',
+                                style: TextStyle(fontSize: 16),
+                              ),
                             ),
-                          ),
-                        )
-                      : Center(
-                          child: Text(
-                            'No leave balance data available.',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-              SizedBox(height: 20),
-              Divider(thickness: 1),
-              SizedBox(height: 20),
-              Text(
-                'Request Leaves',
-                style: TextStyle(
-                  fontSize: 18.5,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff4d2880),
-                ),
+                  SizedBox(height: 20),
+                  Divider(thickness: 1),
+                  SizedBox(height: 20),
+                  Text(
+                    'Request Leaves',
+                    style: TextStyle(
+                      fontSize: 18.5,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff4d2880),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  RequestLeavesRow(),
+                  SizedBox(height: 20),
+                  RequestLeavesForm(),
+                ],
               ),
-              SizedBox(height: 20),
-              RequestLeavesRow(),
-              SizedBox(height: 20),
-              RequestLeavesForm(),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
   }
 
   Widget _buildLeaveTable() {
-    return DataTable(
-      columnSpacing: 16,
-      columns: [
-        DataColumn(label: Text('Leave')),
-        DataColumn(label: Text('Entitled')),
-        DataColumn(label: Text('Utilized')),
-        DataColumn(label: Text('Pending')),
-        DataColumn(label: Text('Available')),
-      ],
-      rows: leaveBalanceData!.map((data) {
-        return DataRow(cells: [
-          DataCell(Text(data.leave)),
-          DataCell(Text(data.total.toString())),
-          DataCell(Text(data.utilized.toString())),
-          DataCell(Text(data.pending.toString())),
-          DataCell(Text(data.available.toString())),
-        ]);
-      }).toList(),
-    );
+    List<LeaveBalanceData>? selectedData = getSelectedLeaveData();
+    return selectedData == null || selectedData.isEmpty
+        ? Text('No data available for $selectedLeaveType leave.')
+        : DataTable(
+            columnSpacing: 16,
+            columns: [
+              DataColumn(
+                  label: Text('Leave',
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text('Entitled',
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text('Utilized',
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text('Pending',
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text('Available',
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+            ],
+            rows: selectedData.map((data) {
+              return DataRow(cells: [
+                DataCell(Text(data.leave)),
+                DataCell(Text(data.total.toString())),
+                DataCell(Text(data.utilized.toString())),
+                DataCell(Text(data.pending.toString())),
+                DataCell(Text(data.available.toString())),
+              ]);
+            }).toList(),
+          );
   }
 }
 
