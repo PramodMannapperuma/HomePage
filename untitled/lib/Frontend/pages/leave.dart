@@ -170,7 +170,7 @@ class _LeaveState extends State<Leave> {
   }
 
   List<LeaveBalanceData>? getSelectedLeaveData() {
-    if (leaveBalanceData == null) return null;
+    if (leaveBalanceData == null) return [];
     return leaveBalanceData!
         .where((data) => data.leave == selectedLeaveType)
         .toList();
