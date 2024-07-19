@@ -356,16 +356,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   String _formatDateTime(String dateTimeString) {
-    try {
-      final DateTime dateTime = DateTime.parse(dateTimeString);
-      final DateFormat dateFormat = DateFormat('yMd'); // Format date to 'YYYY-MM-DD'
-      final DateFormat timeFormat = DateFormat('h:mm a'); // Format time to 'HH:mm'
-      final String formattedDate = dateFormat.format(dateTime.toLocal());
-      final String formattedTime = timeFormat.format(dateTime.toLocal());
-      return '$formattedDate\n$formattedTime'; // Display date and time on separate lines
-    } catch (e) {
-      return 'Invalid date format';
-    }
+    final dateTime = DateTime.parse(dateTimeString);
+    final formatter = DateFormat('MMMM dd, yyyy hh:mm a');
+    return formatter.format(dateTime);
   }
 }
 
