@@ -6,6 +6,134 @@ import '../app_bar.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
+// class Leave extends StatefulWidget {
+//   final String token;
+
+//   const Leave({Key? key, required this.token}) : super(key: key);
+
+//   @override
+//   State<Leave> createState() => _LeaveState();
+// }
+
+// class _LeaveState extends State<Leave> {
+//   List<LeaveBalanceData>? leaveBalanceData;
+//   bool isLoading = true;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _fetchLeaveBalance();
+//   }
+
+//   Future<void> _fetchLeaveBalance() async {
+//     try {
+//       final data = await ApiService().fetchLeaveBalance(widget.token);
+//       setState(() {
+//         leaveBalanceData = data;
+//         isLoading = false;
+//       });
+//     } catch (e) {
+//       print('Error fetching leave balance: $e');
+//       setState(() {
+//         isLoading = false;
+//       });
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: customAppBar(
+//         title: 'Leaves',
+//         showActions: true,
+//         showLeading: true,
+//         context: context,
+//         showBackButton: true,
+//       ),
+//       drawer: CustomSidebar(
+//         token: widget.token,
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: SingleChildScrollView(
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Text(
+//                 'Leave Details',
+//                 style: TextStyle(
+//                   fontSize: 18.5,
+//                   fontWeight: FontWeight.bold,
+//                   color: Color(0xff4d2880),
+//                 ),
+//               ),
+//               SizedBox(height: 16),
+//               isLoading
+//                   ? Center(child: CircularProgressIndicator())
+//                   : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
+//                       ? Card(
+//                           elevation: 3,
+//                           shape: RoundedRectangleBorder(
+//                             borderRadius: BorderRadius.circular(10),
+//                           ),
+//                           child: Padding(
+//                             padding: const EdgeInsets.all(16.0),
+//                             child: Center(
+//                               child: _buildLeaveTable(),
+//                             ),
+//                           ),
+//                         )
+//                       : Center(
+//                           child: Text(
+//                             'No leave balance data available.',
+//                             style: TextStyle(fontSize: 16),
+//                           ),
+//                         ),
+//               SizedBox(height: 20),
+//               Divider(thickness: 1),
+//               SizedBox(height: 20),
+//               Text(
+//                 'Request Leaves',
+//                 style: TextStyle(
+//                   fontSize: 18.5,
+//                   fontWeight: FontWeight.bold,
+//                   color: Color(0xff4d2880),
+//                 ),
+//               ),
+//               SizedBox(height: 20),
+//               RequestLeavesRow(),
+//               SizedBox(height: 20),
+//               RequestLeavesForm(),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildLeaveTable() {
+//     return DataTable(
+//       columnSpacing: 16,
+//       columns: [
+//         DataColumn(label: Text('Leave', style: TextStyle(fontWeight: FontWeight.bold))),
+//         DataColumn(label: Text('Entitled', style: TextStyle(fontWeight: FontWeight.bold))),
+//         DataColumn(label: Text('Utilized', style: TextStyle(fontWeight: FontWeight.bold))),
+//         DataColumn(label: Text('Pending', style: TextStyle(fontWeight: FontWeight.bold))),
+//         DataColumn(label: Text('Available', style: TextStyle(fontWeight: FontWeight.bold))),
+//       ],
+//       rows: leaveBalanceData!.map((data) {
+//         return DataRow(cells: [
+//           DataCell(Text(data.leave)),
+//           DataCell(Text(data.total.toString())),
+//           DataCell(Text(data.utilized.toString())),
+//           DataCell(Text(data.pending.toString())),
+//           DataCell(Text(data.available.toString())),
+//         ]);
+//       }).toList(),
+//     );
+//   }
+// }
+
 class Leave extends StatefulWidget {
   final String token;
 
