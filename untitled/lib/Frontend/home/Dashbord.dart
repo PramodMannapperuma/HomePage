@@ -58,7 +58,7 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
@@ -90,6 +90,12 @@ class _MainScreenState extends State<MainScreen> {
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.purple,
           onTap: _onItemTapped,
+          selectedLabelStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+          unselectedLabelStyle: TextStyle(
+            fontWeight: FontWeight.normal,
+          ),
         ),
       ),
     );
