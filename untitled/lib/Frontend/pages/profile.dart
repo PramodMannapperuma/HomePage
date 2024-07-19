@@ -297,11 +297,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           SizedBox(height: 10), // Gap between designation and email
                           Text(
-                            'Email: ${userData['personalEmail']}',
+                            'Email: ${userData['officeEmail']}',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           Text(
-                            'Contact No: ${userData['mobile1']}',
+                            'Contact No: ${userData['officeMobile']}',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           Text(
