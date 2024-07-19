@@ -305,11 +305,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           Text(
-                            'EPF Number: ${userData['epfnumber']}',
+                            'EPF Number: ${userData['epf']}',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           Text(
-                            'Supervisor: ${userData['supervisorName']}',
+                            'Supervisor: ${userData['supervisor']}',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
