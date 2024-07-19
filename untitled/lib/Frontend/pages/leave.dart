@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/services.dart';
 import 'package:untitled/Backend/APIs/Apis.dart';
 import 'package:untitled/Backend/models/leave_balance_model.dart';
 import '../app_bar.dart';
@@ -179,15 +180,73 @@ class _LeaveState extends State<Leave> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(
-        title: 'Leaves',
-        showActions: true,
-        showLeading: true,
-        context: context,
-        showBackButton: true,
-      ),
-      drawer: CustomSidebar(
-        token: widget.token,
+      appBar: AppBar(
+        // backgroundColor: const Color(0xff4d2880),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/hrislogo2.png',
+              height: 40.0,
+            ),
+            SizedBox(
+              width: 8.0,
+            ),
+          ],
+        ),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(35.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  "Leave",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Divider(
+                color: Colors.black,
+                thickness: 0.2,
+              ),
+            ],
+          ),
+        ),
+        centerTitle: true,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.menu_outlined,
+                  color: AppColors.background,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              ),
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.person,
+              color: AppColors.background,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile',arguments: widget.token);
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -205,7 +264,7 @@ class _LeaveState extends State<Leave> {
                       color: Color(0xff4d2880),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 15),
                   DropdownButton<String>(
                     value: selectedLeaveType,
                     onChanged: (String? newValue) {
@@ -221,7 +280,7 @@ class _LeaveState extends State<Leave> {
                       );
                     }).toList(),
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 8),
                   isLoading
                       ? Center(child: CircularProgressIndicator())
                       : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
@@ -272,7 +331,9 @@ class _LeaveState extends State<Leave> {
     return selectedData == null || selectedData.isEmpty
         ? Text('No data available for $selectedLeaveType leave.')
         : DataTable(
-            columnSpacing: 16,
+        columnSpacing: 16,
+        headingRowHeight: 35,
+        dataRowHeight: 38,
             columns: [
               DataColumn(
                   label: Text('Leave',
