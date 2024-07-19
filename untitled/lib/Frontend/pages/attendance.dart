@@ -26,7 +26,6 @@ class _AttendanceState extends State<Attendance> {
   DateTime today = DateTime.now();
 
   Map<DateTime, List<Event>> events = {};
-  TextEditingController _eventController = TextEditingController();
   TextEditingController _startTimeController = TextEditingController();
   TextEditingController _leaveTimeController = TextEditingController();
   TextEditingController _commentController = TextEditingController();
@@ -41,14 +40,12 @@ class _AttendanceState extends State<Attendance> {
     super.initState();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
-    futureAttendanceData =
-        apiService.fetchAttendanceData(widget.token, _selectedDay!);
+    futureAttendanceData = apiService.fetchAttendanceData(widget.token, _selectedDay!);
     print('Token in attendance is ${widget.token}');
   }
 
   @override
   void dispose() {
-    _eventController.dispose();
     _startTimeController.dispose();
     _leaveTimeController.dispose();
     _commentController.dispose();
@@ -61,9 +58,8 @@ class _AttendanceState extends State<Attendance> {
         _selectedDay = selectedDate;
         _focusedDay = focusedDay;
         _selectedEvents.value = _getEventsForDay(selectedDate);
-        futureAttendanceData =
-            apiService.fetchAttendanceData(widget.token, selectedDate);
-        print('Token in ondayselected${widget.token}');
+        futureAttendanceData = apiService.fetchAttendanceData(widget.token, selectedDate);
+        print('Token in onDaySelected ${widget.token}');
       });
     }
   }
@@ -80,7 +76,10 @@ class _AttendanceState extends State<Attendance> {
         return Padding(
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.05,
+              vertical: MediaQuery.of(context).size.height * 0.02,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -192,22 +191,22 @@ class _AttendanceState extends State<Attendance> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: const Color(0xff4d2880),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
               'assets/images/hrislogo2.png',
-              height: 40.0,
+              height: isPortrait ? 40.0 : 30.0,
             ),
-            SizedBox(
-              width: 8.0,
-            ),
+            SizedBox(width: 8.0),
           ],
         ),
         bottom: PreferredSize(
@@ -215,7 +214,7 @@ class _AttendanceState extends State<Attendance> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 child: Text(
                   "Attendance",
                   style: TextStyle(
@@ -239,7 +238,7 @@ class _AttendanceState extends State<Attendance> {
         leading: Builder(
           builder: (BuildContext context) {
             return Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(screenWidth * 0.02),
               child: IconButton(
                 icon: const Icon(
                   Icons.menu_outlined,
@@ -259,12 +258,12 @@ class _AttendanceState extends State<Attendance> {
               color: AppColors.background,
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/profile',arguments: widget.token);
+              Navigator.pushNamed(context, '/profile', arguments: widget.token);
             },
           ),
         ],
       ),
-      drawer: CustomSidebar(token: widget.token,),
+      drawer: CustomSidebar(token: widget.token),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4d2880),
         onPressed: () {
@@ -292,7 +291,7 @@ class _AttendanceState extends State<Attendance> {
                   color: Colors.white,
                 ),
                 titleTextStyle: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: screenWidth * 0.05,
                   fontWeight: FontWeight.bold,
                   color: Color(0xff4d2880),
                 ),
@@ -345,9 +344,7 @@ class _AttendanceState extends State<Attendance> {
           Divider(
             thickness: 1,
           ),
-          SizedBox(
-            height: 8.0,
-          ),
+          SizedBox(height: 8.0),
           Expanded(
             child: FutureBuilder<List<AttendanceData>>(
               future: futureAttendanceData,
@@ -361,8 +358,7 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                      (element) =>
-                          element.date == _selectedDay.toString().split(" ")[0],
+                          (element) => element.date == _selectedDay.toString().split(" ")[0],
                       orElse: () => AttendanceData(
                           amdIn: 'N/A',
                           recIn: 'N/A',
@@ -370,18 +366,23 @@ class _AttendanceState extends State<Attendance> {
                           comment: 'N/A',
                           recOut: 'N/A',
                           date: _selectedDay.toString().split(" ")[0],
-                          status: 'N/A'));
+                          status: 'N/A'
+                      )
+                  );
                   return Padding(
-                    padding: const EdgeInsets.only(top: 8.0,bottom: 140.0,left: 8.0,right: 8.0),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.05,
+                      vertical: screenHeight * 0.02,
+                    ),
                     child: SizedBox(
-                      height: 100,
+                      height: screenHeight * 0.3,
                       child: Card(
                         elevation: 2,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: EdgeInsets.all(screenWidth * 0.04),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -392,14 +393,14 @@ class _AttendanceState extends State<Attendance> {
                                     'Date: ${selectedDateData.date}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                                      fontSize: screenWidth * 0.044,
                                     ),
                                   ),
                                   Text(
                                     'Status: ${selectedDateData.status}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                                      fontSize: screenWidth * 0.044,
                                       color: selectedDateData.status == 'leave'
                                           ? Colors.red
                                           : Colors.green,
@@ -414,48 +415,48 @@ class _AttendanceState extends State<Attendance> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('AMD In: ${selectedDateData.amdIn}', style: TextStyle(fontSize: 16),),
+                                      Text('AMD In: ${selectedDateData.amdIn}', style: TextStyle(fontSize: screenWidth * 0.04)),
                                       SizedBox(height: 4.0),
-                                      Text('AMD Out: ${selectedDateData.amdOut}', style: TextStyle(fontSize: 16),),
+                                      Text('AMD Out: ${selectedDateData.amdOut}', style: TextStyle(fontSize: screenWidth * 0.04)),
                                     ],
                                   ),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('Rec In: ${selectedDateData.recIn}', style: TextStyle(fontSize: 16),),
+                                      Text('Rec In: ${selectedDateData.recIn}', style: TextStyle(fontSize: screenWidth * 0.04)),
                                       SizedBox(height: 4.0),
-                                      Text('Rec Out: ${selectedDateData.recOut}', style: TextStyle(fontSize: 16),),
+                                      Text('Rec Out: ${selectedDateData.recOut}', style: TextStyle(fontSize: screenWidth * 0.04)),
                                     ],
                                   ),
                                 ],
                               ),
                               Divider(thickness: 1),
-                              Text('Comment: ${selectedDateData.comment}', style: TextStyle(fontSize: 16),),
+                              Text('Comment: ${selectedDateData.comment}', style: TextStyle(fontSize: screenWidth * 0.04)),
                             ],
                           ),
                         ),
                       ),
                     ),
                   );
-                  // return ListView(
-                  //   children: [
-                  //     ListTile(
-                  //       title: Text('Date: ${selectedDateData.date}'),
-                  //       subtitle: Column(
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         children: [
-                  //           Text('AMD In: ${selectedDateData.amdIn}'),
-                  //           Text('Rec In: ${selectedDateData.recIn}'),
-                  //           Text('AMD Out: ${selectedDateData.amdOut}'),
-                  //           Text('Comment: ${selectedDateData.comment}'),
-                  //           Text('Rec Out: ${selectedDateData.recOut}'),
-                  //           Text('Status: ${selectedDateData.status}'),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ],
-                  // );
                 }
+                // return ListView(
+                //   children: [
+                //     ListTile(
+                //       title: Text('Date: ${selectedDateData.date}'),
+                //       subtitle: Column(
+                //         crossAxisAlignment: CrossAxisAlignment.start,
+                //         children: [
+                //           Text('AMD In: ${selectedDateData.amdIn}'),
+                //           Text('Rec In: ${selectedDateData.recIn}'),
+                //           Text('AMD Out: ${selectedDateData.amdOut}'),
+                //           Text('Comment: ${selectedDateData.comment}'),
+                //           Text('Rec Out: ${selectedDateData.recOut}'),
+                //           Text('Status: ${selectedDateData.status}'),
+                //         ],
+                //       ),
+                //     ),
+                //   ],
+                // );
               },
             ),
           ),
