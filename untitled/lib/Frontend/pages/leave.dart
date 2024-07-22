@@ -888,7 +888,7 @@ class _LeaveState extends State<Leave> {
               height: 40.0,
             ),
             SizedBox(
-              width: screenWidth * 0.02,
+              width: screenWidth * 0.03,
             ),
           ],
         ),
@@ -900,7 +900,7 @@ class _LeaveState extends State<Leave> {
         leading: Builder(
           builder: (BuildContext context) {
             return Padding(
-              padding: EdgeInsets.all(screenWidth * 0.02),
+              padding: EdgeInsets.all(screenWidth * 0.03),
               child: IconButton(
                 icon: const Icon(
                   Icons.menu_outlined,
@@ -929,7 +929,7 @@ class _LeaveState extends State<Leave> {
         token: widget.token,
       ),
       body: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.02),
+        padding: EdgeInsets.all(screenWidth * 0.03),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -942,7 +942,7 @@ class _LeaveState extends State<Leave> {
                   color: Color(0xff4d2880),
                 ),
               ),
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: screenHeight * 0.03),
               isLoading
                   ? Center(child: CircularProgressIndicator())
                   : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
@@ -952,7 +952,7 @@ class _LeaveState extends State<Leave> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Padding(
-                            padding: EdgeInsets.all(screenWidth * 0.02),
+                            padding: EdgeInsets.all(screenWidth * 0.03),
                             child: Center(
                               child: _buildLeaveTable(),
                             ),
@@ -964,9 +964,9 @@ class _LeaveState extends State<Leave> {
                             style: TextStyle(fontSize: 14),
                           ),
                         ),
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: screenHeight * 0.03),
               Divider(thickness: 1),
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: screenHeight * 0.03),
               Text(
                 'Request Leaves',
                 style: TextStyle(
@@ -975,9 +975,9 @@ class _LeaveState extends State<Leave> {
                   color: Color(0xff4d2880),
                 ),
               ),
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: screenHeight * 0.03),
               RequestLeavesRow(),
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: screenHeight * 0.03),
               RequestLeavesForm(),
             ],
           ),
@@ -988,42 +988,42 @@ class _LeaveState extends State<Leave> {
 
   Widget _buildLeaveTable() {
     return DataTable(
-      columnSpacing: 8,
-      headingRowHeight: 24,
+      columnSpacing: 10,
+      headingRowHeight: 30,
       dataRowHeight: 30,
       columns: [
         DataColumn(
             label: Text('Leave',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
         DataColumn(
             label: Text('Entitled',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
         DataColumn(
             label: Text('Utilized',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
         DataColumn(
             label: Text('Pending',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
         DataColumn(
             label: Text('Available',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
       ],
       rows: leaveBalanceData!.map((data) {
         return DataRow(cells: [
           DataCell(
-            Center(child: Text(data.leave, style: TextStyle(fontSize: 12))),
+            Center(child: Text(data.leave, style: TextStyle(fontSize: 13))),
           ),
           DataCell(
-            Center(child: Text(data.total.toString(), style: TextStyle(fontSize: 12))),
+            Center(child: Text(data.total.toString(), style: TextStyle(fontSize: 13))),
           ),
           DataCell(
-            Center(child: Text(data.utilized.toString(), style: TextStyle(fontSize: 12))),
+            Center(child: Text(data.utilized.toString(), style: TextStyle(fontSize: 13))),
           ),
           DataCell(
-            Center(child: Text(data.pending.toString(), style: TextStyle(fontSize: 12))),
+            Center(child: Text(data.pending.toString(), style: TextStyle(fontSize: 13))),
           ),
           DataCell(
-            Center(child: Text(data.available.toString(), style: TextStyle(fontSize: 12))),
+            Center(child: Text(data.available.toString(), style: TextStyle(fontSize: 13))),
           ),
         ]);
       }).toList(),
@@ -1059,14 +1059,14 @@ class LeaveRequestOption extends StatelessWidget {
     return Column(
       children: [
         CircleAvatar(
-          radius: 24,
+          radius: 28,
           backgroundColor: Colors.grey.shade300,
-          child: Icon(icon, size: 20, color: AppColors.background),
+          child: Icon(icon, size: 30, color: AppColors.background),
         ),
-        SizedBox(height: 4),
+        SizedBox(height: 6),
         Text(
           label,
-          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -1092,7 +1092,7 @@ class _RequestLeavesFormState extends State<RequestLeavesForm> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Padding(
-      padding: EdgeInsets.all(screenWidth * 0.02),
+      padding: EdgeInsets.all(screenWidth * 0.03),
       child: Form(
         key: _formKey,
         child: Column(
@@ -1116,7 +1116,25 @@ class _RequestLeavesFormState extends State<RequestLeavesForm> {
                 });
               },
             ),
-            SizedBox(height: screenHeight * 0.01),
+            SizedBox(height: screenHeight * 0.02),
+            Row(
+              children: [
+                Text(
+                  'Dates',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      startDate = null;
+                      endDate = null;
+                    });
+                  },
+                  child: Text('Clear'),
+                ),
+              ],
+            ),
             Row(
               children: [
                 Expanded(
@@ -1138,11 +1156,11 @@ class _RequestLeavesFormState extends State<RequestLeavesForm> {
                       startDate != null
                           ? 'Start Date: ${startDate!.toLocal()}'.split(' ')[0]
                           : 'Pick Start Date',
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 14),
                     ),
                   ),
                 ),
-                SizedBox(width: screenWidth * 0.02),
+                SizedBox(width: screenWidth * 0.03),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
@@ -1162,13 +1180,13 @@ class _RequestLeavesFormState extends State<RequestLeavesForm> {
                       endDate != null
                           ? 'End Date: ${endDate!.toLocal()}'.split(' ')[0]
                           : 'Pick End Date',
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 14),
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: screenHeight * 0.01),
+            SizedBox(height: screenHeight * 0.03),
             TextFormField(
               decoration: InputDecoration(
                 labelText: 'Notify Employee',
@@ -1187,7 +1205,7 @@ class _RequestLeavesFormState extends State<RequestLeavesForm> {
                 });
               },
             ),
-            SizedBox(height: screenHeight * 0.02),
+            SizedBox(height: screenHeight * 0.03),
             Row(
               children: [
                 Expanded(
@@ -1202,7 +1220,7 @@ class _RequestLeavesFormState extends State<RequestLeavesForm> {
                     ),
                   ),
                 ),
-                SizedBox(width: screenWidth * 0.02),
+                SizedBox(width: screenWidth * 0.03),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
