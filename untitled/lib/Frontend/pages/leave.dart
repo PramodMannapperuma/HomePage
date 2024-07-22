@@ -147,7 +147,6 @@ class Leave extends StatefulWidget {
 class _LeaveState extends State<Leave> {
   List<LeaveBalanceData>? leaveBalanceData;
   bool isLoading = true;
-  String selectedLeaveType = 'Casual';
 
   @override
   void initState() {
@@ -170,197 +169,127 @@ class _LeaveState extends State<Leave> {
     }
   }
 
-  List<LeaveBalanceData>? getSelectedLeaveData() {
-    if (leaveBalanceData == null) return [];
-    return leaveBalanceData!
-        .where((data) => data.leave == selectedLeaveType)
-        .toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // backgroundColor: const Color(0xff4d2880),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/hrislogo2.png',
-              height: 40.0,
-            ),
-            SizedBox(
-              width: 8.0,
-            ),
-          ],
-        ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(35.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  "Leave",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Divider(
-                color: Colors.black,
-                thickness: 0.2,
-              ),
-            ],
-          ),
-        ),
-        centerTitle: true,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-        ),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.menu_outlined,
-                  color: AppColors.background,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              ),
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.person,
-              color: AppColors.background,
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/profile',arguments: widget.token);
-            },
-          ),
-        ],
+      appBar: customAppBar(
+        title: 'Leaves',
+        showActions: true,
+        showLeading: true,
+        context: context,
+        showBackButton: true,
+      ),
+      drawer: CustomSidebar(
+        token: widget.token,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Leave Details',
-                    style: TextStyle(
-                      fontSize: 18.5,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff4d2880),
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  DropdownButton<String>(
-                    value: selectedLeaveType,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedLeaveType = newValue!;
-                      });
-                    },
-                    items: <String>['Annual', 'Casual', 'Medical']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: 8),
-                  isLoading
-                      ? Center(child: CircularProgressIndicator())
-                      : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
-                          ? Card(
-                              elevation: 3,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Center(
-                                  child: _buildLeaveTable(),
-                                ),
-                              ),
-                            )
-                          : Center(
-                              child: Text(
-                                'No leave balance data available.',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                  SizedBox(height: 20),
-                  Divider(thickness: 1),
-                  SizedBox(height: 20),
-                  Text(
-                    'Request Leaves',
-                    style: TextStyle(
-                      fontSize: 18.5,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff4d2880),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  RequestLeavesRow(),
-                  SizedBox(height: 20),
-                  RequestLeavesForm(),
-                ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Leave Details',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff4d2880),
+                ),
               ),
-            );
-          },
+              SizedBox(height: 16),
+              isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
+                      ? Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Center(
+                              child: _buildLeaveTable(),
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child: Text(
+                            'No leave balance data available.',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+              SizedBox(height: 20),
+              Divider(thickness: 1),
+              SizedBox(height: 20),
+              Text(
+                'Request Leaves',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff4d2880),
+                ),
+              ),
+              SizedBox(height: 20),
+              RequestLeavesRow(),
+              SizedBox(height: 20),
+              RequestLeavesForm(),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildLeaveTable() {
-    List<LeaveBalanceData>? selectedData = getSelectedLeaveData();
-    return selectedData == null || selectedData.isEmpty
-        ? Text('No data available for $selectedLeaveType leave.')
-        : DataTable(
-        columnSpacing: 16,
-        headingRowHeight: 35,
-        dataRowHeight: 38,
-            columns: [
-              DataColumn(
-                  label: Text('Leave',
-                      style: TextStyle(fontWeight: FontWeight.bold))),
-              DataColumn(
-                  label: Text('Entitled',
-                      style: TextStyle(fontWeight: FontWeight.bold))),
-              DataColumn(
-                  label: Text('Utilized',
-                      style: TextStyle(fontWeight: FontWeight.bold))),
-              DataColumn(
-                  label: Text('Pending',
-                      style: TextStyle(fontWeight: FontWeight.bold))),
-              DataColumn(
-                  label: Text('Available',
-                      style: TextStyle(fontWeight: FontWeight.bold))),
-            ],
-            rows: selectedData.map((data) {
-              return DataRow(cells: [
-                DataCell(Text(data.leave)),
-                DataCell(Text(data.total.toString())),
-                DataCell(Text(data.utilized.toString())),
-                DataCell(Text(data.pending.toString())),
-                DataCell(Text(data.available.toString())),
-              ]);
-            }).toList(),
-          );
+    return DataTable(
+      columnSpacing: 10,
+      headingRowHeight: 30,
+      dataRowHeight: 32,
+      columns: [
+        DataColumn(
+            label: Text('Leave',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Entitled',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Utilized',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Pending',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Available',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+      ],
+      rows: leaveBalanceData!.map((data) {
+        return DataRow(cells: [
+          DataCell(
+            Center(child: Text(data.leave, style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.total.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.utilized.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.pending.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.available.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+        ]);
+      }).toList(),
+    );
   }
 }
 
@@ -390,14 +319,14 @@ class LeaveRequestOption extends StatelessWidget {
     return Column(
       children: [
         CircleAvatar(
-          radius: 30,
+          radius: 28,
           backgroundColor: Colors.grey.shade300,
-          child: Icon(icon, size: 25, color: AppColors.background),
+          child: Icon(icon, size: 24, color: AppColors.background),
         ),
         SizedBox(height: 8),
         Text(
           label,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -493,7 +422,7 @@ class _RequestLeavesFormState extends State<RequestLeavesForm> {
                   if (errorMessages['startDate'] != null)
                     Text(
                       errorMessages['startDate']!,
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: Colors.red, fontSize: 12),
                     ),
                 ],
               ),
@@ -527,7 +456,7 @@ class _RequestLeavesFormState extends State<RequestLeavesForm> {
                   if (errorMessages['endDate'] != null)
                     Text(
                       errorMessages['endDate']!,
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: Colors.red, fontSize: 12),
                     ),
                 ],
               ),
@@ -689,8 +618,8 @@ class LeaveBar extends StatelessWidget {
               BarChartRodData(
                 toY: leaveData[0].toDouble(),
                 color: AppColors.background,
-                borderRadius: BorderRadius.circular(0),
-                width: 50,
+                borderRadius: BorderRadius.circular(8),
+                width: 40,
               ),
             ],
           ),
@@ -700,8 +629,8 @@ class LeaveBar extends StatelessWidget {
               BarChartRodData(
                 toY: leaveData[1].toDouble(),
                 color: AppColors.background,
-                borderRadius: BorderRadius.circular(0),
-                width: 50,
+                borderRadius: BorderRadius.circular(8),
+                width: 40,
               ),
             ],
           ),
@@ -711,8 +640,8 @@ class LeaveBar extends StatelessWidget {
               BarChartRodData(
                 toY: leaveData[2].toDouble(),
                 color: AppColors.background,
-                borderRadius: BorderRadius.circular(0),
-                width: 50,
+                borderRadius: BorderRadius.circular(8),
+                width: 40,
               ),
             ],
           ),
@@ -722,8 +651,8 @@ class LeaveBar extends StatelessWidget {
               BarChartRodData(
                 toY: leaveData[3].toDouble(),
                 color: AppColors.background,
-                borderRadius: BorderRadius.circular(0),
-                width: 50,
+                borderRadius: BorderRadius.circular(8),
+                width: 40,
               ),
             ],
           ),
@@ -739,7 +668,7 @@ Widget getBottomTitles(double value, TitleMeta meta) {
   const style = TextStyle(
     color: AppColors.background,
     fontWeight: FontWeight.bold,
-    fontSize: 14,
+    fontSize: 12,
   );
 
   switch (value.toInt()) {
