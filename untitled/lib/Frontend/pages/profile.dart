@@ -268,7 +268,13 @@ class _ProfilePageState extends State<ProfilePage> {
           final userData = snapshot.data!;
           String name = userData['fullName'] ?? 'N/A';
           String designation = userData['designation'] ?? 'N/A';
-          String profileImageUrl = userData['profileImageUrl'] ?? '';
+          //String profileImageUrl = userData['profileImageUrl'] ?? '';
+          String image = userData['image'] ?? ''; 
+
+          // Construct the full URL for the profile image if it's not null
+          String fullProfileImageUrl = image.isNotEmpty
+              ? 'http://hris.accelution.lk/api/profile/$image'
+              : ''; // Use an empty string if no image URL is provided
 
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
@@ -280,7 +286,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     CircleAvatar(
                       radius: 60.0,
-                      backgroundImage: AssetImage("assets/images/2.-electronic-evan (1).jpg"),
+                      // backgroundImage: AssetImage("assets/images/2.-electronic-evan (1).jpg"),
+                      backgroundImage: fullProfileImageUrl.isNotEmpty
+                          ? NetworkImage(fullProfileImageUrl)
+                          : null, // Show the image from the URL
+                      child: fullProfileImageUrl.isEmpty
+                          ? Icon(Icons.person, size: 60) // Fallback icon if no image URL is provided
+                          : null,
                     ),
                     SizedBox(width: 20),
                     Expanded(
@@ -417,17 +429,17 @@ class ProfileMenuWidget extends StatelessWidget {
       ),
       trailing: endIcon
           ? Container(
-        width: 30,
-        height: 30,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: Colors.black.withOpacity(0.1),
-        ),
-        child: const Icon(
-          Icons.keyboard_arrow_right,
-          color: Color.fromRGBO(77, 40, 128, 0.5),
-        ),
-      )
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: Colors.black.withOpacity(0.1),
+              ),
+              child: const Icon(
+                Icons.keyboard_arrow_right,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+              ),
+            )
           : null,
     );
   }
