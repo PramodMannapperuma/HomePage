@@ -273,12 +273,51 @@ class _LeaveState extends State<Leave> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(
-        title: 'Leaves',
-        showActions: true,
-        showLeading: true,
-        context: context,
-        showBackButton: true,
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/hrislogo2.png',
+              height: 40.0,
+            ),
+            SizedBox(
+              width: 8.0,
+            ),
+          ],
+        ),
+        centerTitle: true,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.menu_outlined,
+                  color: AppColors.background,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              ),
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.person,
+              color: AppColors.background,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile', arguments: widget.token);
+            },
+          ),
+        ],
       ),
       drawer: CustomSidebar(
         token: widget.token,
