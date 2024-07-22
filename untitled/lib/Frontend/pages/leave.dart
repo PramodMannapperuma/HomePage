@@ -7,235 +7,6 @@ import '../app_bar.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
-class Leave extends StatefulWidget {
-  final String token;
-
-  const Leave({Key? key, required this.token}) : super(key: key);
-
-  @override
-  State<Leave> createState() => _LeaveState();
-}
-
-class _LeaveState extends State<Leave> {
-  List<LeaveBalanceData>? leaveBalanceData;
-  bool isLoading = true;
-  String selectedLeaveType = 'Casual';
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchLeaveBalance();
-  }
-
-  Future<void> _fetchLeaveBalance() async {
-    try {
-      final data = await ApiService().fetchLeaveBalance(widget.token);
-      setState(() {
-        leaveBalanceData = data;
-        isLoading = false;
-      });
-    } catch (e) {
-      print('Error fetching leave balance: $e');
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  List<LeaveBalanceData>? getSelectedLeaveData() {
-    if (leaveBalanceData == null) return [];
-    return leaveBalanceData!
-        .where((data) => data.leave == selectedLeaveType)
-        .toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        // backgroundColor: const Color(0xff4d2880),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/hrislogo2.png',
-              height: 40.0,
-            ),
-            SizedBox(
-              width: 8.0,
-            ),
-          ],
-        ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(35.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  "Leave",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Divider(
-                color: Colors.black,
-                thickness: 0.2,
-              ),
-            ],
-          ),
-        ),
-        centerTitle: true,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-        ),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.menu_outlined,
-                  color: AppColors.background,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              ),
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.person,
-              color: AppColors.background,
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/profile',arguments: widget.token);
-            },
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Leave Details',
-                    style: TextStyle(
-                      fontSize: 18.5,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff4d2880),
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  DropdownButton<String>(
-                    value: selectedLeaveType,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedLeaveType = newValue!;
-                      });
-                    },
-                    items: <String>['Annual', 'Casual', 'Medical']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: 8),
-                  isLoading
-                      ? Center(child: CircularProgressIndicator())
-                      : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
-                      ? Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Center(
-                        child: _buildLeaveTable(),
-                      ),
-                    ),
-                  )
-                      : Center(
-                    child: Text(
-                      'No leave balance data available.',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Divider(thickness: 1),
-                  SizedBox(height: 20),
-                  Text(
-                    'Request Leaves',
-                    style: TextStyle(
-                      fontSize: 18.5,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff4d2880),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  RequestLeavesRow(),
-                  SizedBox(height: 20),
-                  RequestLeavesForm(),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLeaveTable() {
-    List<LeaveBalanceData>? selectedData = getSelectedLeaveData();
-    return selectedData == null || selectedData.isEmpty
-        ? Text('No data available for $selectedLeaveType leave.')
-        : DataTable(
-      columnSpacing: 16,
-      headingRowHeight: 35,
-      dataRowHeight: 38,
-      columns: [
-        DataColumn(
-            label: Text('Leave',
-                style: TextStyle(fontWeight: FontWeight.bold))),
-        DataColumn(
-            label: Text('Entitled',
-                style: TextStyle(fontWeight: FontWeight.bold))),
-        DataColumn(
-            label: Text('Utilized',
-                style: TextStyle(fontWeight: FontWeight.bold))),
-        DataColumn(
-            label: Text('Pending',
-                style: TextStyle(fontWeight: FontWeight.bold))),
-        DataColumn(
-            label: Text('Available',
-                style: TextStyle(fontWeight: FontWeight.bold))),
-      ],
-      rows: selectedData.map((data) {
-        return DataRow(cells: [
-          DataCell(Text(data.leave)),
-          DataCell(Text(data.total.toString())),
-          DataCell(Text(data.utilized.toString())),
-          DataCell(Text(data.pending.toString())),
-          DataCell(Text(data.available.toString())),
-        ]);
-      }).toList(),
-    );
-  }
-}
-
 // class Leave extends StatefulWidget {
 //   final String token;
 //
@@ -248,6 +19,7 @@ class _LeaveState extends State<Leave> {
 // class _LeaveState extends State<Leave> {
 //   List<LeaveBalanceData>? leaveBalanceData;
 //   bool isLoading = true;
+//   String selectedLeaveType = 'Casual';
 //
 //   @override
 //   void initState() {
@@ -270,129 +42,357 @@ class _LeaveState extends State<Leave> {
 //     }
 //   }
 //
+//   List<LeaveBalanceData>? getSelectedLeaveData() {
+//     if (leaveBalanceData == null) return [];
+//     return leaveBalanceData!
+//         .where((data) => data.leave == selectedLeaveType)
+//         .toList();
+//   }
+//
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
-//       appBar: customAppBar(
-//         title: 'Leaves',
-//         showActions: true,
-//         showLeading: true,
-//         context: context,
-//         showBackButton: true,
-//       ),
-//       drawer: CustomSidebar(
-//         token: widget.token,
+//       appBar: AppBar(
+//         // backgroundColor: const Color(0xff4d2880),
+//         title: Row(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Image.asset(
+//               'assets/images/hrislogo2.png',
+//               height: 40.0,
+//             ),
+//             SizedBox(
+//               width: 8.0,
+//             ),
+//           ],
+//         ),
+//         bottom: PreferredSize(
+//           preferredSize: Size.fromHeight(35.0),
+//           child: Column(
+//             children: [
+//               Padding(
+//                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
+//                 child: Text(
+//                   "Leave",
+//                   style: TextStyle(
+//                     fontSize: 18.0,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//               ),
+//               Divider(
+//                 color: Colors.black,
+//                 thickness: 0.2,
+//               ),
+//             ],
+//           ),
+//         ),
+//         centerTitle: true,
+//         systemOverlayStyle: const SystemUiOverlayStyle(
+//           statusBarColor: Colors.transparent,
+//           statusBarIconBrightness: Brightness.dark,
+//         ),
+//         leading: Builder(
+//           builder: (BuildContext context) {
+//             return Padding(
+//               padding: const EdgeInsets.all(8.0),
+//               child: IconButton(
+//                 icon: const Icon(
+//                   Icons.menu_outlined,
+//                   color: AppColors.background,
+//                 ),
+//                 onPressed: () {
+//                   Scaffold.of(context).openDrawer();
+//                 },
+//               ),
+//             );
+//           },
+//         ),
+//         actions: [
+//           IconButton(
+//             icon: const Icon(
+//               Icons.person,
+//               color: AppColors.background,
+//             ),
+//             onPressed: () {
+//               Navigator.pushNamed(context, '/profile',arguments: widget.token);
+//             },
+//           ),
+//         ],
 //       ),
 //       body: Padding(
 //         padding: const EdgeInsets.all(16.0),
-//         child: SingleChildScrollView(
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Text(
-//                 'Leave Details',
-//                 style: TextStyle(
-//                   fontSize: 20,
-//                   fontWeight: FontWeight.bold,
-//                   color: Color(0xff4d2880),
-//                 ),
-//               ),
-//               SizedBox(height: 16),
-//               isLoading
-//                   ? Center(child: CircularProgressIndicator())
-//                   : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
+//         child: LayoutBuilder(
+//           builder: (context, constraints) {
+//             return SingleChildScrollView(
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text(
+//                     'Leave Details',
+//                     style: TextStyle(
+//                       fontSize: 18.5,
+//                       fontWeight: FontWeight.bold,
+//                       color: Color(0xff4d2880),
+//                     ),
+//                   ),
+//                   SizedBox(height: 15),
+//                   DropdownButton<String>(
+//                     value: selectedLeaveType,
+//                     onChanged: (String? newValue) {
+//                       setState(() {
+//                         selectedLeaveType = newValue!;
+//                       });
+//                     },
+//                     items: <String>['Annual', 'Casual', 'Medical']
+//                         .map<DropdownMenuItem<String>>((String value) {
+//                       return DropdownMenuItem<String>(
+//                         value: value,
+//                         child: Text(value),
+//                       );
+//                     }).toList(),
+//                   ),
+//                   SizedBox(height: 8),
+//                   isLoading
+//                       ? Center(child: CircularProgressIndicator())
+//                       : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
 //                       ? Card(
-//                           elevation: 4,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(12),
-//                           ),
-//                           child: Padding(
-//                             padding: const EdgeInsets.all(12.0),
-//                             child: Center(
-//                               child: _buildLeaveTable(),
-//                             ),
-//                           ),
-//                         )
+//                     elevation: 3,
+//                     shape: RoundedRectangleBorder(
+//                       borderRadius: BorderRadius.circular(10),
+//                     ),
+//                     child: Padding(
+//                       padding: const EdgeInsets.all(16.0),
+//                       child: Center(
+//                         child: _buildLeaveTable(),
+//                       ),
+//                     ),
+//                   )
 //                       : Center(
-//                           child: Text(
-//                             'No leave balance data available.',
-//                             style: TextStyle(fontSize: 16),
-//                           ),
-//                         ),
-//               SizedBox(height: 20),
-//               Divider(thickness: 1),
-//               SizedBox(height: 20),
-//               Text(
-//                 'Request Leaves',
-//                 style: TextStyle(
-//                   fontSize: 20,
-//                   fontWeight: FontWeight.bold,
-//                   color: Color(0xff4d2880),
-//                 ),
+//                     child: Text(
+//                       'No leave balance data available.',
+//                       style: TextStyle(fontSize: 16),
+//                     ),
+//                   ),
+//                   SizedBox(height: 20),
+//                   Divider(thickness: 1),
+//                   SizedBox(height: 20),
+//                   Text(
+//                     'Request Leaves',
+//                     style: TextStyle(
+//                       fontSize: 18.5,
+//                       fontWeight: FontWeight.bold,
+//                       color: Color(0xff4d2880),
+//                     ),
+//                   ),
+//                   SizedBox(height: 20),
+//                   RequestLeavesRow(),
+//                   SizedBox(height: 20),
+//                   RequestLeavesForm(),
+//                 ],
 //               ),
-//               SizedBox(height: 20),
-//               RequestLeavesRow(),
-//               SizedBox(height: 20),
-//               RequestLeavesForm(),
-//             ],
-//           ),
+//             );
+//           },
 //         ),
 //       ),
 //     );
 //   }
 //
 //   Widget _buildLeaveTable() {
-//     return DataTable(
-//       columnSpacing: 10,
-//       headingRowHeight: 30,
-//       dataRowHeight: 32,
+//     List<LeaveBalanceData>? selectedData = getSelectedLeaveData();
+//     return selectedData == null || selectedData.isEmpty
+//         ? Text('No data available for $selectedLeaveType leave.')
+//         : DataTable(
+//       columnSpacing: 16,
+//       headingRowHeight: 35,
+//       dataRowHeight: 38,
 //       columns: [
 //         DataColumn(
 //             label: Text('Leave',
-//                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+//                 style: TextStyle(fontWeight: FontWeight.bold))),
 //         DataColumn(
 //             label: Text('Entitled',
-//                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+//                 style: TextStyle(fontWeight: FontWeight.bold))),
 //         DataColumn(
 //             label: Text('Utilized',
-//                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+//                 style: TextStyle(fontWeight: FontWeight.bold))),
 //         DataColumn(
 //             label: Text('Pending',
-//                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+//                 style: TextStyle(fontWeight: FontWeight.bold))),
 //         DataColumn(
 //             label: Text('Available',
-//                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+//                 style: TextStyle(fontWeight: FontWeight.bold))),
 //       ],
-//       rows: leaveBalanceData!.map((data) {
+//       rows: selectedData.map((data) {
 //         return DataRow(cells: [
-//           DataCell(
-//             Center(child: Text(data.leave, style: TextStyle(fontSize: 14))),
-//           ),
-//           DataCell(
-//             Center(
-//                 child: Text(data.total.toString(),
-//                     style: TextStyle(fontSize: 14))),
-//           ),
-//           DataCell(
-//             Center(
-//                 child: Text(data.utilized.toString(),
-//                     style: TextStyle(fontSize: 14))),
-//           ),
-//           DataCell(
-//             Center(
-//                 child: Text(data.pending.toString(),
-//                     style: TextStyle(fontSize: 14))),
-//           ),
-//           DataCell(
-//             Center(
-//                 child: Text(data.available.toString(),
-//                     style: TextStyle(fontSize: 14))),
-//           ),
+//           DataCell(Text(data.leave)),
+//           DataCell(Text(data.total.toString())),
+//           DataCell(Text(data.utilized.toString())),
+//           DataCell(Text(data.pending.toString())),
+//           DataCell(Text(data.available.toString())),
 //         ]);
 //       }).toList(),
 //     );
 //   }
 // }
+
+class Leave extends StatefulWidget {
+  final String token;
+
+  const Leave({Key? key, required this.token}) : super(key: key);
+
+  @override
+  State<Leave> createState() => _LeaveState();
+}
+
+class _LeaveState extends State<Leave> {
+  List<LeaveBalanceData>? leaveBalanceData;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLeaveBalance();
+  }
+
+  Future<void> _fetchLeaveBalance() async {
+    try {
+      final data = await ApiService().fetchLeaveBalance(widget.token);
+      setState(() {
+        leaveBalanceData = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching leave balance: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: customAppBar(
+        title: 'Leaves',
+        showActions: true,
+        showLeading: true,
+        context: context,
+        showBackButton: true,
+      ),
+      drawer: CustomSidebar(
+        token: widget.token,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Leave Details',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff4d2880),
+                ),
+              ),
+              SizedBox(height: 16),
+              isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
+                      ? Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Center(
+                              child: _buildLeaveTable(),
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child: Text(
+                            'No leave balance data available.',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+              SizedBox(height: 20),
+              Divider(thickness: 1),
+              SizedBox(height: 20),
+              Text(
+                'Request Leaves',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff4d2880),
+                ),
+              ),
+              SizedBox(height: 20),
+              RequestLeavesRow(),
+              SizedBox(height: 20),
+              RequestLeavesForm(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLeaveTable() {
+    return DataTable(
+      columnSpacing: 10,
+      headingRowHeight: 30,
+      dataRowHeight: 32,
+      columns: [
+        DataColumn(
+            label: Text('Leave',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Entitled',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Utilized',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Pending',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Available',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+      ],
+      rows: leaveBalanceData!.map((data) {
+        return DataRow(cells: [
+          DataCell(
+            Center(child: Text(data.leave, style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.total.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.utilized.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.pending.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.available.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+        ]);
+      }).toList(),
+    );
+  }
+}
 
 class RequestLeavesRow extends StatelessWidget {
   @override
