@@ -750,7 +750,7 @@ class _LeavePageState extends State<Leave> {
       builder: (BuildContext context) {
         return Padding(
           padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -773,7 +773,7 @@ class _LeavePageState extends State<Leave> {
                     labelText: "Leave Type",
                   ),
                   items:
-                  ["Annual", "Casual", "Medical"].map((String leaveType) {
+                      ["Annual", "Casual", "Medical"].map((String leaveType) {
                     return DropdownMenuItem<String>(
                       value: leaveType,
                       child: Text(leaveType),
@@ -817,7 +817,7 @@ class _LeavePageState extends State<Leave> {
                           ),
                         ),
                         controller:
-                        TextEditingController(text: _attachmentPath),
+                            TextEditingController(text: _attachmentPath),
                       ),
                       if (_attachmentPath != null)
                         Text(
@@ -1101,24 +1101,24 @@ class _LeavePageState extends State<Leave> {
                   isLoading
                       ? Center(child: CircularProgressIndicator())
                       : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
-                      ? Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(screenWidth * 0.03),
-                      child: Center(
-                        child: _buildLeaveTable(),
-                      ),
-                    ),
-                  )
-                      : Center(
-                    child: Text(
-                      'No leave balance data available.',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
+                          ? Card(
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(screenWidth * 0.03),
+                                child: Center(
+                                  child: _buildLeaveTable(),
+                                ),
+                              ),
+                            )
+                          : Center(
+                              child: Text(
+                                'No leave balance data available.',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
                 ],
               ),
             ),
@@ -1215,6 +1215,65 @@ class _LeavePageState extends State<Leave> {
           ),
         ]);
       }).toList(),
+    );
+  }
+  Widget _buildMedicalAttachmentField() {
+    return Column(
+      children: [
+        TextField(
+          readOnly: true,
+          decoration: InputDecoration(
+            labelText: "Attachment",
+            suffixIcon: IconButton(
+              icon: Icon(Icons.attach_file),
+              onPressed: _pickAttachment,
+            ),
+          ),
+          controller: TextEditingController(text: _attachmentPath),
+        ),
+        if (_attachmentPath != null)
+          Text("Selected file: ${_attachmentPath!.split('/').last}"),
+      ],
+    );
+  }
+
+  Widget _buildCoverUpDropdown() {
+    return DropdownButtonFormField<String>(
+      value: _selectedCoverUp,
+      decoration: InputDecoration(
+        labelText: "Cover up",
+      ),
+      items: ["Employee 1", "Employee 2", "Employee 3"].map((String employeeName) {
+        return DropdownMenuItem<String>(
+          value: employeeName,
+          child: Text(employeeName),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          _selectedCoverUp = newValue;
+        });
+      },
+    );
+  }
+
+  Widget _buildTimeOfDayDropdown() {
+    return DropdownButtonFormField<String>(
+      value: _selectedTimeOfDay,
+      decoration: InputDecoration(
+        labelText: "Time of the Day",
+      ),
+      items: ["Full Day", "Half Day-Morning", "Half Day-Evening"].map((String timeOfDay) {
+        return DropdownMenuItem<String>(
+          value: timeOfDay,
+          child: Text(timeOfDay),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          _selectedTimeOfDay = newValue;
+        });
+      },
     );
   }
 }
