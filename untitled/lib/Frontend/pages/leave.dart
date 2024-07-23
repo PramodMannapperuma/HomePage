@@ -750,7 +750,7 @@ class _LeavePageState extends State<Leave> {
       builder: (BuildContext context) {
         return Padding(
           padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -773,7 +773,7 @@ class _LeavePageState extends State<Leave> {
                     labelText: "Leave Type",
                   ),
                   items:
-                      ["Annual", "Casual", "Medical"].map((String leaveType) {
+                  ["Annual", "Casual", "Medical"].map((String leaveType) {
                     return DropdownMenuItem<String>(
                       value: leaveType,
                       child: Text(leaveType),
@@ -817,7 +817,7 @@ class _LeavePageState extends State<Leave> {
                           ),
                         ),
                         controller:
-                            TextEditingController(text: _attachmentPath),
+                        TextEditingController(text: _attachmentPath),
                       ),
                       if (_attachmentPath != null)
                         Text(
