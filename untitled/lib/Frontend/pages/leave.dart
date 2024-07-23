@@ -748,175 +748,182 @@ class _LeavePageState extends State<Leave> {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.05,
-              vertical: MediaQuery.of(context).size.height * 0.02,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Add Leave",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.05,
+                  vertical: MediaQuery.of(context).size.height * 0.02,
                 ),
-                SizedBox(height: 10),
-                DropdownButtonFormField<String>(
-                  value: _selectedLeaveType,
-                  decoration: InputDecoration(
-                    labelText: "Leave Type",
-                  ),
-                  items:
-                      ["Annual", "Casual", "Medical"].map((String leaveType) {
-                    return DropdownMenuItem<String>(
-                      value: leaveType,
-                      child: Text(leaveType),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedLeaveType = newValue;
-                    });
-                  },
-                ),
-                if (_selectedLeaveType == "Annual")
-                  DropdownButtonFormField<String>(
-                    value: _selectedCoverUp,
-                    decoration: InputDecoration(
-                      labelText: "Cover up",
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Add Leave",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
                     ),
-                    items: ["Employee 1", "Employee 2", "Employee 3"]
-                        .map((String employeeName) {
-                      return DropdownMenuItem<String>(
-                        value: employeeName,
-                        child: Text(employeeName),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedCoverUp = newValue;
-                      });
-                    },
-                  ),
-                if (_selectedLeaveType == "Medical")
-                  Column(
-                    children: [
-                      TextField(
-                        readOnly: true,
+                    SizedBox(height: 10),
+                    DropdownButtonFormField<String>(
+                      value: _selectedLeaveType,
+                      decoration: InputDecoration(
+                        labelText: "Leave Type",
+                      ),
+                      items: ["Annual", "Casual", "Medical"].map((String leaveType) {
+                        return DropdownMenuItem<String>(
+                          value: leaveType,
+                          child: Text(leaveType),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedLeaveType = newValue;
+                          if (newValue != "Medical") {
+                            _attachmentPath = null;
+                          }
+                        });
+                      },
+                    ),
+                    if (_selectedLeaveType == "Annual")
+                      DropdownButtonFormField<String>(
+                        value: _selectedCoverUp,
                         decoration: InputDecoration(
-                          labelText: "Attachment",
-                          suffixIcon: IconButton(
-                            icon: Icon(Icons.attach_file),
-                            onPressed: _pickAttachment,
+                          labelText: "Cover up",
+                        ),
+                        items: ["Employee 1", "Employee 2", "Employee 3"].map((String employeeName) {
+                          return DropdownMenuItem<String>(
+                            value: employeeName,
+                            child: Text(employeeName),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedCoverUp = newValue;
+                          });
+                        },
+                      ),
+                    if (_selectedLeaveType == "Medical")
+                      Column(
+                        children: [
+                          TextField(
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              labelText: "Attachment",
+                              suffixIcon: IconButton(
+                                icon: Icon(Icons.attach_file),
+                                onPressed: () async {
+                                  FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+                                  if (result != null) {
+                                    setState(() {
+                                      _attachmentPath = result.files.single.path;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                            controller: TextEditingController(text: _attachmentPath),
+                          ),
+                          if (_attachmentPath != null)
+                            Text("Selected file: ${_attachmentPath!.split('/').last}"),
+                        ],
+                      ),
+                    DropdownButtonFormField<String>(
+                      value: _selectedTimeOfDay,
+                      decoration: InputDecoration(
+                        labelText: "Time of the Day",
+                      ),
+                      items: ["Full Day", "Half Day-Morning", "Half Day-Evening"].map((String timeOfDay) {
+                        return DropdownMenuItem<String>(
+                          value: timeOfDay,
+                          child: Text(timeOfDay),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedTimeOfDay = newValue;
+                        });
+                      },
+                    ),
+                    TextField(
+                      controller: _commentController,
+                      decoration: InputDecoration(
+                        labelText: "Reason",
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            _clearForm();
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(color: Colors.red),
                           ),
                         ),
-                        controller:
-                            TextEditingController(text: _attachmentPath),
-                      ),
-                      if (_attachmentPath != null)
-                        Text(
-                            "Selected file: ${_attachmentPath!.split('/').last}"),
-                    ],
-                  ),
-                DropdownButtonFormField<String>(
-                  value: _selectedTimeOfDay,
-                  decoration: InputDecoration(
-                    labelText: "Time of the Day",
-                  ),
-                  items: ["Full Day", "Half Day-Morning", "Half Day-Evening"]
-                      .map((String timeOfDay) {
-                    return DropdownMenuItem<String>(
-                      value: timeOfDay,
-                      child: Text(timeOfDay),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedTimeOfDay = newValue;
-                    });
-                  },
-                ),
-                TextField(
-                  controller: _commentController,
-                  decoration: InputDecoration(
-                    labelText: "Reason",
-                  ),
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        _clearForm();
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        "Cancel",
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.all(14.0),
-                        backgroundColor: Color(0xff4d2880),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_selectedLeaveType != null &&
-                            _selectedTimeOfDay != null &&
-                            _commentController.text.isNotEmpty &&
-                            (_selectedLeaveType != "Annual" ||
-                                _selectedCoverUp != null) &&
-                            (_selectedLeaveType != "Medical" ||
-                                _attachmentPath != null)) {
-                          setState(() {
-                            events[_selectedDay!] = [
-                              LeaveEvent(
-                                _selectedLeaveType!,
-                                _selectedTimeOfDay!,
-                                _commentController.text,
-                                _selectedCoverUp,
-                                _attachmentPath,
-                              )
-                            ];
-                          });
-
-                          _clearForm();
-                          Navigator.of(context).pop();
-                          _selectedEvents.value =
-                              _getEventsForDay(_selectedDay!);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Please enter all fields"),
-                              duration: Duration(seconds: 2),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.all(14.0),
+                            backgroundColor: Color(0xff4d2880),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          );
-                        }
-                      },
-                      child: Text(
-                        "Submit",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                          ),
+                          onPressed: () {
+                            if (_selectedLeaveType != null &&
+                                _selectedTimeOfDay != null &&
+                                _commentController.text.isNotEmpty &&
+                                (_selectedLeaveType != "Annual" || _selectedCoverUp != null) &&
+                                (_selectedLeaveType != "Medical" || _attachmentPath != null)) {
+                              setState(() {
+                                events[_selectedDay!] = [
+                                  LeaveEvent(
+                                    _selectedLeaveType!,
+                                    _selectedTimeOfDay!,
+                                    _commentController.text,
+                                    _selectedCoverUp,
+                                    _attachmentPath,
+                                  )
+                                ];
+                              });
+
+                              _clearForm();
+                              Navigator.of(context).pop();
+                              _selectedEvents.value = _getEventsForDay(_selectedDay!);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Please enter all fields"),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                          },
+                          child: Text(
+                            "Submit",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
   }
+
 
   Future<void> _fetchLeaveBalance() async {
     try {
