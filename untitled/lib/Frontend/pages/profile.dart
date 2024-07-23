@@ -268,8 +268,8 @@ class _ProfilePageState extends State<ProfilePage> {
           final userData = snapshot.data!;
           String name = userData['fullName'] ?? 'N/A';
           String designation = userData['designation'] ?? 'N/A';
-          //String profileImageUrl = userData['profileImageUrl'] ?? '';
-          String image = userData['image'] ?? ''; 
+          // String profileImageUrl = userData['profileImageUrl'] ?? '';
+          String image = userData['image'] ?? '';
 
           // Construct the full URL for the profile image if it's not null
           String fullProfileImageUrl = image.isNotEmpty
@@ -285,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CircleAvatar(
-                      radius: 60.0,
+                      radius: 40.0,
                       // backgroundImage: AssetImage("assets/images/2.-electronic-evan (1).jpg"),
                       backgroundImage: fullProfileImageUrl.isNotEmpty
                           ? NetworkImage(fullProfileImageUrl)
@@ -309,15 +309,15 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           SizedBox(height: 10), // Gap between designation and email
                           Text(
-                            'Email: ${userData['officeEmail']}',
+                            '${userData['officeEmail']}',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           Text(
-                            'Contact No: ${userData['officeTel']}',
+                            '${userData['officeTel']}',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           Text(
-                            'EPF Number: ${userData['epf']}',
+                            '${userData['epf']}',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           Text(
