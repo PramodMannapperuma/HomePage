@@ -977,28 +977,70 @@ class _LeavePageState extends State<Leave> {
         ],
       ),
       drawer: CustomSidebar(token: widget.token),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xff4d2880),
+        onPressed: () {
+          _showAddLeaveBottomSheet(context);
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
       body: Column(
         children: [
-          SizedBox(height: screenHeight * 0.02),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+          Container(
             child: TableCalendar(
-              availableGestures: AvailableGestures.all,
-              headerStyle: const HeaderStyle(
+              rowHeight: 40,
+              headerStyle: HeaderStyle(
                 titleCentered: true,
-                formatButtonVisible: false,
-                leftChevronIcon: Icon(Icons.chevron_left, color: Colors.black),
-                rightChevronIcon: Icon(Icons.chevron_right, color: Colors.black),
-                titleTextStyle: TextStyle(fontWeight: FontWeight.bold),
+                formatButtonVisible: true,
+                formatButtonShowsNext: false,
+                formatButtonDecoration: BoxDecoration(
+                  color: Color(0xff4d2880),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                formatButtonTextStyle: TextStyle(
+                  color: Colors.white,
+                ),
+                titleTextStyle: TextStyle(
+                  fontSize: screenWidth * 0.05,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff4d2880),
+                ),
+                leftChevronIcon: Icon(
+                  Icons.chevron_left,
+                  color: Color(0xff4d2880),
+                ),
+                rightChevronIcon: Icon(
+                  Icons.chevron_right,
+                  color: Color(0xff4d2880),
+                ),
               ),
-              firstDay: DateTime.utc(2000, 1, 1),
-              lastDay: DateTime.utc(2030, 12, 31),
               focusedDay: _focusedDay,
-              calendarFormat: _calendarFormat,
-              selectedDayPredicate: (day) {
-                return isSameDay(_selectedDay, day);
-              },
+              startingDayOfWeek: StartingDayOfWeek.monday,
               onDaySelected: _onDaySelected,
+              availableGestures: AvailableGestures.all,
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+              firstDay: DateTime.utc(2023, 01, 01),
+              lastDay: DateTime.utc(3030, 12, 31),
+              calendarFormat: _calendarFormat,
+              eventLoader: _getEventsForDay,
+              calendarStyle: CalendarStyle(
+                outsideDaysVisible: false,
+                todayDecoration: BoxDecoration(
+                  color: Color(0xff4d2880),
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Color(0xff9575cd),
+                  shape: BoxShape.circle,
+                ),
+                markerDecoration: BoxDecoration(
+                  color: Color(0xff9575cd),
+                  shape: BoxShape.circle,
+                ),
+              ),
               onFormatChanged: (format) {
                 if (_calendarFormat != format) {
                   setState(() {
@@ -1051,11 +1093,6 @@ class _LeavePageState extends State<Leave> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xff4d2880),
-        onPressed: () => _showAddLeaveBottomSheet(context),
-        child: const Icon(Icons.add),
       ),
     );
   }
