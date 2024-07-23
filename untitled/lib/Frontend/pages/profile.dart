@@ -114,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: Color(0xff4d2880),
                               ),
                             ),
-                            SizedBox(height: 4),
+                            SizedBox(height: 0.2),
                             Text(
                               designation,
                               style: TextStyle(
