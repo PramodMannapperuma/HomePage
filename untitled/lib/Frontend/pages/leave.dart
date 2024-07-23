@@ -656,6 +656,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:untitled/Backend/APIs/Apis.dart';
+import '../../Backend/models/leave_balance_model.dart';
 import '../../Backend/models/leave_model.dart';
 import '../app_bar.dart';
 import '../styles/app_colors.dart';
@@ -671,6 +672,8 @@ class Leave extends StatefulWidget {
 }
 
 class _LeavePageState extends State<Leave> {
+  List<LeaveBalanceData>? leaveBalanceData;
+  bool isLoading = true;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -691,6 +694,7 @@ class _LeavePageState extends State<Leave> {
   @override
   void initState() {
     super.initState();
+    _fetchLeaveBalance();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
     futureLeaveData = apiService.fetchLeaveData(widget.token, _selectedDay!);
@@ -745,7 +749,8 @@ class _LeavePageState extends State<Leave> {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -767,7 +772,8 @@ class _LeavePageState extends State<Leave> {
                   decoration: InputDecoration(
                     labelText: "Leave Type",
                   ),
-                  items: ["Annual", "Casual", "Medical"].map((String leaveType) {
+                  items:
+                      ["Annual", "Casual", "Medical"].map((String leaveType) {
                     return DropdownMenuItem<String>(
                       value: leaveType,
                       child: Text(leaveType),
@@ -785,7 +791,8 @@ class _LeavePageState extends State<Leave> {
                     decoration: InputDecoration(
                       labelText: "Cover up",
                     ),
-                    items: ["Employee 1", "Employee 2", "Employee 3"].map((String employeeName) {
+                    items: ["Employee 1", "Employee 2", "Employee 3"]
+                        .map((String employeeName) {
                       return DropdownMenuItem<String>(
                         value: employeeName,
                         child: Text(employeeName),
@@ -809,9 +816,12 @@ class _LeavePageState extends State<Leave> {
                             onPressed: _pickAttachment,
                           ),
                         ),
-                        controller: TextEditingController(text: _attachmentPath),
+                        controller:
+                            TextEditingController(text: _attachmentPath),
                       ),
-                      if (_attachmentPath != null) Text("Selected file: ${_attachmentPath!.split('/').last}"),
+                      if (_attachmentPath != null)
+                        Text(
+                            "Selected file: ${_attachmentPath!.split('/').last}"),
                     ],
                   ),
                 DropdownButtonFormField<String>(
@@ -819,7 +829,8 @@ class _LeavePageState extends State<Leave> {
                   decoration: InputDecoration(
                     labelText: "Time of the Day",
                   ),
-                  items: ["Full Day", "Half Day-Morning", "Half Day-Evening"].map((String timeOfDay) {
+                  items: ["Full Day", "Half Day-Morning", "Half Day-Evening"]
+                      .map((String timeOfDay) {
                     return DropdownMenuItem<String>(
                       value: timeOfDay,
                       child: Text(timeOfDay),
@@ -863,8 +874,10 @@ class _LeavePageState extends State<Leave> {
                         if (_selectedLeaveType != null &&
                             _selectedTimeOfDay != null &&
                             _commentController.text.isNotEmpty &&
-                            (_selectedLeaveType != "Annual" || _selectedCoverUp != null) &&
-                            (_selectedLeaveType != "Medical" || _attachmentPath != null)) {
+                            (_selectedLeaveType != "Annual" ||
+                                _selectedCoverUp != null) &&
+                            (_selectedLeaveType != "Medical" ||
+                                _attachmentPath != null)) {
                           setState(() {
                             events[_selectedDay!] = [
                               LeaveEvent(
@@ -879,7 +892,8 @@ class _LeavePageState extends State<Leave> {
 
                           _clearForm();
                           Navigator.of(context).pop();
-                          _selectedEvents.value = _getEventsForDay(_selectedDay!);
+                          _selectedEvents.value =
+                              _getEventsForDay(_selectedDay!);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -904,91 +918,107 @@ class _LeavePageState extends State<Leave> {
     );
   }
 
+  Future<void> _fetchLeaveBalance() async {
+    try {
+      final data = await ApiService().fetchLeaveBalance(widget.token);
+      setState(() {
+        leaveBalanceData = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching leave balance: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/hrislogo2.png',
-              height: isPortrait ? 40.0 : 30.0,
-            ),
-            SizedBox(width: 8.0),
-          ],
-        ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(35.0),
-          child: Column(
+        appBar: AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                child: Text(
-                  "Leave",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              Image.asset(
+                'assets/images/hrislogo2.png',
+                height: isPortrait ? 40.0 : 30.0,
               ),
-              Divider(
-                color: Colors.black,
-                thickness: 0.2,
-              ),
+              SizedBox(width: 8.0),
             ],
           ),
-        ),
-        centerTitle: true,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-        ),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return Padding(
-              padding: EdgeInsets.all(screenWidth * 0.02),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.menu_outlined,
-                  color: AppColors.background,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(35.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                  child: Text(
+                    "Leave",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              ),
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.person,
-              color: AppColors.background,
+                Divider(
+                  color: Colors.black,
+                  thickness: 0.2,
+                ),
+              ],
             ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/profile', arguments: widget.token);
+          ),
+          centerTitle: true,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+          ),
+          leading: Builder(
+            builder: (BuildContext context) {
+              return Padding(
+                padding: EdgeInsets.all(screenWidth * 0.02),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.menu_outlined,
+                    color: AppColors.background,
+                  ),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
+              );
             },
           ),
-        ],
-      ),
-      drawer: CustomSidebar(token: widget.token),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xff4d2880),
-        onPressed: () {
-          _showAddLeaveBottomSheet(context);
-        },
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.person,
+                color: AppColors.background,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile',
+                    arguments: widget.token);
+              },
+            ),
+          ],
         ),
-      ),
-      body: Column(
-        children: [
+        drawer: CustomSidebar(token: widget.token),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Color(0xff4d2880),
+          onPressed: () {
+            _showAddLeaveBottomSheet(context);
+          },
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
+        body: Column(children: [
           Container(
             child: TableCalendar(
               rowHeight: 40,
@@ -1053,6 +1083,46 @@ class _LeavePageState extends State<Leave> {
               },
             ),
           ),
+          Padding(
+            padding: EdgeInsets.all(screenWidth * 0.03),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Leave Details',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff4d2880),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
+                      ? Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(screenWidth * 0.03),
+                      child: Center(
+                        child: _buildLeaveTable(),
+                      ),
+                    ),
+                  )
+                      : Center(
+                    child: Text(
+                      'No leave balance data available.',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           SizedBox(height: screenHeight * 0.02),
           Expanded(
             child: ValueListenableBuilder<List<LeaveEvent>>(
@@ -1081,7 +1151,8 @@ class _LeavePageState extends State<Leave> {
                               if (value[index].coverUp != null)
                                 Text("Cover up: ${value[index].coverUp!}"),
                               if (value[index].attachment != null)
-                                Text("Attachment: ${value[index].attachment!.split('/').last}"),
+                                Text(
+                                    "Attachment: ${value[index].attachment!.split('/').last}"),
                             ],
                           ),
                         ),
@@ -1092,8 +1163,58 @@ class _LeavePageState extends State<Leave> {
               },
             ),
           ),
-        ],
-      ),
+        ]));
+  }
+
+  Widget _buildLeaveTable() {
+    return DataTable(
+      columnSpacing: 10,
+      headingRowHeight: 30,
+      dataRowHeight: 30,
+      columns: [
+        DataColumn(
+            label: Text('Leave',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Entitled',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Utilized',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Pending',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Available',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+      ],
+      rows: leaveBalanceData!.map((data) {
+        return DataRow(cells: [
+          DataCell(
+            Center(child: Text(data.leave, style: TextStyle(fontSize: 13))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.total.toString(),
+                    style: TextStyle(fontSize: 13))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.utilized.toString(),
+                    style: TextStyle(fontSize: 13))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.pending.toString(),
+                    style: TextStyle(fontSize: 13))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.available.toString(),
+                    style: TextStyle(fontSize: 13))),
+          ),
+        ]);
+      }).toList(),
     );
   }
 }
@@ -1105,5 +1226,6 @@ class LeaveEvent {
   final String? coverUp;
   final String? attachment;
 
-  LeaveEvent(this.leaveType, this.timeOfDay, this.reason, [this.coverUp, this.attachment]);
+  LeaveEvent(this.leaveType, this.timeOfDay, this.reason,
+      [this.coverUp, this.attachment]);
 }
