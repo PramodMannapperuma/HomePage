@@ -1168,9 +1168,9 @@ class _LeavePageState extends State<Leave> {
 
   Widget _buildLeaveTable() {
     return DataTable(
-      columnSpacing: 10,
-      headingRowHeight: 30,
-      dataRowHeight: 30,
+      columnSpacing: 12,
+      headingRowHeight: 40,
+      dataRowHeight: 38,
       columns: [
         DataColumn(
             label: Text('Leave',
@@ -1191,27 +1191,27 @@ class _LeavePageState extends State<Leave> {
       rows: leaveBalanceData!.map((data) {
         return DataRow(cells: [
           DataCell(
-            Center(child: Text(data.leave, style: TextStyle(fontSize: 13))),
+            Center(child: Text(data.leave, style: TextStyle(fontSize: 14))),
           ),
           DataCell(
             Center(
                 child: Text(data.total.toString(),
-                    style: TextStyle(fontSize: 13))),
+                    style: TextStyle(fontSize: 14))),
           ),
           DataCell(
             Center(
                 child: Text(data.utilized.toString(),
-                    style: TextStyle(fontSize: 13))),
+                    style: TextStyle(fontSize: 14))),
           ),
           DataCell(
             Center(
                 child: Text(data.pending.toString(),
-                    style: TextStyle(fontSize: 13))),
+                    style: TextStyle(fontSize: 14))),
           ),
           DataCell(
             Center(
                 child: Text(data.available.toString(),
-                    style: TextStyle(fontSize: 13))),
+                    style: TextStyle(fontSize: 14))),
           ),
         ]);
       }).toList(),
