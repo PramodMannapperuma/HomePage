@@ -49,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
         context: context,
         showBackButton: true, // Show back button instead of hamburger icon
       ),
-      drawer: CustomSidebar(token: token,),
+      drawer: CustomSidebar(token: token),
       body: FutureBuilder<Map<String, dynamic>>(
         future: ApiService.getProfile(token),
         builder: (context, snapshot) {
@@ -64,66 +64,101 @@ class _ProfilePageState extends State<ProfilePage> {
           final userData = snapshot.data!;
           String name = userData['fullName'] ?? 'N/A';
           String designation = userData['designation'] ?? 'N/A';
-          //String profileImageUrl = userData['profileImageUrl'] ?? '';
-          String image = userData['image'] ?? ''; 
+          String image = userData['image'] ?? '';
 
           // Construct the full URL for the profile image if it's not null
-          String fullProfileImageUrl = image.isNotEmpty
-              ? 'http://hris.accelution.lk/api/profile/$image'
-              : ''; // Use an empty string if no image URL is provided
+          String fullProfileImageUrl =
+              'http://hris.accelution.lk/api/profile/$image';
 
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      radius: 60.0,
-                      // backgroundImage: AssetImage("assets/images/2.-electronic-evan (1).jpg"),
-                      backgroundImage: fullProfileImageUrl.isNotEmpty
-                          ? NetworkImage(fullProfileImageUrl)
-                          : null, // Show the image from the URL
-                      child: fullProfileImageUrl.isEmpty
-                          ? Icon(Icons.person, size: 60) // Fallback icon if no image URL is provided
-                          : null,
-                    ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          Text(
-                            designation,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          SizedBox(height: 10), // Gap between designation and email
-                          Text(
-                            'Email: ${userData['officeEmail']}',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          Text(
-                            'Contact No: ${userData['officeTel']}',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          Text(
-                            'EPF Number: ${userData['epf']}',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          Text(
-                            'Supervisor: ${userData['supervisor']}',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
+                Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(11),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        radius: 40.0,
+                        backgroundImage: NetworkImage(fullProfileImageUrl),
+                        child: fullProfileImageUrl.isEmpty
+                            ? Icon(Icons.person,
+                                size:
+                                    40) // Fallback icon if no image URL is provided
+                            : null,
+                      ),
+                      SizedBox(width: 15),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name,
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff4d2880),
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              designation,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(
+                                height:
+                                    10), // Gap between designation and email
+                            Text(
+                              'Supervisor: ${userData['supervisor']}',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Icon(Icons.phone,
+                                    size: 16, color: Colors.grey[700]),
+                                SizedBox(width: 5),
+                                Text(
+                                  '${userData['officeTel']}',
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              'EPF No: ${userData['epf']}',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 20),
                 Divider(thickness: 1),
@@ -133,7 +168,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPress: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => PersonalInfo(token: token)),
+                      MaterialPageRoute(
+                          builder: (context) => PersonalInfo(token: token)),
                     );
                   },
                 ),
@@ -143,7 +179,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPress: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ContactInfo(token: token)),
+                      MaterialPageRoute(
+                          builder: (context) => ContactInfo(token: token)),
                     );
                   },
                 ),
@@ -153,7 +190,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPress: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CareerProfile(token: token)),
+                      MaterialPageRoute(
+                          builder: (context) => CareerProfile(token: token)),
                     );
                   },
                 ),
@@ -164,7 +202,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPress: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => FAQAndPricingScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => FAQAndPricingScreen()),
                     );
                   },
                 ),
@@ -219,7 +258,7 @@ class ProfileMenuWidget extends StatelessWidget {
       title: Text(
         title,
         style: TextStyle(
-          fontSize: 17.0,
+          fontSize: 16.0,
           color: textColor,
         ),
       ),
