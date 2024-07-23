@@ -306,7 +306,7 @@ class _LeaveState extends State<Leave> {
               color: AppColors.background,
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/profile',arguments: widget.token);
+              Navigator.pushNamed(context, '/profile', arguments: widget.token);
             },
           ),
         ],
@@ -347,24 +347,24 @@ class _LeaveState extends State<Leave> {
                   isLoading
                       ? Center(child: CircularProgressIndicator())
                       : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
-                      ? Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Center(
-                        child: _buildLeaveTable(),
-                      ),
-                    ),
-                  )
-                      : Center(
-                    child: Text(
-                      'No leave balance data available.',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
+                          ? Card(
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Center(
+                                  child: _buildLeaveTable(),
+                                ),
+                              ),
+                            )
+                          : Center(
+                              child: Text(
+                                'No leave balance data available.',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
                   SizedBox(height: 20),
                   Divider(thickness: 1),
                   SizedBox(height: 20),
@@ -394,36 +394,36 @@ class _LeaveState extends State<Leave> {
     return selectedData == null || selectedData.isEmpty
         ? Text('No data available for $selectedLeaveType leave.')
         : DataTable(
-      columnSpacing: 16,
-      headingRowHeight: 35,
-      dataRowHeight: 38,
-      columns: [
-        DataColumn(
-            label: Text('Leave',
-                style: TextStyle(fontWeight: FontWeight.bold))),
-        DataColumn(
-            label: Text('Entitled',
-                style: TextStyle(fontWeight: FontWeight.bold))),
-        DataColumn(
-            label: Text('Utilized',
-                style: TextStyle(fontWeight: FontWeight.bold))),
-        DataColumn(
-            label: Text('Pending',
-                style: TextStyle(fontWeight: FontWeight.bold))),
-        DataColumn(
-            label: Text('Available',
-                style: TextStyle(fontWeight: FontWeight.bold))),
-      ],
-      rows: selectedData.map((data) {
-        return DataRow(cells: [
-          DataCell(Text(data.leave)),
-          DataCell(Text(data.total.toString())),
-          DataCell(Text(data.utilized.toString())),
-          DataCell(Text(data.pending.toString())),
-          DataCell(Text(data.available.toString())),
-        ]);
-      }).toList(),
-    );
+            columnSpacing: 16,
+            headingRowHeight: 35,
+            dataRowHeight: 38,
+            columns: [
+              DataColumn(
+                  label: Text('Leave',
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text('Entitled',
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text('Utilized',
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text('Pending',
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text('Available',
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+            ],
+            rows: selectedData.map((data) {
+              return DataRow(cells: [
+                DataCell(Text(data.leave)),
+                DataCell(Text(data.total.toString())),
+                DataCell(Text(data.utilized.toString())),
+                DataCell(Text(data.pending.toString())),
+                DataCell(Text(data.available.toString())),
+              ]);
+            }).toList(),
+          );
   }
 }
 
@@ -611,7 +611,8 @@ class _RequestLeavesFormState extends State<RequestLeavesForm> {
                     },
                     child: Text('Cancel'),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red, side: BorderSide(color: Colors.red),
+                      foregroundColor: Colors.red,
+                      side: BorderSide(color: Colors.red),
                     ),
                   ),
                 ),
@@ -625,7 +626,8 @@ class _RequestLeavesFormState extends State<RequestLeavesForm> {
                           context: context,
                           builder: (context) => AlertDialog(
                             title: Text('Leave Request Submitted'),
-                            content: Text('Your leave request has been successfully submitted.'),
+                            content: Text(
+                                'Your leave request has been successfully submitted.'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
