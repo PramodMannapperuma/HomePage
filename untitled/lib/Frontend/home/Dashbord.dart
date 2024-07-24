@@ -30,6 +30,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    _saveCurrentLogin();
     _loadLastLogin();
     print('Token in Main Screen: ${widget.token}');
     _widgetOptions = <Widget>[
@@ -41,14 +42,22 @@ class _MainScreenState extends State<MainScreen> {
     ];
   }
 
+    Future<void> _saveCurrentLogin() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String currentLogin = DateTime.now().toIso8601String();
+    await prefs.setString('lastLogin', currentLogin);
+  }
+
   Future<void> _loadLastLogin() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? lastLogin = prefs.getString('lastLogin');
     setState(() {
-      _lastLogin = prefs.getString('lastLogin');
+      _lastLogin = lastLogin;
+      _widgetOptions[2] = DashboardScreen(token: widget.token, lastLogin: _lastLogin);
     });
   }
 
-  void _onItemTapped(int index) {
+    void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
       // Update the DashboardScreen widget to reflect the new lastLogin value when switched to
