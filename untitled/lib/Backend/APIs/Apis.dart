@@ -101,9 +101,9 @@ class ApiService {
   static const String _baseUrl = 'http://hris.accelution.lk/api';
 
   static Map<String, String> _headers(String token) => {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
 
   static Future<Map<String, dynamic>> getProfile(String token) async {
     final response = await http.get(
@@ -206,4 +206,3 @@ class ApiService {
     return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
   }
 }
-
