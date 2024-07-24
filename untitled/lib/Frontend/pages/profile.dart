@@ -110,7 +110,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 radius: 40,
                                 backgroundImage: MemoryImage(snapshot.data!));
                           } else {
-                            return Text('No data');
+                            return CircleAvatar(
+                              radius: 60,
+                                backgroundColor: Colors.black45,
+                              child: Icon(Icons.person_rounded, color: Colors.white,),
+                            );
                           }
                         },
                       ),
