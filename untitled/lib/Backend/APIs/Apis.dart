@@ -199,22 +199,32 @@ class ApiService {
     }
   }
 
-  Future<List<LeaveData>> fetchLeaveData(
-      String token, DateTime selectedDate) async {
+  Future<List<LeaveData>> fetchLeaveData(String token, DateTime selectedDate) async {
     final formattedDate = _formatDate(selectedDate);
     final response = await http
         .get(
-          Uri.parse('$_baseUrl/leave/$formattedDate'),
-          headers: _headers(token),
-        )
+      Uri.parse('$_baseUrl/leave/$formattedDate'),
+      headers: _headers(token),
+    )
         .timeout(Duration(seconds: 60));
 
     _logResponse(response);
 
     if (response.statusCode == 200) {
       try {
-        List<dynamic> data = jsonDecode(response.body)['data'];
-        return data.map((item) => LeaveData.fromJson(item)).toList();
+        final jsonResponse = jsonDecode(response.body);
+        final data = jsonResponse['data'];
+        List<dynamic> dataList;
+
+        if (data is String) {
+          dataList = jsonDecode(data) as List<dynamic>; // Decode if data is a string
+        } else if (data is List) {
+          dataList = data as List<dynamic>; // Use directly if data is already a list
+        } else {
+          throw Exception('Unexpected data format');
+        }
+
+        return dataList.map((item) => LeaveData.fromJson(item)).toList();
       } catch (e) {
         throw Exception('Failed to parse leave data: $e');
       }
@@ -226,9 +236,9 @@ class ApiService {
   Future<List<LeaveBalanceData>> fetchLeaveBalance(String token) async {
     final response = await http
         .get(
-          Uri.parse('$_baseUrl/leavebalance'),
-          headers: _headers(token),
-        )
+      Uri.parse('$_baseUrl/leavebalance'),
+      headers: _headers(token),
+    )
         .timeout(Duration(seconds: 60));
 
     _logResponse(response);
@@ -236,7 +246,16 @@ class ApiService {
     if (response.statusCode == 200) {
       try {
         final jsonResponse = jsonDecode(response.body);
-        final dataList = jsonResponse['data'] as List<dynamic>;
+        final data = jsonResponse['data'];
+        List<dynamic> dataList;
+
+        if (data is String) {
+          dataList = jsonDecode(data) as List<dynamic>; // Decode if data is a string
+        } else if (data is List) {
+          dataList = data as List<dynamic>; // Use directly if data is already a list
+        } else {
+          throw Exception('Unexpected data format');
+        }
 
         return dataList.map((item) => LeaveBalanceData.fromJson(item)).toList();
       } catch (e) {
@@ -246,6 +265,7 @@ class ApiService {
       throw Exception('Failed to get leave balance: ${response.reasonPhrase}');
     }
   }
+
 
   static String _formatDate(DateTime date) {
     return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
