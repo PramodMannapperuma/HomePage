@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Backend/APIs/Apis.dart';
@@ -67,8 +69,8 @@ class _ProfilePageState extends State<ProfilePage> {
           String image = userData['image'] ?? '';
 
           // Construct the full URL for the profile image if it's not null
-          String fullProfileImageUrl =
-              'http://hris.accelution.lk/api/profile/$image';
+          // String fullProfileImageUrl =
+          //     'http://hris.accelution.lk/api/profile/$image';
 
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
@@ -90,16 +92,27 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                        radius: 40.0,
-                        backgroundImage: NetworkImage(fullProfileImageUrl),
-                        child: fullProfileImageUrl.isEmpty
-                            ? Icon(Icons.person,
-                            size:
-                            40) // Fallback icon if no image URL is provided
-                            : null,
+                      FutureBuilder<Uint8List>(
+                        future: ApiService.fetchProfilePicture(token),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return CircleAvatar(
+                                radius: 40,
+                                child: Center(
+                                    child: Text('Error: ${snapshot.error}', style: TextStyle(fontSize: 8),)));
+                          } else if (snapshot.hasData) {
+                            return CircleAvatar(
+                                radius: 40,
+                                backgroundImage: MemoryImage(snapshot.data!));
+                          } else {
+                            return Text('No data');
+                          }
+                        },
                       ),
                       SizedBox(width: 15),
                       Expanded(
@@ -124,7 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             SizedBox(
                                 height:
-                                10), // Gap between designation and email
+                                    10), // Gap between designation and email
                             Text(
                               'Supervisor: ${userData['supervisor']}',
                               style: TextStyle(
@@ -153,7 +166,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: Colors.grey[700],
                               ),
                             ),
-
                           ],
                         ),
                       ),
@@ -264,17 +276,17 @@ class ProfileMenuWidget extends StatelessWidget {
       ),
       trailing: endIcon
           ? Container(
-        width: 30,
-        height: 30,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: Colors.black.withOpacity(0.1),
-        ),
-        child: const Icon(
-          Icons.keyboard_arrow_right,
-          color: Color.fromRGBO(77, 40, 128, 0.5),
-        ),
-      )
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: Colors.black.withOpacity(0.1),
+              ),
+              child: const Icon(
+                Icons.keyboard_arrow_right,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+              ),
+            )
           : null,
     );
   }
