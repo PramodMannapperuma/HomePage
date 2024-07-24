@@ -751,7 +751,8 @@ class _LeavePageState extends State<Leave> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return Padding(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -773,7 +774,8 @@ class _LeavePageState extends State<Leave> {
                       decoration: InputDecoration(
                         labelText: "Leave Type",
                       ),
-                      items: ["Annual", "Casual", "Medical"].map((String leaveType) {
+                      items: ["Annual", "Casual", "Medical"]
+                          .map((String leaveType) {
                         return DropdownMenuItem<String>(
                           value: leaveType,
                           child: Text(leaveType),
@@ -794,7 +796,8 @@ class _LeavePageState extends State<Leave> {
                         decoration: InputDecoration(
                           labelText: "Cover up",
                         ),
-                        items: ["Employee 1", "Employee 2", "Employee 3"].map((String employeeName) {
+                        items: ["Employee 1", "Employee 2", "Employee 3"]
+                            .map((String employeeName) {
                           return DropdownMenuItem<String>(
                             value: employeeName,
                             child: Text(employeeName),
@@ -816,20 +819,24 @@ class _LeavePageState extends State<Leave> {
                               suffixIcon: IconButton(
                                 icon: Icon(Icons.attach_file),
                                 onPressed: () async {
-                                  FilePickerResult? result = await FilePicker.platform.pickFiles();
+                                  FilePickerResult? result =
+                                      await FilePicker.platform.pickFiles();
 
                                   if (result != null) {
                                     setState(() {
-                                      _attachmentPath = result.files.single.path;
+                                      _attachmentPath =
+                                          result.files.single.path;
                                     });
                                   }
                                 },
                               ),
                             ),
-                            controller: TextEditingController(text: _attachmentPath),
+                            controller:
+                                TextEditingController(text: _attachmentPath),
                           ),
                           if (_attachmentPath != null)
-                            Text("Selected file: ${_attachmentPath!.split('/').last}"),
+                            Text(
+                                "Selected file: ${_attachmentPath!.split('/').last}"),
                         ],
                       ),
                     DropdownButtonFormField<String>(
@@ -837,7 +844,11 @@ class _LeavePageState extends State<Leave> {
                       decoration: InputDecoration(
                         labelText: "Time of the Day",
                       ),
-                      items: ["Full Day", "Half Day-Morning", "Half Day-Evening"].map((String timeOfDay) {
+                      items: [
+                        "Full Day",
+                        "Half Day-Morning",
+                        "Half Day-Evening"
+                      ].map((String timeOfDay) {
                         return DropdownMenuItem<String>(
                           value: timeOfDay,
                           child: Text(timeOfDay),
@@ -881,8 +892,10 @@ class _LeavePageState extends State<Leave> {
                             if (_selectedLeaveType != null &&
                                 _selectedTimeOfDay != null &&
                                 _commentController.text.isNotEmpty &&
-                                (_selectedLeaveType != "Annual" || _selectedCoverUp != null) &&
-                                (_selectedLeaveType != "Medical" || _attachmentPath != null)) {
+                                (_selectedLeaveType != "Annual" ||
+                                    _selectedCoverUp != null) &&
+                                (_selectedLeaveType != "Medical" ||
+                                    _attachmentPath != null)) {
                               setState(() {
                                 events[_selectedDay!] = [
                                   LeaveEvent(
@@ -897,7 +910,8 @@ class _LeavePageState extends State<Leave> {
 
                               _clearForm();
                               Navigator.of(context).pop();
-                              _selectedEvents.value = _getEventsForDay(_selectedDay!);
+                              _selectedEvents.value =
+                                  _getEventsForDay(_selectedDay!);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -923,7 +937,6 @@ class _LeavePageState extends State<Leave> {
       },
     );
   }
-
 
   Future<void> _fetchLeaveBalance() async {
     try {
@@ -1108,24 +1121,24 @@ class _LeavePageState extends State<Leave> {
                   isLoading
                       ? Center(child: CircularProgressIndicator())
                       : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
-                      ? Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(screenWidth * 0.03),
-                      child: Center(
-                        child: _buildLeaveTable(),
-                      ),
-                    ),
-                  )
-                      : Center(
-                    child: Text(
-                      'No leave balance data available.',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
+                          ? Card(
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(screenWidth * 0.03),
+                                child: Center(
+                                  child: _buildLeaveTable(),
+                                ),
+                              ),
+                            )
+                          : Center(
+                              child: Text(
+                                'No leave balance data available.',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
                 ],
               ),
             ),
