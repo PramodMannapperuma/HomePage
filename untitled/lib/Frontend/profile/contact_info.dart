@@ -66,7 +66,11 @@ class _ContactInfoState extends State<ContactInfo> {
                             radius: 60,
                             backgroundImage: MemoryImage(snapshot.data!));
                       } else {
-                        return Text('No data');
+                        return CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.black45,
+                          child: Icon(Icons.person_rounded, color: Colors.white,),
+                        );
                       }
                     },
                     ),
