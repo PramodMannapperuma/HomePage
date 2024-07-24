@@ -73,6 +73,7 @@ class _CareerProfileState extends State<CareerProfile> {
                             radius: 60,
                             backgroundImage: MemoryImage(snapshot.data!));
                       } else {
+
                         return CircleAvatar(
                           radius: 60,
                           backgroundColor: Colors.black45,
