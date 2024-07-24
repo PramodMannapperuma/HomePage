@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:untitled/Frontend/profile/profile_detail_column.dart';
 import 'package:untitled/Frontend/profile/profile_detail_row.dart';
@@ -6,7 +8,8 @@ import '../app_bar.dart';
 import '../styles/sidebar.dart';
 
 class PersonalInfo extends StatefulWidget {
-  late String token;
+  late final String token;
+
 
   PersonalInfo({super.key, required this.token});
 
@@ -15,8 +18,10 @@ class PersonalInfo extends StatefulWidget {
 }
 
 class _PersonalInfoState extends State<PersonalInfo> {
+  // late final String token;
   @override
   Widget build(BuildContext context) {
+    print('token in personal ${widget.token}');
     return Scaffold(
       appBar: customAppBar(
         title: 'Personal Information',
@@ -46,13 +51,24 @@ class _PersonalInfoState extends State<PersonalInfo> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      child: CircleAvatar(
-                        radius: 60.0,
-                        backgroundImage: AssetImage(
-                            "assets/images/2.-electronic-evan (1).jpg"),
-                      ),
-                    )
+                    FutureBuilder<Uint8List>(future: ApiService.fetchProfilePicture(widget.token), builder: (context, snapshot){
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return CircleAvatar(
+                            radius: 60,
+                            child: Center(
+                                child: Text('Error: ${snapshot.error}', style: TextStyle(fontSize: 8),)));
+                      } else if (snapshot.hasData) {
+                        return CircleAvatar(
+                            radius: 60,
+                            backgroundImage: MemoryImage(snapshot.data!));
+                      } else {
+                        return Text('No data');
+                      }
+                    },
+                    ),
                   ],
                 ),
                 SizedBox(height: 10),

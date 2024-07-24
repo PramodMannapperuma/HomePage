@@ -90,6 +90,7 @@
 // }
 
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:untitled/Backend/models/leave_model.dart';
 import 'package:untitled/Backend/models/leave_balance_model.dart';
@@ -248,5 +249,23 @@ class ApiService {
 
   static String _formatDate(DateTime date) {
     return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+  }
+
+  static Future<Uint8List> fetchProfilePicture(String token) async {
+    final response = await http.get(
+      Uri.parse('http://hris.accelution.lk/api/profile-picture'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    ).timeout(Duration(seconds: 60));
+    print('token: $token');
+
+    _logResponse(response);
+
+    if (response.statusCode == 200) {
+      return response.bodyBytes;
+    } else {
+      throw Exception('Failed to load profile picture');
+    }
   }
 }

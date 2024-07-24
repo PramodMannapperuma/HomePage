@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:untitled/Frontend/profile/profile_detail_column.dart';
 import 'package:untitled/Frontend/profile/profile_detail_row.dart';
@@ -50,13 +52,24 @@ class _ContactInfoState extends State<ContactInfo> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      child: CircleAvatar(
-                        radius: 60.0,
-                        backgroundImage: AssetImage(
-                            "assets/images/2.-electronic-evan (1).jpg"),
-                      ),
-                    )
+                    FutureBuilder<Uint8List>(future: ApiService.fetchProfilePicture(widget.token), builder: (context, snapshot){
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return CircleAvatar(
+                            radius: 60,
+                            child: Center(
+                                child: Text('Error: ${snapshot.error}', style: TextStyle(fontSize: 8),)));
+                      } else if (snapshot.hasData) {
+                        return CircleAvatar(
+                            radius: 60,
+                            backgroundImage: MemoryImage(snapshot.data!));
+                      } else {
+                        return Text('No data');
+                      }
+                    },
+                    ),
                   ],
                 ),
                 SizedBox(
