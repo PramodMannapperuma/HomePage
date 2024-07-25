@@ -12,6 +12,7 @@ import '../pages/employee.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 import 'Dashboard1.dart';
+import 'dart:typed_data'; // For Uint8List
 
 class MainScreen extends StatefulWidget {
   final String token;
@@ -36,13 +37,16 @@ class _MainScreenState extends State<MainScreen> {
     _widgetOptions = <Widget>[
       Attendance(token: widget.token),
       Leave(token: widget.token),
-      DashboardScreen(token: widget.token, lastLogin: _lastLogin), // Pass token and last login to DashboardScreen
+      DashboardScreen(
+          token: widget.token,
+          lastLogin:
+              _lastLogin), // Pass token and last login to DashboardScreen
       DashMainScreen(token: widget.token),
       EmployeeScreen(),
     ];
   }
 
-    Future<void> _saveCurrentLogin() async {
+  Future<void> _saveCurrentLogin() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String currentLogin = DateTime.now().toIso8601String();
     await prefs.setString('lastLogin', currentLogin);
@@ -53,21 +57,23 @@ class _MainScreenState extends State<MainScreen> {
     final String? lastLogin = prefs.getString('lastLogin');
     setState(() {
       _lastLogin = lastLogin;
-      _widgetOptions[2] = DashboardScreen(token: widget.token, lastLogin: _lastLogin);
+      _widgetOptions[2] =
+          DashboardScreen(token: widget.token, lastLogin: _lastLogin);
     });
   }
 
-    void _onItemTapped(int index) {
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
       // Update the DashboardScreen widget to reflect the new lastLogin value when switched to
       if (index == 2) {
-        _widgetOptions[2] = DashboardScreen(token: widget.token, lastLogin: _lastLogin);
+        _widgetOptions[2] =
+            DashboardScreen(token: widget.token, lastLogin: _lastLogin);
       }
     });
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
@@ -80,7 +86,8 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Attendance',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.beach_access_outlined, color: AppColors.background),
+              icon: Icon(Icons.beach_access_outlined,
+                  color: AppColors.background),
               label: 'Leave',
             ),
             BottomNavigationBarItem(
@@ -88,7 +95,8 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_customize_outlined, color: AppColors.background),
+              icon: Icon(Icons.dashboard_customize_outlined,
+                  color: AppColors.background),
               label: 'Dashboard',
             ),
             BottomNavigationBarItem(
@@ -130,17 +138,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     print('Token in DashboardScreen: ${widget.token}');
     return FutureBuilder<Map<String, dynamic>>(
-      future: ApiService.getProfile(widget.token),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data == null) {
-          return Center(child: Text('No data available'));
-        } else {
-          String name = snapshot.data!['fullName'] ?? 'N/A';
-          String email = snapshot.data!['designation'] ?? 'N/A';
+        future: ApiService.getProfile(widget.token),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return Center(child: Text('No data available'));
+          }
+
+          final userData = snapshot.data!;
+          String name = userData['fullName'] ?? 'N/A';
+          String designation = userData['designation'] ?? 'N/A';
 
           return Scaffold(
             appBar: AppBar(
@@ -150,7 +160,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Image.asset(
                     'assets/images/hrislogo2.png',
                     height: 40.0,
-
                   ),
                   SizedBox(width: 8.0),
                 ],
@@ -183,7 +192,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     color: AppColors.background,
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context,'news_screen', arguments: widget.token);
+                    Navigator.pushNamed(context, '/news_screen',
+                        arguments: widget.token);
                   },
                 ),
                 IconButton(
@@ -192,7 +202,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     color: AppColors.background,
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context,'/profile', arguments: widget.token);
+                    Navigator.pushNamed(context, '/profile',
+                        arguments: widget.token);
                   },
                 ),
               ],
@@ -206,27 +217,50 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, '/profile', arguments: widget.token);
+                        Navigator.pushNamed(context, '/profile',
+                            arguments: widget.token);
                       },
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            radius: 55,
-                            backgroundImage: AssetImage(
-                                'assets/images/2.-electronic-evan (1).jpg'),
+                          FutureBuilder<Uint8List>(
+                            future:
+                                ApiService.fetchProfilePicture(widget.token),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return CircleAvatar(
+                                  radius: 40,
+                                  child: Center(
+                                    child: Text(
+                                      'Error: ${snapshot.error}',
+                                      style: TextStyle(fontSize: 8),
+                                    ),
+                                  ),
+                                );
+                              } else if (snapshot.hasData) {
+                                return CircleAvatar(
+                                  radius: 40,
+                                  backgroundImage: MemoryImage(snapshot.data!),
+                                );
+                              } else {
+                                return Text('No data');
+                              }
+                            },
                           ),
                           SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '$name',
+                                name,
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text('$email'),
+                              Text(designation),
                               if (widget.lastLogin != null)
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -365,9 +399,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
           );
-        }
-      },
-    );
+        });
   }
 
   String _formatDateTime(String dateTimeString) {
@@ -437,10 +469,6 @@ class RecentLeaveRequestCard extends StatelessWidget {
   }
 }
 
-
-
-
-
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
@@ -454,7 +482,6 @@ class RecentLeaveRequestCard extends StatelessWidget {
 // import '../styles/app_colors.dart';
 // import '../styles/sidebar.dart';
 // import 'Dashboard1.dart';
-
 
 // class MainScreen extends StatefulWidget {
 //   final String token;
