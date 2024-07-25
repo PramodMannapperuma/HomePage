@@ -231,7 +231,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 return CircularProgressIndicator();
                               } else if (snapshot.hasError) {
                                 return CircleAvatar(
-                                  radius: 40,
+                                  radius: 45,
                                   child: Center(
                                     child: Text(
                                       'Error: ${snapshot.error}',
@@ -241,7 +241,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 );
                               } else if (snapshot.hasData) {
                                 return CircleAvatar(
-                                  radius: 40,
+                                  radius: 45,
                                   backgroundImage: MemoryImage(snapshot.data!),
                                 );
                               } else {
