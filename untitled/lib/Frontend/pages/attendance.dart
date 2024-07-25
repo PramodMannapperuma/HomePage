@@ -114,6 +114,20 @@ class _AttendanceState extends State<Attendance> {
             duration: Duration(seconds: 2),
           ),
         );
+
+        // Fetch updated attendance data
+        futureAttendanceData = apiService.fetchAttendanceData(widget.token, DateTime.parse(selectedDay));
+        // Update local state to reflect the changes immediately
+        setState(() {
+          events[_selectedDay!] = [
+            Event(
+              startTime,
+              leaveTime,
+              comment,
+            )
+          ];
+          _selectedEvents.value = _getEventsForDay(_selectedDay!);
+        });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -146,7 +160,6 @@ class _AttendanceState extends State<Attendance> {
       );
     }
   }
-
 
   Future<void> _showAddAttendanceBottomSheet(BuildContext context) async {
     await showModalBottomSheet(
