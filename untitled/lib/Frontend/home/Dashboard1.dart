@@ -451,12 +451,12 @@ class _DashMainScreenState extends State<DashMainScreen> {
               color: AppColors.background,
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/profile',arguments: widget.token);
+              Navigator.pushNamed(context, '/profile', arguments: widget.token);
             },
           ),
         ],
       ),
-      drawer: CustomSidebar(token: widget.token,),
+      drawer: CustomSidebar(token: widget.token),
       body: FutureBuilder<DashboardData>(
         future: futureDashboardData,
         builder: (context, snapshot) {
@@ -474,15 +474,22 @@ class _DashMainScreenState extends State<DashMainScreen> {
           String noPay = data.attendance?.nopay?.toString() ?? 'N/A';
 
           // Extract attendance data
-          String complete = data.attendance?.attendance?.attendance?.toString() ?? 'N/A';
-          String incomplete = data.attendance?.attendance?.incomplete?.toString() ?? 'N/A';
-          String pending = data.attendance?.attendance?.pending?.toString() ?? 'N/A';
-          String rejected = data.attendance?.attendance?.rejected?.toString() ?? 'N/A';
+          String complete =
+              data.attendance?.attendance?.attendance?.toString() ?? 'N/A';
+          String incomplete =
+              data.attendance?.attendance?.incomplete?.toString() ?? 'N/A';
+          String pending =
+              data.attendance?.attendance?.pending?.toString() ?? 'N/A';
+          String rejected =
+              data.attendance?.attendance?.rejected?.toString() ?? 'N/A';
 
           // Extract leave balance data
-          String leaveTaken = data.attendance?.leave?.active?.toString() ?? 'N/A';
-          String leavePending = data.attendance?.leave?.pending?.toString() ?? 'N/A';
-          String leaveRejected = data.attendance?.leave?.rejected?.toString() ?? 'N/A';
+          String leaveTaken =
+              data.attendance?.leave?.active?.toString() ?? 'N/A';
+          String leavePending =
+              data.attendance?.leave?.pending?.toString() ?? 'N/A';
+          String leaveRejected =
+              data.attendance?.leave?.rejected?.toString() ?? 'N/A';
 
           return SingleChildScrollView(
             child: Padding(
@@ -493,17 +500,47 @@ class _DashMainScreenState extends State<DashMainScreen> {
                   // User Info
                   Row(
                     children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage(
-                            'assets/images/2.-electronic-evan (1).jpg'),
+                      FutureBuilder<Uint8List>(
+                        future: ApiService.fetchProfilePicture(widget.token),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircleAvatar(
+                              radius: 30,
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return CircleAvatar(
+                              radius: 30,
+                              child: Center(
+                                child: Text(
+                                  'Error',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
+                            );
+                          } else if (snapshot.hasData) {
+                            return CircleAvatar(
+                              radius: 45,
+                              backgroundImage: MemoryImage(snapshot.data!),
+                            );
+                          } else {
+                            return CircleAvatar(
+                              radius: 45,
+                              child: Center(
+                                child: Text('No Image'),
+                              ),
+                            );
+                          }
+                        },
                       ),
                       SizedBox(width: 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-
                             data.employee?.name ?? 'N/A',
                             style: TextStyle(
                               fontSize: 18,
@@ -528,7 +565,6 @@ class _DashMainScreenState extends State<DashMainScreen> {
                   SizedBox(height: 20),
 
                   // Calendar Section
-                  // CalendarPage(token:widget.token),
                   Container(
                     margin: const EdgeInsets.only(bottom: 20.0),
                     child: TableCalendar(
@@ -588,7 +624,8 @@ class _DashMainScreenState extends State<DashMainScreen> {
                           });
                         }
                       },
-                      selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                      selectedDayPredicate: (day) =>
+                          isSameDay(_selectedDay, day),
                       firstDay: DateTime.utc(2023, 01, 01),
                       lastDay: DateTime.utc(3030, 12, 31),
                       calendarFormat: _calendarFormat,
@@ -634,7 +671,8 @@ class _DashMainScreenState extends State<DashMainScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _buildAttendanceItem('Working Days', workingDays, Colors.green),
+                            _buildAttendanceItem(
+                                'Working Days', workingDays, Colors.green),
                             _buildAttendanceItem('No Pay', noPay, Colors.red),
                           ],
                         ),
@@ -672,10 +710,14 @@ class _DashMainScreenState extends State<DashMainScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _buildAttendanceItem('Complete', complete, Colors.green),
-                            _buildAttendanceItem('Incomplete', incomplete, Colors.orange),
-                            _buildAttendanceItem('Pending', pending, Colors.blue),
-                            _buildAttendanceItem('Rejected', rejected, Colors.red),
+                            _buildAttendanceItem(
+                                'Complete', complete, Colors.green),
+                            _buildAttendanceItem(
+                                'Incomplete', incomplete, Colors.orange),
+                            _buildAttendanceItem(
+                                'Pending', pending, Colors.blue),
+                            _buildAttendanceItem(
+                                'Rejected', rejected, Colors.red),
                           ],
                         ),
                       ],

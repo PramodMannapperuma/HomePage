@@ -102,12 +102,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             return CircularProgressIndicator();
                           } else if (snapshot.hasError) {
                             return CircleAvatar(
-                                radius: 40,
+                                radius: 50,
                                 child: Center(
                                     child: Text('Error: ${snapshot.error}', style: TextStyle(fontSize: 8),)));
                           } else if (snapshot.hasData) {
                             return CircleAvatar(
-                                radius: 40,
+                                radius: 50,
                                 backgroundImage: MemoryImage(snapshot.data!));
                           } else {
                             return CircleAvatar(
