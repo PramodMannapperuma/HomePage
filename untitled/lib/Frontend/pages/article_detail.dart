@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Import the intl package for DateFormat
 import '../styles/app_colors.dart';
 
 class ArticleDetail extends StatefulWidget {
@@ -35,9 +36,9 @@ class _ArticleDetailState extends State<ArticleDetail> {
   }
 
   void _addComment(String comment) {
-    // Get current time
+     // Get current time in 12-hour format with AM/PM
     DateTime now = DateTime.now();
-    String formattedTime = '${now.hour}:${now.minute}';
+    String formattedTime = DateFormat('hh:mm a').format(now);
 
     setState(() {
       _comments.add({'text': comment, 'time': formattedTime});
