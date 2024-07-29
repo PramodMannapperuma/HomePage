@@ -90,7 +90,7 @@ class _AttendanceState extends State<Attendance> {
 
   Future<void> _submitAttendance(String token, String selectedDay,
       String startTime, String leaveTime, String comment) async {
-    final url =  Uri.parse('${ApiService.baseUrl}/attendance'); // replace with your actual endpoint
+    final url = Uri.parse('${ApiService.baseUrl}/attendance'); // replace with your actual endpoint
 
     try {
       final response = await http.post(
@@ -153,8 +153,7 @@ class _AttendanceState extends State<Attendance> {
     } on TimeoutException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text('The connection has timed out. Please try again later.'),
+          content: Text('The connection has timed out. Please try again later.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -175,7 +174,7 @@ class _AttendanceState extends State<Attendance> {
       builder: (BuildContext context) {
         return Padding(
           padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -266,41 +265,29 @@ class _AttendanceState extends State<Attendance> {
                           });
                           if (_selectedDay != null) {
                             DateTime selectedDay =
-                                _selectedDay!;
-                            String date = selectedDay
-                                .toIso8601String();
+                                _selectedDay ?? DateTime.now();
                             _submitAttendance(
-                                widget.token,
-                                date,
-                                _startTimeController.text,
-                                _leaveTimeController.text,
-                                _commentController.text);
-
-                            print('Selected date: $date');
-                          } else {
-                            // Handle the case where _selectedDay is null
-                            print('No date selected');
-                          } // Convert DateTime to String
-                          
+                              widget.token,
+                              selectedDay.toString().split(" ")[0],
+                              _startTimeController.text,
+                              _leaveTimeController.text,
+                              _commentController.text,
+                            );
+                          }
                           _startTimeController.clear();
                           _leaveTimeController.clear();
                           _commentController.clear();
                           Navigator.of(context).pop();
-                          _selectedEvents.value =
-                              _getEventsForDay(_selectedDay!);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("Please enter all fields"),
+                              content: Text('All fields are required'),
                               duration: Duration(seconds: 2),
                             ),
                           );
                         }
                       },
-                      child: Text(
-                        "Submit",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      child: Text("Save"),
                     ),
                   ],
                 ),
@@ -316,8 +303,7 @@ class _AttendanceState extends State<Attendance> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final bool isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       appBar: AppBar(
@@ -480,15 +466,14 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                      (element) =>
-                          element.date == _selectedDay.toString().split(" ")[0],
+                          (element) => element.date == _selectedDay?.toString().split(" ")[0],
                       orElse: () => AttendanceData(
                           amdIn: 'N/A',
                           recIn: 'N/A',
                           amdOut: 'N/A',
                           comment: 'N/A',
                           recOut: 'N/A',
-                          date: _selectedDay.toString().split(" ")[0],
+                          date: _selectedDay?.toString().split(" ")[0] ?? 'N/A',
                           status: 'N/A'));
                   return Padding(
                     padding: EdgeInsets.symmetric(
@@ -508,8 +493,7 @@ class _AttendanceState extends State<Attendance> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Date: ${selectedDateData.date}',
@@ -525,50 +509,42 @@ class _AttendanceState extends State<Attendance> {
                                       fontSize: screenWidth * 0.044,
                                       color: selectedDateData.status == 'leave'
                                           ? Colors.red
-                                          : Colors.green,
+                                          : (selectedDateData.status == 'pending'
+                                          ? Color.fromRGBO(229, 165, 75, 1.0)
+                                          : Colors.green),
                                     ),
                                   ),
                                 ],
                               ),
                               Divider(thickness: 1),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('AMD In: ${selectedDateData.amdIn}',
-                                          style: TextStyle(
-                                              fontSize: screenWidth * 0.04)),
+                                      Text('AMD In: ${selectedDateData.amdIn ?? 'N/A'}',
+                                          style: TextStyle(fontSize: screenWidth * 0.04)),
                                       SizedBox(height: 4.0),
-                                      Text(
-                                          'AMD Out: ${selectedDateData.amdOut}',
-                                          style: TextStyle(
-                                              fontSize: screenWidth * 0.04)),
+                                      Text('AMD Out: ${selectedDateData.amdOut ?? 'N/A'}',
+                                          style: TextStyle(fontSize: screenWidth * 0.04)),
                                     ],
                                   ),
                                   Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('Rec In: ${selectedDateData.recIn}',
-                                          style: TextStyle(
-                                              fontSize: screenWidth * 0.04)),
+                                      Text('Rec In: ${selectedDateData.recIn ?? 'N/A'}',
+                                          style: TextStyle(fontSize: screenWidth * 0.04)),
                                       SizedBox(height: 4.0),
-                                      Text(
-                                          'Rec Out: ${selectedDateData.recOut}',
-                                          style: TextStyle(
-                                              fontSize: screenWidth * 0.04)),
+                                      Text('Rec Out: ${selectedDateData.recOut ?? 'N/A'}',
+                                          style: TextStyle(fontSize: screenWidth * 0.04)),
                                     ],
                                   ),
                                 ],
                               ),
                               Divider(thickness: 1),
-                              Text('Comment: ${selectedDateData.comment}',
-                                  style:
-                                      TextStyle(fontSize: screenWidth * 0.04)),
+                              Text('Comment: ${selectedDateData.comment ?? 'N/A'}',
+                                  style: TextStyle(fontSize: screenWidth * 0.04)),
                             ],
                           ),
                         ),
