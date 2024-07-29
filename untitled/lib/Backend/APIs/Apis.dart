@@ -99,6 +99,7 @@ import '../models/dash_model.dart';
 
 class ApiService {
   static const String _baseUrl = 'http://hris.accelution.lk/api';
+  static String get baseUrl => _baseUrl;
 
   static Map<String, String> _headers(String token) => {
         'Content-Type': 'application/json',
