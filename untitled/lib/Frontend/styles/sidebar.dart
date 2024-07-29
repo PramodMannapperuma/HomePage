@@ -63,7 +63,7 @@ class CustomSidebar extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(
-                Icons.event_available,
+                Icons.calendar_month,
                 color: Color.fromRGBO(77, 40, 128, 0.5),
                 size: 35,
               ),
@@ -75,7 +75,7 @@ class CustomSidebar extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(
-                Icons.airplanemode_on_sharp,
+                Icons.beach_access,
                 color: Color.fromRGBO(77, 40, 128, 0.5),
                 size: 35,
               ),
@@ -99,7 +99,7 @@ class CustomSidebar extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(
-                Icons.person_pin_outlined,
+                Icons.person_outline,
                 color: Color.fromRGBO(77, 40, 128, 0.5),
                 size: 35,
               ),
@@ -111,19 +111,7 @@ class CustomSidebar extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(
-                Icons.receipt_long_outlined,
-                color: Color.fromRGBO(77, 40, 128, 0.5),
-                size: 35,
-              ),
-              title: Text('News'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/news_screen');
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.receipt_long_outlined,
+                Icons.payment,
                 color: Color.fromRGBO(77, 40, 128, 0.5),
                 size: 35,
               ),
@@ -135,7 +123,7 @@ class CustomSidebar extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(
-                Icons.assignment_turned_in_outlined,
+                Icons.approval,
                 color: Color.fromRGBO(77, 40, 128, 0.5),
                 size: 35,
               ),
@@ -155,6 +143,30 @@ class CustomSidebar extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/employee');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.newspaper,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+                size: 35,
+              ),
+              title: Text('Policy'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/policies');
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.newspaper,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+                size: 35,
+              ),
+              title: Text('News'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/news_screen');
               },
             ),
             Divider(

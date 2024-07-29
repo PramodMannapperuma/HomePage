@@ -324,7 +324,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         CategoryCard(
                           title: 'Requests',
-                          icon: Icons.request_page_outlined,
+                          icon: Icons.list_alt,
                           route: '/requests',
                           token: widget.token,
                         ),
