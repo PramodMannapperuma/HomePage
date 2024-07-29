@@ -44,7 +44,8 @@ class _AttendanceState extends State<Attendance> {
     super.initState();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
-    futureAttendanceData = apiService.fetchAttendanceData(widget.token, _selectedDay!);
+    futureAttendanceData =
+        apiService.fetchAttendanceData(widget.token, _selectedDay!);
     print('Token in attendance is ${widget.token}');
   }
 
@@ -62,7 +63,8 @@ class _AttendanceState extends State<Attendance> {
         _selectedDay = selectedDate;
         _focusedDay = focusedDay;
         _selectedEvents.value = _getEventsForDay(selectedDate);
-        futureAttendanceData = apiService.fetchAttendanceData(widget.token, selectedDate);
+        futureAttendanceData =
+            apiService.fetchAttendanceData(widget.token, selectedDate);
         print('Token in onDaySelected ${widget.token}');
       });
     }
@@ -81,12 +83,15 @@ class _AttendanceState extends State<Attendance> {
       timeOfDay.hour,
       timeOfDay.minute,
     );
-    print('${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}');
+    print(
+        '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}');
     return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 
-  Future<void> _submitAttendance(String token, String selectedDay, String startTime, String leaveTime, String comment) async {
-    final url =  Uri.parse('${ApiService.baseUrl}/attendance') ;// replace with your actual endpoint
+  Future<void> _submitAttendance(String token, String selectedDay,
+      String startTime, String leaveTime, String comment) async {
+    final url = Uri.parse(
+        'http://hris.accelution.lk/api/attendance'); // replace with your actual endpoint
 
     try {
       final response = await http.post(
@@ -116,7 +121,8 @@ class _AttendanceState extends State<Attendance> {
         );
 
         // Fetch updated attendance data
-        futureAttendanceData = apiService.fetchAttendanceData(widget.token, DateTime.parse(selectedDay));
+        futureAttendanceData = apiService.fetchAttendanceData(
+            widget.token, DateTime.parse(selectedDay));
         // Update local state to reflect the changes immediately
         setState(() {
           events[_selectedDay!] = [
@@ -131,7 +137,8 @@ class _AttendanceState extends State<Attendance> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to submit attendance: ${response.statusCode} ${response.reasonPhrase}'),
+            content: Text(
+                'Failed to submit attendance: ${response.statusCode} ${response.reasonPhrase}'),
             duration: Duration(seconds: 2),
           ),
         );
@@ -147,7 +154,8 @@ class _AttendanceState extends State<Attendance> {
     } on TimeoutException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('The connection has timed out. Please try again later.'),
+          content:
+              Text('The connection has timed out. Please try again later.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -167,7 +175,8 @@ class _AttendanceState extends State<Attendance> {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -195,7 +204,8 @@ class _AttendanceState extends State<Attendance> {
                       initialTime: TimeOfDay.now(),
                     );
                     if (pickedTime != null) {
-                      _startTimeController.text = formatTimeOfDayTo24Hour(pickedTime);
+                      _startTimeController.text =
+                          formatTimeOfDayTo24Hour(pickedTime);
                     }
                   },
                 ),
@@ -210,7 +220,8 @@ class _AttendanceState extends State<Attendance> {
                       initialTime: TimeOfDay.now(),
                     );
                     if (pickedTime != null) {
-                      _leaveTimeController.text = formatTimeOfDayTo24Hour(pickedTime);
+                      _leaveTimeController.text =
+                          formatTimeOfDayTo24Hour(pickedTime);
                     }
                   },
                 ),
@@ -255,23 +266,29 @@ class _AttendanceState extends State<Attendance> {
                             ];
                           });
                           if (_selectedDay != null) {
-                            DateTime selectedDay = _selectedDay!; // Use non-nullable type
-                            String date = selectedDay.toIso8601String(); // Convert DateTime to String
-                            _submitAttendance(widget.token,date, _startTimeController.text, _leaveTimeController.text, _commentController.text);
-                            // _submitAttendance(widget.token,date, _startTimeController.text, _leaveTimeController.text, _commentController.text);
-                            // Use the `date` string as needed...
+                            DateTime selectedDay =
+                                _selectedDay!;
+                            String date = selectedDay
+                                .toIso8601String();
+                            _submitAttendance(
+                                widget.token,
+                                date,
+                                _startTimeController.text,
+                                _leaveTimeController.text,
+                                _commentController.text);
+
                             print('Selected date: $date');
                           } else {
                             // Handle the case where _selectedDay is null
                             print('No date selected');
                           } // Convert DateTime to String
-                          // _submitAttendance(widget.token,date, _startTimeController.text, _leaveTimeController.text, _commentController.text);
-
+                          
                           _startTimeController.clear();
                           _leaveTimeController.clear();
                           _commentController.clear();
                           Navigator.of(context).pop();
-                          _selectedEvents.value = _getEventsForDay(_selectedDay!);
+                          _selectedEvents.value =
+                              _getEventsForDay(_selectedDay!);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -300,7 +317,8 @@ class _AttendanceState extends State<Attendance> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       appBar: AppBar(
@@ -463,7 +481,8 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                          (element) => element.date == _selectedDay.toString().split(" ")[0],
+                      (element) =>
+                          element.date == _selectedDay.toString().split(" ")[0],
                       orElse: () => AttendanceData(
                           amdIn: 'N/A',
                           recIn: 'N/A',
@@ -471,9 +490,7 @@ class _AttendanceState extends State<Attendance> {
                           comment: 'N/A',
                           recOut: 'N/A',
                           date: _selectedDay.toString().split(" ")[0],
-                          status: 'N/A'
-                      )
-                  );
+                          status: 'N/A'));
                   return Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenWidth * 0.05,
@@ -492,7 +509,8 @@ class _AttendanceState extends State<Attendance> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Date: ${selectedDateData.date}',
@@ -515,28 +533,43 @@ class _AttendanceState extends State<Attendance> {
                               ),
                               Divider(thickness: 1),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text('AMD In: ${selectedDateData.amdIn}', style: TextStyle(fontSize: screenWidth * 0.04)),
+                                      Text('AMD In: ${selectedDateData.amdIn}',
+                                          style: TextStyle(
+                                              fontSize: screenWidth * 0.04)),
                                       SizedBox(height: 4.0),
-                                      Text('AMD Out: ${selectedDateData.amdOut}', style: TextStyle(fontSize: screenWidth * 0.04)),
+                                      Text(
+                                          'AMD Out: ${selectedDateData.amdOut}',
+                                          style: TextStyle(
+                                              fontSize: screenWidth * 0.04)),
                                     ],
                                   ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text('Rec In: ${selectedDateData.recIn}', style: TextStyle(fontSize: screenWidth * 0.04)),
+                                      Text('Rec In: ${selectedDateData.recIn}',
+                                          style: TextStyle(
+                                              fontSize: screenWidth * 0.04)),
                                       SizedBox(height: 4.0),
-                                      Text('Rec Out: ${selectedDateData.recOut}', style: TextStyle(fontSize: screenWidth * 0.04)),
+                                      Text(
+                                          'Rec Out: ${selectedDateData.recOut}',
+                                          style: TextStyle(
+                                              fontSize: screenWidth * 0.04)),
                                     ],
                                   ),
                                 ],
                               ),
                               Divider(thickness: 1),
-                              Text('Comment: ${selectedDateData.comment}', style: TextStyle(fontSize: screenWidth * 0.04)),
+                              Text('Comment: ${selectedDateData.comment}',
+                                  style:
+                                      TextStyle(fontSize: screenWidth * 0.04)),
                             ],
                           ),
                         ),

@@ -94,7 +94,9 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:untitled/Backend/models/leave_model.dart';
 import 'package:untitled/Backend/models/leave_balance_model.dart';
+import 'package:untitled/Backend/models/leave_types.dart';
 import '../models/att_model.dart';
+import '../models/cover_ups.dart';
 import '../models/dash_model.dart';
 
 class ApiService {
@@ -289,4 +291,45 @@ class ApiService {
       throw Exception('Failed to load profile picture');
     }
   }
+
+  Future<List<LeaveType>> fetchLeaveTypes(String token) async {
+    // Replace with your API endpoint
+    final response = await http.get(
+      Uri.parse('http://hris.accelution.lk/api/leave-types'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    _logResponse(response);
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final List<dynamic> data = jsonResponse['data'];
+      return data.map((json) => LeaveType.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load leave types');
+    }
+  }
+
+  Future<List<CoverUp>> fetchCoverUps(String token) async {
+    final response = await http.get(
+      Uri.parse('http://hris.accelution.lk/api/coverups'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    _logResponse(response);
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> coverups = jsonResponse['data'];
+      return coverups.map((dynamic item) => CoverUp.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load cover-ups');
+    }
+  }
+
+
 }

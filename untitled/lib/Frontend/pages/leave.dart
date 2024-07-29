@@ -1,663 +1,14 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:untitled/Backend/APIs/Apis.dart';
-// import 'package:untitled/Backend/models/leave_balance_model.dart';
-// import '../app_bar.dart';
-// import '../styles/app_colors.dart';
-// import '../styles/sidebar.dart';
-
-// // class Leave extends StatefulWidget {
-// //   final String token;
-// //
-// //   const Leave({Key? key, required this.token}) : super(key: key);
-// //
-// //   @override
-// //   State<Leave> createState() => _LeaveState();
-// // }
-// //
-// // class _LeaveState extends State<Leave> {
-// //   List<LeaveBalanceData>? leaveBalanceData;
-// //   bool isLoading = true;
-// //
-// //   @override
-// //   void initState() {
-// //     super.initState();
-// //     _fetchLeaveBalance();
-// //   }
-// //
-// //   Future<void> _fetchLeaveBalance() async {
-// //     try {
-// //       final data = await ApiService().fetchLeaveBalance(widget.token);
-// //       setState(() {
-// //         leaveBalanceData = data;
-// //         isLoading = false;
-// //       });
-// //     } catch (e) {
-// //       print('Error fetching leave balance: $e');
-// //       setState(() {
-// //         isLoading = false;
-// //       });
-// //     }
-// //   }
-// //
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     final screenWidth = MediaQuery.of(context).size.width;
-// //     final screenHeight = MediaQuery.of(context).size.height;
-// //
-// //     return Scaffold(
-// //       appBar: AppBar(
-// //         title: Row(
-// //           mainAxisAlignment: MainAxisAlignment.center,
-// //           children: [
-// //             Image.asset(
-// //               'assets/images/hrislogo2.png',
-// //               height: 40.0,
-// //             ),
-// //             SizedBox(
-// //               width: screenWidth * 0.03,
-// //             ),
-// //           ],
-// //         ),
-// //         centerTitle: true,
-// //         systemOverlayStyle: const SystemUiOverlayStyle(
-// //           statusBarColor: Colors.transparent,
-// //           statusBarIconBrightness: Brightness.dark,
-// //         ),
-// //         leading: Builder(
-// //           builder: (BuildContext context) {
-// //             return Padding(
-// //               padding: EdgeInsets.all(screenWidth * 0.03),
-// //               child: IconButton(
-// //                 icon: const Icon(
-// //                   Icons.menu_outlined,
-// //                   color: AppColors.background,
-// //                 ),
-// //                 onPressed: () {
-// //                   Scaffold.of(context).openDrawer();
-// //                 },
-// //               ),
-// //             );
-// //           },
-// //         ),
-// //         actions: [
-// //           IconButton(
-// //             icon: const Icon(
-// //               Icons.person,
-// //               color: AppColors.background,
-// //             ),
-// //             onPressed: () {
-// //               Navigator.pushNamed(context, '/profile', arguments: widget.token);
-// //             },
-// //           ),
-// //         ],
-// //       ),
-// //       drawer: CustomSidebar(
-// //         token: widget.token,
-// //       ),
-// //       body: Padding(
-// //         padding: EdgeInsets.all(screenWidth * 0.03),
-// //         child: SingleChildScrollView(
-// //           child: Column(
-// //             crossAxisAlignment: CrossAxisAlignment.start,
-// //             children: [
-// //               Text(
-// //                 'Leave Details',
-// //                 style: TextStyle(
-// //                   fontSize: 18,
-// //                   fontWeight: FontWeight.bold,
-// //                   color: Color(0xff4d2880),
-// //                 ),
-// //               ),
-// //               SizedBox(height: screenHeight * 0.03),
-// //               isLoading
-// //                   ? Center(child: CircularProgressIndicator())
-// //                   : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
-// //                       ? Card(
-// //                           elevation: 4,
-// //                           shape: RoundedRectangleBorder(
-// //                             borderRadius: BorderRadius.circular(8),
-// //                           ),
-// //                           child: Padding(
-// //                             padding: EdgeInsets.all(screenWidth * 0.03),
-// //                             child: Center(
-// //                               child: _buildLeaveTable(),
-// //                             ),
-// //                           ),
-// //                         )
-// //                       : Center(
-// //                           child: Text(
-// //                             'No leave balance data available.',
-// //                             style: TextStyle(fontSize: 14),
-// //                           ),
-// //                         ),
-// //               SizedBox(height: screenHeight * 0.03),
-// //               Divider(thickness: 1),
-// //               SizedBox(height: screenHeight * 0.03),
-// //               Text(
-// //                 'Request Leaves',
-// //                 style: TextStyle(
-// //                   fontSize: 18,
-// //                   fontWeight: FontWeight.bold,
-// //                   color: Color(0xff4d2880),
-// //                 ),
-// //               ),
-// //               SizedBox(height: screenHeight * 0.03),
-// //               RequestLeavesRow(),
-// //               SizedBox(height: screenHeight * 0.03),
-// //               RequestLeavesForm(),
-// //             ],
-// //           ),
-// //         ),
-// //       ),
-// //     );
-// //   }
-// //
-// //   Widget _buildLeaveTable() {
-// //     return DataTable(
-// //       columnSpacing: 10,
-// //       headingRowHeight: 30,
-// //       dataRowHeight: 30,
-// //       columns: [
-// //         DataColumn(
-// //             label: Text('Leave',
-// //                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-// //         DataColumn(
-// //             label: Text('Entitled',
-// //                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-// //         DataColumn(
-// //             label: Text('Utilized',
-// //                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-// //         DataColumn(
-// //             label: Text('Pending',
-// //                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-// //         DataColumn(
-// //             label: Text('Available',
-// //                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-// //       ],
-// //       rows: leaveBalanceData!.map((data) {
-// //         return DataRow(cells: [
-// //           DataCell(
-// //             Center(child: Text(data.leave, style: TextStyle(fontSize: 13))),
-// //           ),
-// //           DataCell(
-// //             Center(child: Text(data.total.toString(), style: TextStyle(fontSize: 13))),
-// //           ),
-// //           DataCell(
-// //             Center(child: Text(data.utilized.toString(), style: TextStyle(fontSize: 13))),
-// //           ),
-// //           DataCell(
-// //             Center(child: Text(data.pending.toString(), style: TextStyle(fontSize: 13))),
-// //           ),
-// //           DataCell(
-// //             Center(child: Text(data.available.toString(), style: TextStyle(fontSize: 13))),
-// //           ),
-// //         ]);
-// //       }).toList(),
-// //     );
-// //   }
-// // }
-
-// class Leave extends StatefulWidget {
-//   final String token;
-
-//   const Leave({Key? key, required this.token}) : super(key: key);
-
-//   @override
-//   State<Leave> createState() => _LeaveState();
-// }
-
-// class _LeaveState extends State<Leave> {
-//   List<LeaveBalanceData>? leaveBalanceData;
-//   bool isLoading = true;
-//   String selectedLeaveType = 'Casual';
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _fetchLeaveBalance();
-//   }
-
-//   Future<void> _fetchLeaveBalance() async {
-//     try {
-//       final data = await ApiService().fetchLeaveBalance(widget.token);
-//       setState(() {
-//         leaveBalanceData = data;
-//         isLoading = false;
-//       });
-//     } catch (e) {
-//       print('Error fetching leave balance: $e');
-//       setState(() {
-//         isLoading = false;
-//       });
-//     }
-//   }
-
-//   List<LeaveBalanceData>? getSelectedLeaveData() {
-//     if (leaveBalanceData == null) return [];
-//     return leaveBalanceData!
-//         .where((data) => data.leave == selectedLeaveType)
-//         .toList();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         // backgroundColor: const Color(0xff4d2880),
-//         title: Row(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Image.asset(
-//               'assets/images/hrislogo2.png',
-//               height: 40.0,
-//             ),
-//             SizedBox(
-//               width: 8.0,
-//             ),
-//           ],
-//         ),
-//         bottom: PreferredSize(
-//           preferredSize: Size.fromHeight(35.0),
-//           child: Column(
-//             children: [
-//               Padding(
-//                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-//                 child: Text(
-//                   "Leave",
-//                   style: TextStyle(
-//                     fontSize: 18.0,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//               ),
-//               Divider(
-//                 color: Colors.black,
-//                 thickness: 0.2,
-//               ),
-//             ],
-//           ),
-//         ),
-//         centerTitle: true,
-//         systemOverlayStyle: const SystemUiOverlayStyle(
-//           statusBarColor: Colors.transparent,
-//           statusBarIconBrightness: Brightness.dark,
-//         ),
-//         leading: Builder(
-//           builder: (BuildContext context) {
-//             return Padding(
-//               padding: const EdgeInsets.all(8.0),
-//               child: IconButton(
-//                 icon: const Icon(
-//                   Icons.menu_outlined,
-//                   color: AppColors.background,
-//                 ),
-//                 onPressed: () {
-//                   Scaffold.of(context).openDrawer();
-//                 },
-//               ),
-//             );
-//           },
-//         ),
-//         actions: [
-//           IconButton(
-//             icon: const Icon(
-//               Icons.person,
-//               color: AppColors.background,
-//             ),
-//             onPressed: () {
-//               Navigator.pushNamed(context, '/profile',arguments: widget.token);
-//             },
-//           ),
-//         ],
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: LayoutBuilder(
-//           builder: (context, constraints) {
-//             return SingleChildScrollView(
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Text(
-//                     'Leave Details',
-//                     style: TextStyle(
-//                       fontSize: 18.5,
-//                       fontWeight: FontWeight.bold,
-//                       color: Color(0xff4d2880),
-//                     ),
-//                   ),
-//                   SizedBox(height: 15),
-//                   DropdownButton<String>(
-//                     value: selectedLeaveType,
-//                     onChanged: (String? newValue) {
-//                       setState(() {
-//                         selectedLeaveType = newValue!;
-//                       });
-//                     },
-//                     items: <String>['Annual', 'Casual', 'Medical']
-//                         .map<DropdownMenuItem<String>>((String value) {
-//                       return DropdownMenuItem<String>(
-//                         value: value,
-//                         child: Text(value),
-//                       );
-//                     }).toList(),
-//                   ),
-//                   SizedBox(height: 8),
-//                   isLoading
-//                       ? Center(child: CircularProgressIndicator())
-//                       : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
-//                       ? Card(
-//                     elevation: 3,
-//                     shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(10),
-//                     ),
-//                     child: Padding(
-//                       padding: const EdgeInsets.all(16.0),
-//                       child: Center(
-//                         child: _buildLeaveTable(),
-//                       ),
-//                     ),
-//                   )
-//                       : Center(
-//                     child: Text(
-//                       'No leave balance data available.',
-//                       style: TextStyle(fontSize: 16),
-//                     ),
-//                   ),
-//                   SizedBox(height: 20),
-//                   Divider(thickness: 1),
-//                   SizedBox(height: 20),
-//                   Text(
-//                     'Request Leaves',
-//                     style: TextStyle(
-//                       fontSize: 18.5,
-//                       fontWeight: FontWeight.bold,
-//                       color: Color(0xff4d2880),
-//                     ),
-//                   ),
-//                   SizedBox(height: 20),
-//                   RequestLeavesRow(),
-//                   SizedBox(height: 20),
-//                   RequestLeavesForm(),
-//                 ],
-//               ),
-//             );
-//           },
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildLeaveTable() {
-//     List<LeaveBalanceData>? selectedData = getSelectedLeaveData();
-//     return selectedData == null || selectedData.isEmpty
-//         ? Text('No data available for $selectedLeaveType leave.')
-//         : DataTable(
-//       columnSpacing: 16,
-//       headingRowHeight: 35,
-//       dataRowHeight: 38,
-//       columns: [
-//         DataColumn(
-//             label: Text('Leave',
-//                 style: TextStyle(fontWeight: FontWeight.bold))),
-//         DataColumn(
-//             label: Text('Entitled',
-//                 style: TextStyle(fontWeight: FontWeight.bold))),
-//         DataColumn(
-//             label: Text('Utilized',
-//                 style: TextStyle(fontWeight: FontWeight.bold))),
-//         DataColumn(
-//             label: Text('Pending',
-//                 style: TextStyle(fontWeight: FontWeight.bold))),
-//         DataColumn(
-//             label: Text('Available',
-//                 style: TextStyle(fontWeight: FontWeight.bold))),
-//       ],
-//       rows: selectedData.map((data) {
-//         return DataRow(cells: [
-//           DataCell(Text(data.leave)),
-//           DataCell(Text(data.total.toString())),
-//           DataCell(Text(data.utilized.toString())),
-//           DataCell(Text(data.pending.toString())),
-//           DataCell(Text(data.available.toString())),
-//         ]);
-//       }).toList(),
-//     );
-//   }
-// }
-
-// class RequestLeavesRow extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     final screenWidth = MediaQuery.of(context).size.width;
-
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//       children: [
-//         LeaveRequestOption(icon: Icons.flight, label: 'Annual'),
-//         LeaveRequestOption(icon: Icons.beach_access, label: 'Casual'),
-//         LeaveRequestOption(icon: Icons.local_hospital, label: 'Medical'),
-//       ],
-//     );
-//   }
-// }
-
-// class LeaveRequestOption extends StatelessWidget {
-//   final IconData icon;
-//   final String label;
-
-//   const LeaveRequestOption({Key? key, required this.icon, required this.label})
-//       : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         CircleAvatar(
-//           radius: 28,
-//           backgroundColor: Colors.grey.shade300,
-//           child: Icon(icon, size: 30, color: AppColors.background),
-//         ),
-//         SizedBox(height: 6),
-//         Text(
-//           label,
-//           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-// class RequestLeavesForm extends StatefulWidget {
-//   @override
-//   _RequestLeavesFormState createState() => _RequestLeavesFormState();
-// }
-
-// class _RequestLeavesFormState extends State<RequestLeavesForm> {
-//   DateTime? startDate;
-//   DateTime? endDate;
-//   String? description;
-//   String? notifyEmployee;
-
-//   final _formKey = GlobalKey<FormState>();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final screenWidth = MediaQuery.of(context).size.width;
-//     final screenHeight = MediaQuery.of(context).size.height;
-
-//     return Padding(
-//       padding: EdgeInsets.all(screenWidth * 0.03),
-//       child: Form(
-//         key: _formKey,
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             TextFormField(
-//               decoration: InputDecoration(
-//                 labelText: 'Description',
-//                 border: OutlineInputBorder(),
-//               ),
-//               maxLines: 2,
-//               validator: (value) {
-//                 if (value == null || value.isEmpty) {
-//                   return 'Please enter a description';
-//                 }
-//                 return null;
-//               },
-//               onChanged: (value) {
-//                 setState(() {
-//                   description = value;
-//                 });
-//               },
-//             ),
-//             SizedBox(height: screenHeight * 0.02),
-//             Row(
-//               children: [
-//                 Text(
-//                   'Dates',
-//                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//                 ),
-//                 Spacer(),
-//                 TextButton(
-//                   onPressed: () {
-//                     setState(() {
-//                       startDate = null;
-//                       endDate = null;
-//                     });
-//                   },
-//                   child: Text('Clear'),
-//                 ),
-//               ],
-//             ),
-//             Row(
-//               children: [
-//                 Expanded(
-//                   child: ElevatedButton(
-//                     onPressed: () async {
-//                       final picked = await showDatePicker(
-//                         context: context,
-//                         initialDate: DateTime.now(),
-//                         firstDate: DateTime(2000),
-//                         lastDate: DateTime(2101),
-//                       );
-//                       if (picked != null) {
-//                         setState(() {
-//                           startDate = picked;
-//                         });
-//                       }
-//                     },
-//                     child: Text(
-//                       startDate != null
-//                           ? 'Start Date: ${startDate!.toLocal()}'.split(' ')[0]
-//                           : 'Pick Start Date',
-//                       style: TextStyle(fontSize: 14),
-//                     ),
-//                   ),
-//                 ),
-//                 SizedBox(width: screenWidth * 0.03),
-//                 Expanded(
-//                   child: ElevatedButton(
-//                     onPressed: () async {
-//                       final picked = await showDatePicker(
-//                         context: context,
-//                         initialDate: DateTime.now(),
-//                         firstDate: DateTime(2000),
-//                         lastDate: DateTime(2101),
-//                       );
-//                       if (picked != null) {
-//                         setState(() {
-//                           endDate = picked;
-//                         });
-//                       }
-//                     },
-//                     child: Text(
-//                       endDate != null
-//                           ? 'End Date: ${endDate!.toLocal()}'.split(' ')[0]
-//                           : 'Pick End Date',
-//                       style: TextStyle(fontSize: 14),
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             SizedBox(height: screenHeight * 0.03),
-//             TextFormField(
-//               decoration: InputDecoration(
-//                 labelText: 'Notify Employee',
-//                 border: OutlineInputBorder(),
-//               ),
-//               maxLines: 2,
-//               validator: (value) {
-//                 if (value == null || value.isEmpty) {
-//                   return 'Please enter notification details';
-//                 }
-//                 return null;
-//               },
-//               onChanged: (value) {
-//                 setState(() {
-//                   notifyEmployee = value;
-//                 });
-//               },
-//             ),
-//             SizedBox(height: screenHeight * 0.03),
-//             Row(
-//               children: [
-//                 Expanded(
-//                   child: OutlinedButton(
-//                     onPressed: () {
-//                       Navigator.pop(context);
-//                     },
-//                     child: Text('Cancel'),
-//                     style: OutlinedButton.styleFrom(
-//                       foregroundColor: Colors.red, side: BorderSide(color: Colors.red),
-//                     ),
-//                   ),
-//                 ),
-//                 SizedBox(width: screenWidth * 0.03),
-//                 Expanded(
-//                   child: ElevatedButton(
-//                     onPressed: () {
-//                       if (_formKey.currentState?.validate() ?? false) {
-//                         // Handle the submit action
-//                         showDialog(
-//                           context: context,
-//                           builder: (context) => AlertDialog(
-//                             title: Text('Leave Request Submitted'),
-//                             content: Text('Your leave request has been successfully submitted.'),
-//                             actions: <Widget>[
-//                               TextButton(
-//                                 onPressed: () {
-//                                   Navigator.of(context).pop();
-//                                   Navigator.pop(context); // Navigate back
-//                                 },
-//                                 child: Text('OK'),
-//                               ),
-//                             ],
-//                           ),
-//                         );
-//                       }
-//                     },
-//                     child: Text('Save'),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:untitled/Backend/APIs/Apis.dart';
+import '../../Backend/models/cover_ups.dart';
 import '../../Backend/models/leave_balance_model.dart';
 import '../../Backend/models/leave_model.dart';
+import '../../Backend/models/leave_types.dart';
 import '../app_bar.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
@@ -673,6 +24,8 @@ class Leave extends StatefulWidget {
 
 class _LeavePageState extends State<Leave> {
   List<LeaveBalanceData>? leaveBalanceData;
+  List<LeaveType>? leaveTypes;
+  List<CoverUp>? coverUps;
   bool isLoading = true;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
@@ -695,10 +48,42 @@ class _LeavePageState extends State<Leave> {
   void initState() {
     super.initState();
     _fetchLeaveBalance();
+    _fetchLeaveTypes();
+    _fetchCoverUps();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
     futureLeaveData = apiService.fetchLeaveData(widget.token, _selectedDay!);
     print('Token in leave page is ${widget.token}');
+  }
+
+  Future<void> _fetchLeaveTypes() async {
+    try {
+      final data = await apiService.fetchLeaveTypes(widget.token);
+      setState(() {
+        leaveTypes = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching leave types: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _fetchCoverUps() async {
+    try {
+      final data = await apiService.fetchCoverUps(widget.token);
+      setState(() {
+        coverUps = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching cover-ups: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -721,6 +106,66 @@ class _LeavePageState extends State<Leave> {
 
   List<LeaveEvent> _getEventsForDay(DateTime day) {
     return events[day] ?? [];
+  }
+
+  Future<void> _submitLeave(
+    String token,
+    String selectedDay,
+    String leaveType,
+    String comment,
+    String coverUp,
+    String removeString,
+  ) async {
+    final datesData = [
+      {
+        'date': selectedDay,
+        'data': {
+          'leave_id': 0,
+          'cat': leaveType,
+          'comment': comment,
+          'coverup': coverUp,
+        }
+      }
+    ];
+    final uri = Uri.parse('http://hris.accelution.lk/api/leave');
+    final request = http.MultipartRequest('POST', uri)
+      ..headers['Accept'] = '*/*'
+      ..headers['Authorization'] = 'Bearer $token'
+      ..fields['dates'] = jsonEncode(datesData) // As a JSON string
+      ..fields['remove'] = removeString;
+
+    try {
+      // Send the request
+      final response = await request.send();
+
+      // Handle the response
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Leave submitted successfully!'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } else {
+        final responseBody = await response.stream.bytesToString();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                'Failed to submit leave: ${response.statusCode} ${responseBody}'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        print(
+            "Error in submitting leave ${response.statusCode} ${responseBody}");
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An unexpected error occurred: $e'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   Future<void> _pickAttachment() async {
@@ -768,77 +213,81 @@ class _LeavePageState extends State<Leave> {
                         fontSize: 18,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    DropdownButtonFormField<String>(
-                      value: _selectedLeaveType,
-                      decoration: InputDecoration(
-                        labelText: "Leave Type",
-                      ),
-                      items: ["Annual", "Casual", "Medical"]
-                          .map((String leaveType) {
-                        return DropdownMenuItem<String>(
-                          value: leaveType,
-                          child: Text(leaveType),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedLeaveType = newValue;
-                          if (newValue != "Medical") {
-                            _attachmentPath = null;
-                          }
-                        });
-                      },
+                    SizedBox(
+                      height: 10,
                     ),
-                    if (_selectedLeaveType == "Annual")
-                      DropdownButtonFormField<String>(
-                        value: _selectedCoverUp,
-                        decoration: InputDecoration(
-                          labelText: "Cover up",
-                        ),
-                        items: ["Employee 1", "Employee 2", "Employee 3"]
-                            .map((String employeeName) {
-                          return DropdownMenuItem<String>(
-                            value: employeeName,
-                            child: Text(employeeName),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _selectedCoverUp = newValue;
-                          });
-                        },
-                      ),
-                    if (_selectedLeaveType == "Medical")
-                      Column(
-                        children: [
-                          TextField(
-                            readOnly: true,
+                    isLoading
+                        ? CircularProgressIndicator()
+                        : DropdownButtonFormField<String>(
+                            value: _selectedLeaveType,
                             decoration: InputDecoration(
-                              labelText: "Attachment",
-                              suffixIcon: IconButton(
-                                icon: Icon(Icons.attach_file),
-                                onPressed: () async {
-                                  FilePickerResult? result =
-                                      await FilePicker.platform.pickFiles();
-
-                                  if (result != null) {
-                                    setState(() {
-                                      _attachmentPath =
-                                          result.files.single.path;
-                                    });
-                                  }
-                                },
-                              ),
+                              labelText: "Leave Type",
                             ),
-                            controller:
-                                TextEditingController(text: _attachmentPath),
+                            items: leaveTypes?.map((LeaveType leaveType) {
+                                  return DropdownMenuItem<String>(
+                                    value: leaveType.text,
+                                    child: Text(leaveType.text),
+                                  );
+                                }).toList() ??
+                                [],
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedLeaveType = newValue;
+                                if (newValue != "Medical") {
+                                  _attachmentPath = null;
+                                }
+                              });
+                            },
                           ),
-                          if (_attachmentPath != null)
-                            Text(
-                                "Selected file: ${_attachmentPath!.split('/').last}"),
-                        ],
-                      ),
+                    if (_selectedLeaveType != null && leaveTypes != null) ...[
+                      if (leaveTypes!
+                              .firstWhere(
+                                  (type) => type.text == _selectedLeaveType)
+                              .additionalData['coverup'] ==
+                          'yes')
+                        DropdownButtonFormField<String>(
+                          value: _selectedCoverUp,
+                          decoration: InputDecoration(
+                            labelText: "Cover up",
+                          ),
+                          items: coverUps?.map((CoverUp coverUp) {
+                                return DropdownMenuItem<String>(
+                                  value: coverUp.name,
+                                  child: Text(coverUp.name),
+                                );
+                              }).toList() ??
+                              [],
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectedCoverUp = newValue;
+                            });
+                          },
+                        ),
+                      if (leaveTypes!
+                              .firstWhere(
+                                  (type) => type.text == _selectedLeaveType)
+                              .additionalData['attachment'] ==
+                          'yes')
+                        Column(
+                          children: [
+                            TextField(
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: "Attachment",
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.attach_file),
+                                  onPressed: _pickAttachment,
+                                ),
+                              ),
+                              controller:
+                                  TextEditingController(text: _attachmentPath),
+                            ),
+                            if (_attachmentPath != null)
+                              Text(
+                                  "Selected file: ${_attachmentPath!.split('/').last}"),
+                          ],
+                        ),
+                    ],
                     DropdownButtonFormField<String>(
                       value: _selectedTimeOfDay,
                       decoration: InputDecoration(
@@ -888,7 +337,7 @@ class _LeavePageState extends State<Leave> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             if (_selectedLeaveType != null &&
                                 _selectedTimeOfDay != null &&
                                 _commentController.text.isNotEmpty &&
@@ -907,6 +356,14 @@ class _LeavePageState extends State<Leave> {
                                   )
                                 ];
                               });
+                              await _submitLeave(
+                                widget.token,
+                                _selectedDay!.toIso8601String(),
+                                _selectedLeaveType!,
+                                _commentController.text,
+                                _selectedCoverUp ?? '', // Assuming coverUp is an integer
+                                'string', // Example value for remove
+                              );
 
                               _clearForm();
                               Navigator.of(context).pop();
