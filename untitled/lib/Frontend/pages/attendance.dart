@@ -298,6 +298,24 @@ class _AttendanceState extends State<Attendance> {
       },
     );
   }
+  Color _getStatusColor(String? status) {
+    switch (status) {
+      case 'holiday':
+        return Colors.black;
+      case 'leave':
+        return Colors.purple;
+      case 'incomplete':
+        return Colors.grey;
+      case 'pending':
+        return Color.fromRGBO(229, 165, 75, 1.0);
+      case 'rejected':
+        return Colors.red;
+      case 'active-amd':
+        return Colors.green;
+      default:
+        return Colors.grey; // Default color if none of the cases match
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -502,18 +520,15 @@ class _AttendanceState extends State<Attendance> {
                                       fontSize: screenWidth * 0.044,
                                     ),
                                   ),
+
                                   Text(
-                                    'Status: ${selectedDateData.status}',
+                                    'Status: ${selectedDateData.status ?? 'N/A'}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: screenWidth * 0.044,
-                                      color: selectedDateData.status == 'leave'
-                                          ? Colors.red
-                                          : (selectedDateData.status == 'pending'
-                                          ? Color.fromRGBO(229, 165, 75, 1.0)
-                                          : Colors.green),
+                                      color: _getStatusColor(selectedDateData.status),
                                     ),
-                                  ),
+                                  )
                                 ],
                               ),
                               Divider(thickness: 1),
