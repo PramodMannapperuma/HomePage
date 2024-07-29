@@ -90,8 +90,7 @@ class _AttendanceState extends State<Attendance> {
 
   Future<void> _submitAttendance(String token, String selectedDay,
       String startTime, String leaveTime, String comment) async {
-    final url = Uri.parse(
-        'http://hris.accelution.lk/api/attendance'); // replace with your actual endpoint
+    final url =  Uri.parse('${ApiService.baseUrl}/attendance'); // replace with your actual endpoint
 
     try {
       final response = await http.post(
