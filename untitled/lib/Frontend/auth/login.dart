@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled/Frontend/home/Dashbord.dart';
 import '../app_bar.dart';
+import 'package:untitled/Backend/APIs/Apis.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -109,7 +110,7 @@ class _LoginFormState extends State<LoginForm> {
 
       final response = await http
           .post(
-        Uri.parse('http://hris.accelution.lk/api/auth'),
+        Uri.parse('${ApiService.baseUrl}/auth'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -174,7 +175,7 @@ class _LoginFormState extends State<LoginForm> {
     String cookieHeader = cookies.join('; ');
 
     final response = await http.get(
-      Uri.parse('http://hris.accelution.lk/api/user/profile'),
+      Uri.parse('${ApiService.baseUrl}/profile'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Cookie': cookieHeader,

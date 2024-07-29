@@ -311,15 +311,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       physics: NeverScrollableScrollPhysics(),
                       children: [
                         CategoryCard(
-                          title: 'Policies',
-                          icon: Icons.policy_outlined,
-                          route: '/policies',
-                          token: widget.token,
-                        ),
-                        CategoryCard(
-                          title: 'Policy',
-                          icon: Icons.task_outlined,
-                          route: '/policies',
+                          title: 'Attendance',
+                          icon: Icons.calendar_month,
+                          route: '/attendance',
                           token: widget.token,
                         ),
                         CategoryCard(
@@ -330,7 +324,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         CategoryCard(
                           title: 'Requests',
-                          icon: Icons.request_page_outlined,
+                          icon: Icons.list_alt,
                           route: '/requests',
                           token: widget.token,
                         ),
@@ -338,12 +332,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           title: 'Profile',
                           icon: Icons.person_outline,
                           route: '/profile',
-                          token: widget.token,
-                        ),
-                        CategoryCard(
-                          title: 'News',
-                          icon: Icons.newspaper,
-                          route: '/news_screen',
                           token: widget.token,
                         ),
                         CategoryCard(
@@ -362,6 +350,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           title: 'My Team',
                           icon: Icons.group_add_outlined,
                           route: '/employee',
+                          token: widget.token,
+                        ),
+                        CategoryCard(
+                          title: 'Policy',
+                          icon: Icons.task_outlined,
+                          route: '/policies',
+                          token: widget.token,
+                        ),
+                        CategoryCard(
+                          title: 'News',
+                          icon: Icons.newspaper,
+                          route: '/news_screen',
                           token: widget.token,
                         ),
                       ],
