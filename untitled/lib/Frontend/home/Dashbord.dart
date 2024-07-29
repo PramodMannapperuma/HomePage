@@ -77,45 +77,94 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: SizedBox(
-        height: 80,
-        child: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month, color: AppColors.background),
-              label: 'Attendance',
+      bottomNavigationBar: Container(
+        height: 105,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.calendar_month, color: AppColors.background),
+                  label: 'Attendance',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.beach_access_outlined, color: AppColors.background),
+                  label: 'Leave',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_outlined, color: AppColors.background),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.dashboard_customize_outlined, color: AppColors.background),
+                  label: 'Dashboard',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.group_add_outlined, color: AppColors.background),
+                  label: 'Tracking',
+                ),
+              ],
+              currentIndex: _selectedIndex,
+              selectedItemColor: Colors.purple,
+              onTap: _onItemTapped,
+              selectedLabelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+              unselectedLabelStyle: TextStyle(
+                fontWeight: FontWeight.normal,
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.beach_access_outlined,
-                  color: AppColors.background),
-              label: 'Leave',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined, color: AppColors.background),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_customize_outlined,
-                  color: AppColors.background),
-              label: 'Dashboard',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.group_add_outlined, color: AppColors.background),
-              label: 'Tracking',
-            ),
+            Divider(thickness: 1),
+            SizedBox(height: 3),
+            FadeInText(), // Custom widget for animated text
+            SizedBox(height: 5),
           ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.purple,
-          onTap: _onItemTapped,
-          selectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-          unselectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.normal,
-          ),
+
         ),
       ),
     );
+  }
+}
+
+class FadeInText extends StatefulWidget {
+  @override
+  _FadeInTextState createState() => _FadeInTextState();
+}
+
+class _FadeInTextState extends State<FadeInText> with SingleTickerProviderStateMixin {
+  AnimationController? _controller;
+  Animation<double>? _opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller!);
+    _controller!.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller!.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _opacityAnimation!,
+      child: Text(
+        '© 2023 - Accelution',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.black87,
+          ),
+        ),
+      );
   }
 }
 
