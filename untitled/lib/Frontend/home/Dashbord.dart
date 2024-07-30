@@ -78,7 +78,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: Container(
-        height: 105,
+        height: 86,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -115,10 +115,10 @@ class _MainScreenState extends State<MainScreen> {
                 fontWeight: FontWeight.normal,
               ),
             ),
-            Divider(thickness: 1),
-            SizedBox(height: 3),
+            // Divider(thickness: 1),
+            // SizedBox(height: 3),
             FadeInText(), // Custom widget for animated text
-            SizedBox(height: 5),
+            // SizedBox(height: 5),
           ],
 
         ),
@@ -158,7 +158,7 @@ class _FadeInTextState extends State<FadeInText> with SingleTickerProviderStateM
     return FadeTransition(
       opacity: _opacityAnimation!,
       child: Text(
-        '© 2023 - Accelution',
+        '© Powerd by Accelution',
           style: TextStyle(
             fontSize: 16,
             color: Colors.black87,

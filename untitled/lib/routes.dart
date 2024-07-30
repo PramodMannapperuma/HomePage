@@ -20,38 +20,51 @@ import 'Frontend/profile/career_profile.dart';
 import 'Frontend/profile/contact_info.dart';
 import 'Frontend/profile/personal_info.dart';
 
-final Map<String, WidgetBuilder> routes = {
-  '/login': (context) => Login(),
-  '/home': (context) => MyHomePage(
-        token: null,
-      ),
-  '/attendance': (context) => Attendance(
-        token: "",
-      ),
-  '/leave': (context) => Leave(token: ''),
-  // '/news': (context) => News(),
-  '/geolocation': (context) => GeoLocation(token: ''),
-  '/news_screen': (context) => NewsScreen(),
-  '/policies': (context) => Policies(),
-  '/requests': (context) => Requests(),
-  '/celebrations': (context) => Celebrations(),
-  '/personalInfo': (context) => PersonalInfo(
-        token: '',
-      ),
-  '/payslips': (context) => PaySlip(),
-  //'/approvalTask': (context) => ApprovalTask(),
-  '/careerProfile': (context) => CareerProfile(
-        token: '',
-      ),
-  '/profile': (context) => ProfilePage(),
-  '/contactInfo': (context) => ContactInfo(
-        token: '',
-      ),
-  '/attendanceTracker': (context) => AttendanceTracker(),
-  '/taskScreen': (context) => TaskScreen(),
-  '/taskList': (context) => TaskListScreen(),
-  '/employeeScreen': (context) => EmployeeGridScreen(),
-  '/employee': (context) => EmployeeScreen(),
-  '/leavePolicy': (context) => LeavePolicy(),
-  // '/dashboard':(context) => MainScreen(token: ''),
-};
+Route<dynamic> generateRoute(RouteSettings settings) {
+  final args = settings.arguments as String?;
+
+  switch (settings.name) {
+    case '/login':
+      return MaterialPageRoute(builder: (context) => Login());
+    case '/home':
+      return MaterialPageRoute(builder: (context) => MyHomePage(token: args));
+    case '/attendance':
+      return MaterialPageRoute(builder: (context) => Attendance(token: args ?? ''));
+    case '/leave':
+      return MaterialPageRoute(builder: (context) => Leave(token: args ?? ''));
+    case '/geolocation':
+      return MaterialPageRoute(builder: (context) => GeoLocation(token: args ?? ''));
+    case '/news_screen':
+      return MaterialPageRoute(builder: (context) => NewsScreen());
+    case '/policies':
+      return MaterialPageRoute(builder: (context) => Policies());
+    case '/requests':
+      return MaterialPageRoute(builder: (context) => Requests());
+    case '/celebrations':
+      return MaterialPageRoute(builder: (context) => Celebrations());
+    case '/personalInfo':
+      return MaterialPageRoute(builder: (context) => PersonalInfo(token: args ?? ''));
+    case '/payslips':
+      return MaterialPageRoute(builder: (context) => PaySlip());
+    case '/careerProfile':
+      return MaterialPageRoute(builder: (context) => CareerProfile(token: args ?? ''));
+    case '/profile':
+      return MaterialPageRoute(builder: (context) => ProfilePage(token: args ?? ''));
+    case '/contactInfo':
+      return MaterialPageRoute(builder: (context) => ContactInfo(token: args ?? ''));
+    case '/attendanceTracker':
+      return MaterialPageRoute(builder: (context) => AttendanceTracker());
+    case '/taskScreen':
+      return MaterialPageRoute(builder: (context) => TaskScreen());
+    case '/taskList':
+      return MaterialPageRoute(builder: (context) => TaskListScreen());
+    case '/employeeScreen':
+      return MaterialPageRoute(builder: (context) => EmployeeGridScreen());
+    case '/employee':
+      return MaterialPageRoute(builder: (context) => EmployeeScreen());
+    case '/leavePolicy':
+      return MaterialPageRoute(builder: (context) => LeavePolicy());
+    default:
+      return MaterialPageRoute(builder: (context) => Login()); // Default route
+  }
+}
