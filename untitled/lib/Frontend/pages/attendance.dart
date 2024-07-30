@@ -168,6 +168,15 @@ class _AttendanceState extends State<Attendance> {
   }
 
   Future<void> _showAddAttendanceBottomSheet(BuildContext context) async {
+    if (_selectedDay != null && !isSameDay(_selectedDay!, today)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('You can only add attendance for today.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -254,16 +263,16 @@ class _AttendanceState extends State<Attendance> {
                         if (_startTimeController.text.isNotEmpty &&
                             _leaveTimeController.text.isNotEmpty &&
                             _commentController.text.isNotEmpty) {
-                          setState(() {
-                            events[_selectedDay!] = [
-                              Event(
-                                _startTimeController.text,
-                                _leaveTimeController.text,
-                                _commentController.text,
-                              )
-                            ];
-                          });
-                          if (_selectedDay != null) {
+                          if (_selectedDay != null && isSameDay(_selectedDay!, today)) {
+                            setState(() {
+                              events[_selectedDay!] = [
+                                Event(
+                                  _startTimeController.text,
+                                  _leaveTimeController.text,
+                                  _commentController.text,
+                                )
+                              ];
+                            });
                             DateTime selectedDay =
                                 _selectedDay ?? DateTime.now();
                             _submitAttendance(
@@ -273,11 +282,18 @@ class _AttendanceState extends State<Attendance> {
                               _leaveTimeController.text,
                               _commentController.text,
                             );
+                            _startTimeController.clear();
+                            _leaveTimeController.clear();
+                            _commentController.clear();
+                            Navigator.of(context).pop();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Attendance can only be added for today.'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
                           }
-                          _startTimeController.clear();
-                          _leaveTimeController.clear();
-                          _commentController.clear();
-                          Navigator.of(context).pop();
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
