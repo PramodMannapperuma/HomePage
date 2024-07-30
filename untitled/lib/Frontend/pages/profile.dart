@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Backend/APIs/Apis.dart';
 import '../app_bar.dart';
-import '../auth/login.dart';
 import '../profile/Info.dart';
 import '../profile/career_profile.dart';
 import '../profile/contact_info.dart';
@@ -13,20 +12,23 @@ import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
 class ProfilePage extends StatefulWidget {
+  final String token;
+  const ProfilePage({super.key, required this.token});
+
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late String token;
+  // late String token;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
-      token = ModalRoute.of(context)!.settings.arguments as String;
-      setState(() {});
-    });
+    // Future.delayed(Duration.zero, () {
+    //   // token = (ModalRoute.of(context)!.settings.arguments as String?)!;
+    //   setState(() {});
+    // });
   }
 
   Future<void> _logout(BuildContext context) async {
@@ -41,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final String token = ModalRoute.of(context)!.settings.arguments as String;
+    final String token = widget.token;
     print('Token in profile is: $token');
     return Scaffold(
       appBar: customAppBar(
@@ -104,7 +106,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             return CircleAvatar(
                                 radius: 50,
                                 child: Center(
-                                    child: Text('Error: ${snapshot.error}', style: TextStyle(fontSize: 8),)));
+                                    child: Text(
+                                  'Error: ${snapshot.error}',
+                                  style: TextStyle(fontSize: 8),
+                                )));
                           } else if (snapshot.hasData) {
                             return CircleAvatar(
                                 radius: 50,
@@ -112,8 +117,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           } else {
                             return CircleAvatar(
                               radius: 60,
-                                backgroundColor: Colors.black45,
-                              child: Icon(Icons.person_rounded, color: Colors.white,),
+                              backgroundColor: Colors.black45,
+                              child: Icon(
+                                Icons.person_rounded,
+                                color: Colors.white,
+                              ),
                             );
                           }
                         },

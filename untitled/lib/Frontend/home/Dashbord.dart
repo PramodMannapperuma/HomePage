@@ -78,7 +78,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: Container(
-        height: 105,
+        height: 86,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -89,7 +89,8 @@ class _MainScreenState extends State<MainScreen> {
                   label: 'Attendance',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.beach_access_outlined, color: AppColors.background),
+                  icon: Icon(Icons.beach_access_outlined,
+                      color: AppColors.background),
                   label: 'Leave',
                 ),
                 BottomNavigationBarItem(
@@ -97,11 +98,13 @@ class _MainScreenState extends State<MainScreen> {
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.dashboard_customize_outlined, color: AppColors.background),
+                  icon: Icon(Icons.dashboard_customize_outlined,
+                      color: AppColors.background),
                   label: 'Dashboard',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.group_add_outlined, color: AppColors.background),
+                  icon: Icon(Icons.group_add_outlined,
+                      color: AppColors.background),
                   label: 'Tracking',
                 ),
               ],
@@ -115,12 +118,11 @@ class _MainScreenState extends State<MainScreen> {
                 fontWeight: FontWeight.normal,
               ),
             ),
-            Divider(thickness: 1),
-            SizedBox(height: 3),
+            // Divider(thickness: 1),
+            // SizedBox(height: 3),
             FadeInText(), // Custom widget for animated text
-            SizedBox(height: 5),
+            // SizedBox(height: 5),
           ],
-
         ),
       ),
     );
@@ -132,7 +134,8 @@ class FadeInText extends StatefulWidget {
   _FadeInTextState createState() => _FadeInTextState();
 }
 
-class _FadeInTextState extends State<FadeInText> with SingleTickerProviderStateMixin {
+class _FadeInTextState extends State<FadeInText>
+    with SingleTickerProviderStateMixin {
   AnimationController? _controller;
   Animation<double>? _opacityAnimation;
 
@@ -143,7 +146,8 @@ class _FadeInTextState extends State<FadeInText> with SingleTickerProviderStateM
       duration: const Duration(seconds: 2),
       vsync: this,
     );
-    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller!);
+    _opacityAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_controller!);
     _controller!.forward();
   }
 
@@ -158,13 +162,13 @@ class _FadeInTextState extends State<FadeInText> with SingleTickerProviderStateM
     return FadeTransition(
       opacity: _opacityAnimation!,
       child: Text(
-        '© 2023 - Accelution',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.black87,
-          ),
+        '© Powerd by Accelution',
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.black87,
         ),
-      );
+      ),
+    );
   }
 }
 

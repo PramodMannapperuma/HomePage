@@ -361,7 +361,8 @@ class _LeavePageState extends State<Leave> {
                                 _selectedDay!.toIso8601String(),
                                 _selectedTimeOfDay!,
                                 _commentController.text,
-                                _selectedCoverUp ?? '', // Assuming coverUp is an integer
+                                _selectedCoverUp ??
+                                    '', // Assuming coverUp is an integer
                                 'string', // Example value for remove
                               );
 
