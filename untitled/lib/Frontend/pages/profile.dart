@@ -15,7 +15,6 @@ class ProfilePage extends StatefulWidget {
   final String token;
   const ProfilePage({super.key, required this.token});
 
-
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
@@ -107,7 +106,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             return CircleAvatar(
                                 radius: 50,
                                 child: Center(
-                                    child: Text('Error: ${snapshot.error}', style: TextStyle(fontSize: 8),)));
+                                    child: Text(
+                                  'Error: ${snapshot.error}',
+                                  style: TextStyle(fontSize: 8),
+                                )));
                           } else if (snapshot.hasData) {
                             return CircleAvatar(
                                 radius: 50,
@@ -115,8 +117,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           } else {
                             return CircleAvatar(
                               radius: 60,
-                                backgroundColor: Colors.black45,
-                              child: Icon(Icons.person_rounded, color: Colors.white,),
+                              backgroundColor: Colors.black45,
+                              child: Icon(
+                                Icons.person_rounded,
+                                color: Colors.white,
+                              ),
                             );
                           }
                         },

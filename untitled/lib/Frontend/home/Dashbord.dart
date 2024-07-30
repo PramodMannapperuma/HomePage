@@ -89,7 +89,8 @@ class _MainScreenState extends State<MainScreen> {
                   label: 'Attendance',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.beach_access_outlined, color: AppColors.background),
+                  icon: Icon(Icons.beach_access_outlined,
+                      color: AppColors.background),
                   label: 'Leave',
                 ),
                 BottomNavigationBarItem(
@@ -97,11 +98,13 @@ class _MainScreenState extends State<MainScreen> {
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.dashboard_customize_outlined, color: AppColors.background),
+                  icon: Icon(Icons.dashboard_customize_outlined,
+                      color: AppColors.background),
                   label: 'Dashboard',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.group_add_outlined, color: AppColors.background),
+                  icon: Icon(Icons.group_add_outlined,
+                      color: AppColors.background),
                   label: 'Tracking',
                 ),
               ],
@@ -120,7 +123,6 @@ class _MainScreenState extends State<MainScreen> {
             FadeInText(), // Custom widget for animated text
             // SizedBox(height: 5),
           ],
-
         ),
       ),
     );
@@ -132,7 +134,8 @@ class FadeInText extends StatefulWidget {
   _FadeInTextState createState() => _FadeInTextState();
 }
 
-class _FadeInTextState extends State<FadeInText> with SingleTickerProviderStateMixin {
+class _FadeInTextState extends State<FadeInText>
+    with SingleTickerProviderStateMixin {
   AnimationController? _controller;
   Animation<double>? _opacityAnimation;
 
@@ -143,7 +146,8 @@ class _FadeInTextState extends State<FadeInText> with SingleTickerProviderStateM
       duration: const Duration(seconds: 2),
       vsync: this,
     );
-    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller!);
+    _opacityAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_controller!);
     _controller!.forward();
   }
 
@@ -159,12 +163,12 @@ class _FadeInTextState extends State<FadeInText> with SingleTickerProviderStateM
       opacity: _opacityAnimation!,
       child: Text(
         '© Powerd by Accelution',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.black87,
-          ),
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.black87,
         ),
-      );
+      ),
+    );
   }
 }
 
