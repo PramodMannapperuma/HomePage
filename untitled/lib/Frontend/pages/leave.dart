@@ -111,7 +111,7 @@ class _LeavePageState extends State<Leave> {
   Future<void> _submitLeave(
     String token,
     String selectedDay,
-    String leaveType,
+    String selectedTypeOfDay,
     String comment,
     String coverUp,
     String removeString,
@@ -120,8 +120,8 @@ class _LeavePageState extends State<Leave> {
       {
         'date': selectedDay,
         'data': {
-          'leave_id': 0,
-          'cat': leaveType,
+          'leave_id': 1,
+          'cat': selectedTypeOfDay,
           'comment': comment,
           'coverup': coverUp,
         }
@@ -295,8 +295,8 @@ class _LeavePageState extends State<Leave> {
                       ),
                       items: [
                         "Full Day",
-                        "Half Day-Morning",
-                        "Half Day-Evening"
+                        "Half Day - Morning",
+                        "Half Day - Evening"
                       ].map((String timeOfDay) {
                         return DropdownMenuItem<String>(
                           value: timeOfDay,
@@ -359,7 +359,7 @@ class _LeavePageState extends State<Leave> {
                               await _submitLeave(
                                 widget.token,
                                 _selectedDay!.toIso8601String(),
-                                _selectedLeaveType!,
+                                _selectedTimeOfDay!,
                                 _commentController.text,
                                 _selectedCoverUp ?? '', // Assuming coverUp is an integer
                                 'string', // Example value for remove
