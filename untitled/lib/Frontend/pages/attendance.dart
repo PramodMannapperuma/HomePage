@@ -192,10 +192,10 @@ class _AttendanceState extends State<Attendance> {
   }
 
   Future<void> _showAddAttendanceBottomSheet(BuildContext context) async {
-    if (_selectedDay != null && !isSameDay(_selectedDay!, today)) {
+    if (_selectedDay != null && _selectedDay!.isAfter(today)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('You can only add attendance for today.'),
+          content: Text('You cannot add attendance for future dates.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -314,8 +314,8 @@ class _AttendanceState extends State<Attendance> {
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(
-                                    'Attendance can only be added for today.'),
+                                content:
+                                    Text('You cannot add attendance for future dates.'),
                                 duration: Duration(seconds: 2),
                               ),
                             );
