@@ -23,11 +23,32 @@ class Attendance extends StatefulWidget {
 class _AttendanceState extends State<Attendance> {
   // final String? token = widget.token;
   // final token = widget.token;
+  // Define static color constants
+  static const Color incompleteColor = Colors.grey;
+  static const Color amendmentColor = Colors.blue;
+  static const Color pendingColor = Colors.amber;
+  static const Color rejectedColor = Colors.red;
+  static const Color attendanceColor = Colors.green;
+  static const Color holidayColor = Colors.black;
+  static const Color leaveColor = Colors.purple;
+
+  // Map status to color
+  final Map<String, Color> statusColorMap = {
+    'incomplete': incompleteColor,
+    'amendment': amendmentColor,
+    'pending': pendingColor,
+    'rejected': rejectedColor,
+    'attendance': attendanceColor,
+    'holiday': holidayColor,
+    'leave': leaveColor,
+  };
+
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   DateTime today = DateTime.now();
+  final Map<DateTime, List<String>> _events = {};
 
   Map<DateTime, List<Event>> events = {};
   TextEditingController _startTimeController = TextEditingController();
@@ -36,6 +57,7 @@ class _AttendanceState extends State<Attendance> {
 
   late final ValueNotifier<List<Event>> _selectedEvents;
   late Future<List<AttendanceData>> futureAttendanceData;
+  late Future<Map<DateTime, String>> futureAttendanceStatus;
 
   final ApiService apiService = ApiService();
 
@@ -90,7 +112,8 @@ class _AttendanceState extends State<Attendance> {
 
   Future<void> _submitAttendance(String token, String selectedDay,
       String startTime, String leaveTime, String comment) async {
-    final url = Uri.parse('${ApiService.baseUrl}/attendance'); // replace with your actual endpoint
+    final url = Uri.parse(
+        '${ApiService.baseUrl}/attendance'); // replace with your actual endpoint
 
     try {
       final response = await http.post(
@@ -153,7 +176,8 @@ class _AttendanceState extends State<Attendance> {
     } on TimeoutException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('The connection has timed out. Please try again later.'),
+          content:
+              Text('The connection has timed out. Please try again later.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -183,7 +207,7 @@ class _AttendanceState extends State<Attendance> {
       builder: (BuildContext context) {
         return Padding(
           padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -263,7 +287,8 @@ class _AttendanceState extends State<Attendance> {
                         if (_startTimeController.text.isNotEmpty &&
                             _leaveTimeController.text.isNotEmpty &&
                             _commentController.text.isNotEmpty) {
-                          if (_selectedDay != null && isSameDay(_selectedDay!, today)) {
+                          if (_selectedDay != null &&
+                              isSameDay(_selectedDay!, today)) {
                             setState(() {
                               events[_selectedDay!] = [
                                 Event(
@@ -289,7 +314,8 @@ class _AttendanceState extends State<Attendance> {
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Attendance can only be added for today.'),
+                                content: Text(
+                                    'Attendance can only be added for today.'),
                                 duration: Duration(seconds: 2),
                               ),
                             );
@@ -314,6 +340,7 @@ class _AttendanceState extends State<Attendance> {
       },
     );
   }
+
   Color _getStatusColor(String? status) {
     switch (status) {
       case 'holiday':
@@ -457,18 +484,23 @@ class _AttendanceState extends State<Attendance> {
               eventLoader: _getEventsForDay,
               calendarStyle: CalendarStyle(
                 outsideDaysVisible: false,
+                defaultDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
                 todayDecoration: BoxDecoration(
-                  color: Color(0xff4d2880),
+                  color: Colors.deepPurple,
                   shape: BoxShape.circle,
                 ),
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xff9575cd),
+                // selectedDecoration: BoxDecoration(
+                //   color: Color(0xff9575cd),
+                //   shape: BoxShape.circle,
+                // ),
+                weekendDecoration: BoxDecoration(
+                  color: Colors.black,
                   shape: BoxShape.circle,
                 ),
-                markerDecoration: BoxDecoration(
-                  color: Color(0xff9575cd),
-                  shape: BoxShape.circle,
-                ),
+                weekendTextStyle: TextStyle().copyWith(color: Colors.white),
+                cellMargin: EdgeInsets.all(4.0),
               ),
               onFormatChanged: (format) {
                 if (_calendarFormat != format) {
@@ -480,6 +512,53 @@ class _AttendanceState extends State<Attendance> {
               onPageChanged: (focusedDay) {
                 _focusedDay = focusedDay;
               },
+              calendarBuilders: CalendarBuilders(
+                defaultBuilder: (context, date, _) {
+                  List<String> events = _events[date] ?? [];
+                  if (events.isNotEmpty) {
+                    String status = events.first;
+                    Color? statusColor = statusColorMap[status];
+                    if (statusColor != null) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: statusColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            date.day.toString(),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                  return null;
+                },
+                selectedBuilder: (context, date, _) {
+                  List<String> events = _events[date] ?? [];
+                  if (events.isNotEmpty) {
+                    String status = events.first;
+                    Color? statusColor = statusColorMap[status];
+                    if (statusColor != null) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: statusColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            date.day.toString(),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                  return null;
+                },
+              ),
+
             ),
           ),
           SizedBox(height: 10.0),
@@ -508,7 +587,7 @@ class _AttendanceState extends State<Attendance> {
                           comment: 'N/A',
                           recOut: 'N/A',
                           date: _selectedDay?.toString().split(" ")[0] ?? 'N/A',
-                          status: 'N/A'));
+                          status:'N/A'));
                   return Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenWidth * 0.05,
