@@ -24,6 +24,7 @@ class Attendance extends StatefulWidget {
 class _AttendanceState extends State<Attendance> {
   // final String? token = widget.token;
   // final token = widget.token;
+
   // Define static color constants
   static const Color incompleteColor = Colors.grey;
   static const Color amendmentColor = Colors.blue;
