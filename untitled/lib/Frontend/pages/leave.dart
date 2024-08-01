@@ -49,6 +49,7 @@ class _LeavePageState extends State<Leave> {
   DateTime? _selectedDay;
   DateTime today = DateTime.now();
   final Map<DateTime, String> _leaveStatus = {};
+  Map<DateTime, List<LeaveData>> leaveDataMap = {};
 
   TextEditingController _commentController = TextEditingController();
 
@@ -142,24 +143,24 @@ class _LeavePageState extends State<Leave> {
     }
   }
 
-  // Future<void> _fetchLeaveData(DateTime selectedDate) async {
-  //   try {
-  //     final List<LeaveData> data = await apiService.fetchLeaveData(widget.token, _focusedDay);
-  //     setState(() {
-  //       leaveDataMap.clear();
-  //       for (var leave in data) {
-  //         if (leave.date != null) {
-  //           // Check if the date is not null
-  //           final DateTime date = DateTime.parse(leave.date!); // Use non-nullable type
-  //           leaveDataMap[date] = leave.status ?? 'unknown';
-  //         }
-  //       }
-  //     });
-  //   } catch (e) {
-  //     // Handle error
-  //     print('Error fetching leave data: $e');
-  //   }
-  // }
+  Future<void> _fetchLeaveData(DateTime selectedDate) async {
+    try {
+      final List<LeaveData> data = await apiService.fetchLeaveData(widget.token, _focusedDay);
+      setState(() {
+        leaveDataMap.clear();
+        for (var leave in data) {
+          if (leave.date != null) {
+            // Check if the date is not null
+            final DateTime date = DateTime.parse(leave.date!); // Use non-nullable type
+            leaveDataMap[date] = leave.status as List<LeaveData> ;
+          }
+        }
+      });
+    } catch (e) {
+      // Handle error
+      print('Error fetching leave data: $e');
+    }
+  }
 
   @override
   void dispose() {
@@ -614,345 +615,361 @@ class _LeavePageState extends State<Leave> {
           color: Colors.white,
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            child: TableCalendar(
-              rowHeight: 40,
-              headerStyle: HeaderStyle(
-                titleCentered: true,
-                formatButtonVisible: true,
-                formatButtonShowsNext: false,
-                formatButtonDecoration: BoxDecoration(
-                  color: Color(0xff4d2880),
-                  borderRadius: BorderRadius.circular(20.0),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              child: TableCalendar(
+                rowHeight: 40,
+                headerStyle: HeaderStyle(
+                  titleCentered: true,
+                  formatButtonVisible: true,
+                  formatButtonShowsNext: false,
+                  formatButtonDecoration: BoxDecoration(
+                    color: Color(0xff4d2880),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  formatButtonTextStyle: TextStyle(
+                    color: Colors.white,
+                  ),
+                  titleTextStyle: TextStyle(
+                    fontSize: screenWidth * 0.05,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff4d2880),
+                  ),
+                  leftChevronIcon: Icon(
+                    Icons.chevron_left,
+                    color: Color(0xff4d2880),
+                  ),
+                  rightChevronIcon: Icon(
+                    Icons.chevron_right,
+                    color: Color(0xff4d2880),
+                  ),
                 ),
-                formatButtonTextStyle: TextStyle(
-                  color: Colors.white,
+                focusedDay: _focusedDay,
+                startingDayOfWeek: StartingDayOfWeek.monday,
+                onDaySelected: _onDaySelected,
+                availableGestures: AvailableGestures.all,
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                firstDay: DateTime.utc(2023, 01, 01),
+                lastDay: DateTime.utc(3030, 12, 31),
+                calendarFormat: _calendarFormat,
+                // eventLoader: _loadLeaveData;
+                calendarStyle: CalendarStyle(
+                  outsideDaysVisible: false,
+                  todayDecoration: BoxDecoration(
+                    color: Color(0xff4d2880),
+                    shape: BoxShape.circle,
+                  ),
+                  selectedDecoration: BoxDecoration(
+                    color: Color(0xff9575cd),
+                    shape: BoxShape.circle,
+                  ),
+                  markerDecoration: BoxDecoration(
+                    color: Color(0xff9575cd),
+                    shape: BoxShape.circle,
+                  ),
                 ),
-                titleTextStyle: TextStyle(
-                  fontSize: screenWidth * 0.05,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff4d2880),
-                ),
-                leftChevronIcon: Icon(
-                  Icons.chevron_left,
-                  color: Color(0xff4d2880),
-                ),
-                rightChevronIcon: Icon(
-                  Icons.chevron_right,
-                  color: Color(0xff4d2880),
-                ),
-              ),
-              focusedDay: _focusedDay,
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              onDaySelected: _onDaySelected,
-              availableGestures: AvailableGestures.all,
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-              firstDay: DateTime.utc(2023, 01, 01),
-              lastDay: DateTime.utc(3030, 12, 31),
-              calendarFormat: _calendarFormat,
-              // eventLoader: _loadLeaveData;
-              calendarStyle: CalendarStyle(
-                outsideDaysVisible: false,
-                todayDecoration: BoxDecoration(
-                  color: Color(0xff4d2880),
-                  shape: BoxShape.circle,
-                ),
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xff9575cd),
-                  shape: BoxShape.circle,
-                ),
-                markerDecoration: BoxDecoration(
-                  color: Color(0xff9575cd),
-                  shape: BoxShape.circle,
-                ),
-              ),
-              onFormatChanged: (format) {
-                if (_calendarFormat != format) {
-                  setState(() {
-                    _calendarFormat = format;
-                  });
-                }
-              },
-              onPageChanged: (focusedDay) {
-                _focusedDay = focusedDay;
-              },
-              calendarBuilders: CalendarBuilders(
-                markerBuilder: (context, day, events) {
-                  final status = _leaveStatus[day];
-                  if (status != null) {
-                    Color statusColor;
-                    switch (status) {
-                      case 'accepted':
-                        statusColor = Colors.green;
-                        break;
-                      case 'rejected':
-                        statusColor = Colors.red;
-                        break;
-                      case 'pending':
-                      default:
-                        statusColor = Colors.orange;
-                    }
-                    return Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: statusColor,
-                      ),
-                    );
+                onFormatChanged: (format) {
+                  if (_calendarFormat != format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
                   }
-                  return null;
                 },
+                onPageChanged: (focusedDay) {
+                  _focusedDay = focusedDay;
+                },
+                calendarBuilders: CalendarBuilders(
+                  markerBuilder: (context, day, events) {
+                    final status = _leaveStatus[day];
+                    if (status != null) {
+                      Color statusColor;
+                      switch (status) {
+                        case 'accepted':
+                          statusColor = Colors.green;
+                          break;
+                        case 'rejected':
+                          statusColor = Colors.red;
+                          break;
+                        case 'pending':
+                        default:
+                          statusColor = Colors.orange;
+                      }
+                      return Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: statusColor,
+                        ),
+                      );
+                    }
+                    return null;
+                  },
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: FutureBuilder<List<LeaveData>>(
-              future: futureLeaveData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(
-                    child: Text('No leave data available.'),
-                  );
-                } else {
-                  final data = snapshot.data!;
-            //       return ListView.builder(
-            //         itemCount: leaveData.length,
-            //         itemBuilder: (context, index) {
-            //           final leave = leaveData[index];
-            //           return ListTile(
-            //             title: Text('Leave Date: ${leave.date ?? 'N/A'}'),
-            //             subtitle: Column(
-            //               crossAxisAlignment: CrossAxisAlignment.start,
-            //               children: [
-            //                 // Text('Start Time: ${leave.startTime ?? 'N/A'}'),
-            //                 // Text('End Time: ${leave.endTime ?? 'N/A'}'),
-            //                 Text('Comment: ${leave.comment ?? 'N/A'}'),
-            //                 Text('Status: ${leave.status ?? 'N/A'}'),
-            //               ],
-            //             ),
-            //           );
-            //         },
-            //       );
-            //     }
-            //   },
-            // ),
-                  final selectedDateData = data.firstWhere(
-                        (element) =>
-                    element.date == _selectedDay?.toString().split(" ")[0],
-                    orElse: () => LeaveData(
-                      amdIn: 'N/A',
-                      recIn: 'N/A',
-                      amdOut: 'N/A',
-                      comment: 'N/A',
-                      recOut: 'N/A',
-                      date: _selectedDay?.toString().split(" ")[0] ?? 'N/A',
-                      status: 'N/A',
-                    ),
-                  );
-                  return Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 0.05,
-                      vertical: screenHeight * 0.02,
-                    ),
-                    child: SizedBox(
-                      height: screenHeight * 0.3,
-                      child: Card(
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+            Column(
+              children: [
+                FutureBuilder<List<LeaveData>>(
+                  future: futureLeaveData,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(
+                        child: Text('No leave data available.'),
+                      );
+                    } else {
+                      final data = snapshot.data!;
+                //       return ListView.builder(
+                //         itemCount: leaveData.length,
+                //         itemBuilder: (context, index) {
+                //           final leave = leaveData[index];
+                //           return ListTile(
+                //             title: Text('Leave Date: ${leave.date ?? 'N/A'}'),
+                //             subtitle: Column(
+                //               crossAxisAlignment: CrossAxisAlignment.start,
+                //               children: [
+                //                 // Text('Start Time: ${leave.startTime ?? 'N/A'}'),
+                //                 // Text('End Time: ${leave.endTime ?? 'N/A'}'),
+                //                 Text('Comment: ${leave.comment ?? 'N/A'}'),
+                //                 Text('Status: ${leave.status ?? 'N/A'}'),
+                //               ],
+                //             ),
+                //           );
+                //         },
+                //       );
+                //     }
+                //   },
+                // ),
+                      final selectedDateData = data.firstWhere(
+                            (element) =>
+                        element.date == _selectedDay?.toString().split(" ")[0],
+                        orElse: () => LeaveData(
+                          amdIn: 'N/A',
+                          recIn: 'N/A',
+                          amdOut: 'N/A',
+                          comment: 'N/A',
+                          recOut: 'N/A',
+                          date: _selectedDay?.toString().split(" ")[0] ?? 'N/A',
+                          status: 'N/A',
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.all(screenWidth * 0.04),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                      );
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.05,
+                          vertical: screenHeight * 0.02,
+                        ),
+                        child: SizedBox(
+                          height: screenHeight * 0.3,
+                          child: Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(screenWidth * 0.04),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Date: ${selectedDateData.date}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: screenWidth * 0.044,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Status: ${selectedDateData.status ?? 'N/A'}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: screenWidth * 0.044,
-                                      color: _getStatusColor(
-                                          selectedDateData.status),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Divider(thickness: 1),
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'AMD In: ${selectedDateData.amdIn ?? 'N/A'}',
+                                        'Date: ${selectedDateData.date}',
                                         style: TextStyle(
-                                            fontSize: screenWidth * 0.04),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: screenWidth * 0.044,
+                                        ),
                                       ),
-                                      SizedBox(height: 4.0),
                                       Text(
-                                        'AMD Out: ${selectedDateData.amdOut ?? 'N/A'}',
+                                        'Status: ${selectedDateData.status ?? 'N/A'}',
                                         style: TextStyle(
-                                            fontSize: screenWidth * 0.04),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: screenWidth * 0.044,
+                                          color: _getStatusColor(
+                                              selectedDateData.status),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Divider(thickness: 1),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'AMD In: ${selectedDateData.amdIn ?? 'N/A'}',
+                                            style: TextStyle(
+                                                fontSize: screenWidth * 0.04),
+                                          ),
+                                          SizedBox(height: 4.0),
+                                          Text(
+                                            'AMD Out: ${selectedDateData.amdOut ?? 'N/A'}',
+                                            style: TextStyle(
+                                                fontSize: screenWidth * 0.04),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Rec In: ${selectedDateData.recIn ?? 'N/A'}',
+                                            style: TextStyle(
+                                                fontSize: screenWidth * 0.04),
+                                          ),
+                                          SizedBox(height: 4.0),
+                                          Text(
+                                            'Rec Out: ${selectedDateData.recOut ?? 'N/A'}',
+                                            style: TextStyle(
+                                                fontSize: screenWidth * 0.04),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                  Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                  Divider(thickness: 1),
+                                  Text(
+                                    'Comment: ${selectedDateData.comment ?? 'N/A'}',
+                                    style: TextStyle(fontSize: screenWidth * 0.04),
+                                  ),
+                                  Row(
                                     children: [
-                                      Text(
-                                        'Rec In: ${selectedDateData.recIn ?? 'N/A'}',
-                                        style: TextStyle(
-                                            fontSize: screenWidth * 0.04),
-                                      ),
-                                      SizedBox(height: 4.0),
-                                      Text(
-                                        'Rec Out: ${selectedDateData.recOut ?? 'N/A'}',
-                                        style: TextStyle(
-                                            fontSize: screenWidth * 0.04),
-                                      ),
+
                                     ],
                                   ),
                                 ],
                               ),
-                              Divider(thickness: 1),
-                              Text(
-                                'Comment: ${selectedDateData.comment ?? 'N/A'}',
-                                style: TextStyle(fontSize: screenWidth * 0.04),
-                              ),
-                            ],
+
+                            ),
                           ),
                         ),
+                      );
+                    }
+                  },
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(screenWidth * 0.03),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Text(
+                            //   'Leave Details',
+                            //   style: TextStyle(
+                            //     fontSize: 18,
+                            //     fontWeight: FontWeight.bold,
+                            //     color: Color(0xff4d2880),
+                            //   ),
+                            // ),
+                            SizedBox(height: screenHeight * 0.02),
+                            isLoading
+                                ? Center(child: CircularProgressIndicator())
+                                : leaveBalanceData != null &&
+                                leaveBalanceData!.isNotEmpty
+                                ? Card(
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(screenWidth * 0.03),
+                                child: Center(
+                                  child: _buildLeaveTable(),
+                                ),
+                              ),
+                            )
+                                : Center(
+                              child: Text(
+                                'No leave balance data available.',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
+                            // _buildLeaveDetail(),
+                          ],
+                        ),
                       ),
                     ),
-                  );
-                }
-              },
+                  ],
+                ),
+              ],
             ),
-            // child: Padding(
-            //   padding: EdgeInsets.all(screenWidth * 0.03),
-            //   child: SingleChildScrollView(
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         Text(
-            //           'Leave Details',
-            //           style: TextStyle(
-            //             fontSize: 18,
-            //             fontWeight: FontWeight.bold,
-            //             color: Color(0xff4d2880),
-            //           ),
-            //         ),
-            //         SizedBox(height: screenHeight * 0.02),
-            //         isLoading
-            //             ? Center(child: CircularProgressIndicator())
-            //             : leaveBalanceData != null &&
-            //                     leaveBalanceData!.isNotEmpty
-            //                 ? Card(
-            //                     elevation: 4,
-            //                     shape: RoundedRectangleBorder(
-            //                       borderRadius: BorderRadius.circular(8),
-            //                     ),
-            //                     child: Padding(
-            //                       padding: EdgeInsets.all(screenWidth * 0.03),
-            //                       child: Center(
-            //                         child: _buildLeaveTable(),
-            //                       ),
-            //                     ),
-            //                   )
-            //                 : Center(
-            //                     child: Text(
-            //                       'No leave balance data available.',
-            //                       style: TextStyle(fontSize: 14),
-            //                     ),
-            //                   ),
-            //         _buildLeaveDetail(),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  // Widget _buildLeaveTable() {
-  //   return DataTable(
-  //     columnSpacing: 12,
-  //     headingRowHeight: 35,
-  //     dataRowHeight: 32,
-  //     columns: [
-  //       DataColumn(
-  //           label: Text('Leave',
-  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-  //       DataColumn(
-  //           label: Text('Entitled',
-  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-  //       DataColumn(
-  //           label: Text('Utilized',
-  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-  //       DataColumn(
-  //           label: Text('Pending',
-  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-  //       DataColumn(
-  //           label: Text('Available',
-  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-  //     ],
-  //     rows: leaveBalanceData!.map((data) {
-  //       return DataRow(cells: [
-  //         DataCell(
-  //           Center(child: Text(data.leave, style: TextStyle(fontSize: 14))),
-  //         ),
-  //         DataCell(
-  //           Center(
-  //               child: Text(data.total.toString(),
-  //                   style: TextStyle(fontSize: 14))),
-  //         ),
-  //         DataCell(
-  //           Center(
-  //               child: Text(data.utilized.toString(),
-  //                   style: TextStyle(fontSize: 14))),
-  //         ),
-  //         DataCell(
-  //           Center(
-  //               child: Text(data.pending.toString(),
-  //                   style: TextStyle(fontSize: 14))),
-  //         ),
-  //         DataCell(
-  //           Center(
-  //               child: Text(data.available.toString(),
-  //                   style: TextStyle(fontSize: 14))),
-  //         ),
-  //       ]);
-  //     }).toList(),
-  //   );
-  // }
+  Widget _buildLeaveTable() {
+    return DataTable(
+      columnSpacing: 12,
+      headingRowHeight: 35,
+      // dataRowHeight: 32,
+      columns: [
+        DataColumn(
+            label: Text('Leave',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Entitled',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Utilized',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Pending',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Available',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+      ],
+      rows: leaveBalanceData!.map((data) {
+        return DataRow(cells: [
+          DataCell(
+            Center(child: Text(data.leave, style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.total.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.utilized.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.pending.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.available.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+        ]);
+      }).toList(),
+    );
+  }
 
   // Widget _buildLeaveDetail() {
   //   if (_selectedDay == null || !leaveDataMap.containsKey(_selectedDay!)) {
@@ -974,53 +991,53 @@ class _LeavePageState extends State<Leave> {
   //       ),
   //     );
   //   }
-  //
-  //   return ListView.builder(
-  //     shrinkWrap: true,
-  //     physics: NeverScrollableScrollPhysics(),
-  //     itemCount: leaveList.length,
-  //     itemBuilder: (context, index) {
-  //       LeaveData leave = leaveList[index];
-  //       return Card(
-  //         elevation: 4,
-  //         margin: EdgeInsets.symmetric(
-  //           vertical: 8.0,
-  //           horizontal: 5.0,
-  //         ),
-  //         child: ListTile(
-  //           title: Text(
-  //             leave.date ?? 'No Date',
-  //             style: TextStyle(
-  //               fontWeight: FontWeight.bold,
-  //               color: Color(0xff4d2880),
-  //             ),
-  //           ),
-  //           subtitle: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Text('Status: ${leave.status ?? 'N/A'}'),
-  //               // Text('AMD In: ${leave.amdIn ?? 'N/A'}'),
-  //               // Text('REC In: ${leave.recIn ?? 'N/A'}'),
-  //               // Text('AMD Out: ${leave.amdOut ?? 'N/A'}'),
-  //               // Text('REC Out: ${leave.recOut ?? 'N/A'}'),
-  //               Text('Comment: ${leave.comment ?? 'N/A'}'),
-  //               IconButton(
-  //                 icon: Icon(Icons.delete, color: Colors.red),
-  //                 onPressed: () {
-  //                   // _removeLeaveRequest(
-  //                   //     widget.token, value[index].timeOfDay);
-  //
-  //                   String date =
-  //                       DateFormat('yyyy-MM-dd').format(_selectedDay!);
-  //                   _submitLeaveRemoval(widget.token, [date]);
-  //                 },
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
+
+    // return ListView.builder(
+    //   shrinkWrap: true,
+    //   physics: NeverScrollableScrollPhysics(),
+    //   itemCount: leaveList.length,
+    //   itemBuilder: (context, index) {
+    //     LeaveData leave = leaveList[index];
+    //     return Card(
+    //       elevation: 4,
+    //       margin: EdgeInsets.symmetric(
+    //         vertical: 8.0,
+    //         horizontal: 5.0,
+    //       ),
+    //       child: ListTile(
+    //         title: Text(
+    //           leave.date ?? 'No Date',
+    //           style: TextStyle(
+    //             fontWeight: FontWeight.bold,
+    //             color: Color(0xff4d2880),
+    //           ),
+    //         ),
+    //         subtitle: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: [
+    //             Text('Status: ${leave.status ?? 'N/A'}'),
+    //             // Text('AMD In: ${leave.amdIn ?? 'N/A'}'),
+    //             // Text('REC In: ${leave.recIn ?? 'N/A'}'),
+    //             // Text('AMD Out: ${leave.amdOut ?? 'N/A'}'),
+    //             // Text('REC Out: ${leave.recOut ?? 'N/A'}'),
+    //             Text('Comment: ${leave.comment ?? 'N/A'}'),
+    //             IconButton(
+    //               icon: Icon(Icons.delete, color: Colors.red),
+    //               onPressed: () {
+    //                 // _removeLeaveRequest(
+    //                 //     widget.token, value[index].timeOfDay);
+    //
+    //                 String date =
+    //                     DateFormat('yyyy-MM-dd').format(_selectedDay!);
+    //                 _submitLeaveRemoval(widget.token, [date]);
+    //               },
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
   // }
 }
 
