@@ -82,7 +82,7 @@ class _LeavePageState extends State<Leave> {
   Future<void> _loadLeaveData() async {
     try {
       final List<LeaveData> data =
-      await apiService.fetchLeaveData(widget.token, _focusedDay);
+          await apiService.fetchLeaveData(widget.token, _focusedDay);
       setState(() {
         _leaveStatus.clear();
         for (var leave in data) {
@@ -187,14 +187,14 @@ class _LeavePageState extends State<Leave> {
   }
 
   Future<void> _submitLeave(
-      BuildContext context,
-      String token,
-      String selectedDay,
-      String selectedTypeOfDay,
-      String comment,
-      String coverUp,
-      List<String> removeDays,
-      ) async {
+    BuildContext context,
+    String token,
+    String selectedDay,
+    String selectedTypeOfDay,
+    String comment,
+    String coverUp,
+    List<String> removeDays,
+  ) async {
     final datesData = [
       {
         'date': selectedDay,
@@ -268,9 +268,9 @@ class _LeavePageState extends State<Leave> {
   }
 
   Future<void> _submitLeaveRemoval(
-      String token,
-      List<String> removeDays,
-      ) async {
+    String token,
+    List<String> removeDays,
+  ) async {
     final uri = Uri.parse('${ApiService.baseUrl}/leave');
     final request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = '*/*'
@@ -359,31 +359,31 @@ class _LeavePageState extends State<Leave> {
                     isLoading
                         ? CircularProgressIndicator()
                         : DropdownButtonFormField<String>(
-                      value: _selectedLeaveType,
-                      decoration: InputDecoration(
-                        labelText: "Leave Type",
-                      ),
-                      items: leaveTypes?.map((LeaveType leaveType) {
-                        return DropdownMenuItem<String>(
-                          value: leaveType.text,
-                          child: Text(leaveType.text),
-                        );
-                      }).toList() ??
-                          [],
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedLeaveType = newValue;
-                          if (newValue != "Medical") {
-                            _attachmentPath = null;
-                          }
-                        });
-                      },
-                    ),
+                            value: _selectedLeaveType,
+                            decoration: InputDecoration(
+                              labelText: "Leave Type",
+                            ),
+                            items: leaveTypes?.map((LeaveType leaveType) {
+                                  return DropdownMenuItem<String>(
+                                    value: leaveType.text,
+                                    child: Text(leaveType.text),
+                                  );
+                                }).toList() ??
+                                [],
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedLeaveType = newValue;
+                                if (newValue != "Medical") {
+                                  _attachmentPath = null;
+                                }
+                              });
+                            },
+                          ),
                     if (_selectedLeaveType != null && leaveTypes != null) ...[
                       if (leaveTypes!
-                          .firstWhere(
-                              (type) => type.text == _selectedLeaveType)
-                          .additionalData['coverup'] ==
+                              .firstWhere(
+                                  (type) => type.text == _selectedLeaveType)
+                              .additionalData['coverup'] ==
                           'yes')
                         DropdownButtonFormField<String>(
                           value: _selectedCoverUp,
@@ -391,11 +391,11 @@ class _LeavePageState extends State<Leave> {
                             labelText: "Cover up",
                           ),
                           items: coverUps?.map((CoverUp coverUp) {
-                            return DropdownMenuItem<String>(
-                              value: coverUp.id,
-                              child: Text(coverUp.name),
-                            );
-                          }).toList() ??
+                                return DropdownMenuItem<String>(
+                                  value: coverUp.id,
+                                  child: Text(coverUp.name),
+                                );
+                              }).toList() ??
                               [],
                           onChanged: (String? newValue) {
                             setState(() {
@@ -404,9 +404,9 @@ class _LeavePageState extends State<Leave> {
                           },
                         ),
                       if (leaveTypes!
-                          .firstWhere(
-                              (type) => type.text == _selectedLeaveType)
-                          .additionalData['attachment'] ==
+                              .firstWhere(
+                                  (type) => type.text == _selectedLeaveType)
+                              .additionalData['attachment'] ==
                           'yes')
                         Column(
                           children: [
@@ -420,7 +420,7 @@ class _LeavePageState extends State<Leave> {
                                 ),
                               ),
                               controller:
-                              TextEditingController(text: _attachmentPath),
+                                  TextEditingController(text: _attachmentPath),
                             ),
                             if (_attachmentPath != null)
                               Text(
@@ -479,7 +479,7 @@ class _LeavePageState extends State<Leave> {
                           ),
                           onPressed: () async {
                             String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(_selectedDay!);
+                                DateFormat('yyyy-MM-dd').format(_selectedDay!);
                             if (_selectedLeaveType != null &&
                                 _selectedTimeOfDay != null &&
                                 _commentController.text.isNotEmpty &&
@@ -726,27 +726,27 @@ class _LeavePageState extends State<Leave> {
                   );
                 } else {
                   final data = snapshot.data!;
-                  //       return ListView.builder(
-                  //         itemCount: leaveData.length,
-                  //         itemBuilder: (context, index) {
-                  //           final leave = leaveData[index];
-                  //           return ListTile(
-                  //             title: Text('Leave Date: ${leave.date ?? 'N/A'}'),
-                  //             subtitle: Column(
-                  //               crossAxisAlignment: CrossAxisAlignment.start,
-                  //               children: [
-                  //                 // Text('Start Time: ${leave.startTime ?? 'N/A'}'),
-                  //                 // Text('End Time: ${leave.endTime ?? 'N/A'}'),
-                  //                 Text('Comment: ${leave.comment ?? 'N/A'}'),
-                  //                 Text('Status: ${leave.status ?? 'N/A'}'),
-                  //               ],
-                  //             ),
-                  //           );
-                  //         },
-                  //       );
-                  //     }
-                  //   },
-                  // ),
+            //       return ListView.builder(
+            //         itemCount: leaveData.length,
+            //         itemBuilder: (context, index) {
+            //           final leave = leaveData[index];
+            //           return ListTile(
+            //             title: Text('Leave Date: ${leave.date ?? 'N/A'}'),
+            //             subtitle: Column(
+            //               crossAxisAlignment: CrossAxisAlignment.start,
+            //               children: [
+            //                 // Text('Start Time: ${leave.startTime ?? 'N/A'}'),
+            //                 // Text('End Time: ${leave.endTime ?? 'N/A'}'),
+            //                 Text('Comment: ${leave.comment ?? 'N/A'}'),
+            //                 Text('Status: ${leave.status ?? 'N/A'}'),
+            //               ],
+            //             ),
+            //           );
+            //         },
+            //       );
+            //     }
+            //   },
+            // ),
                   final selectedDateData = data.firstWhere(
                         (element) =>
                     element.date == _selectedDay?.toString().split(" ")[0],
@@ -902,126 +902,126 @@ class _LeavePageState extends State<Leave> {
     );
   }
 
-// Widget _buildLeaveTable() {
-//   return DataTable(
-//     columnSpacing: 12,
-//     headingRowHeight: 35,
-//     dataRowHeight: 32,
-//     columns: [
-//       DataColumn(
-//           label: Text('Leave',
-//               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-//       DataColumn(
-//           label: Text('Entitled',
-//               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-//       DataColumn(
-//           label: Text('Utilized',
-//               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-//       DataColumn(
-//           label: Text('Pending',
-//               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-//       DataColumn(
-//           label: Text('Available',
-//               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-//     ],
-//     rows: leaveBalanceData!.map((data) {
-//       return DataRow(cells: [
-//         DataCell(
-//           Center(child: Text(data.leave, style: TextStyle(fontSize: 14))),
-//         ),
-//         DataCell(
-//           Center(
-//               child: Text(data.total.toString(),
-//                   style: TextStyle(fontSize: 14))),
-//         ),
-//         DataCell(
-//           Center(
-//               child: Text(data.utilized.toString(),
-//                   style: TextStyle(fontSize: 14))),
-//         ),
-//         DataCell(
-//           Center(
-//               child: Text(data.pending.toString(),
-//                   style: TextStyle(fontSize: 14))),
-//         ),
-//         DataCell(
-//           Center(
-//               child: Text(data.available.toString(),
-//                   style: TextStyle(fontSize: 14))),
-//         ),
-//       ]);
-//     }).toList(),
-//   );
-// }
+  // Widget _buildLeaveTable() {
+  //   return DataTable(
+  //     columnSpacing: 12,
+  //     headingRowHeight: 35,
+  //     dataRowHeight: 32,
+  //     columns: [
+  //       DataColumn(
+  //           label: Text('Leave',
+  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+  //       DataColumn(
+  //           label: Text('Entitled',
+  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+  //       DataColumn(
+  //           label: Text('Utilized',
+  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+  //       DataColumn(
+  //           label: Text('Pending',
+  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+  //       DataColumn(
+  //           label: Text('Available',
+  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+  //     ],
+  //     rows: leaveBalanceData!.map((data) {
+  //       return DataRow(cells: [
+  //         DataCell(
+  //           Center(child: Text(data.leave, style: TextStyle(fontSize: 14))),
+  //         ),
+  //         DataCell(
+  //           Center(
+  //               child: Text(data.total.toString(),
+  //                   style: TextStyle(fontSize: 14))),
+  //         ),
+  //         DataCell(
+  //           Center(
+  //               child: Text(data.utilized.toString(),
+  //                   style: TextStyle(fontSize: 14))),
+  //         ),
+  //         DataCell(
+  //           Center(
+  //               child: Text(data.pending.toString(),
+  //                   style: TextStyle(fontSize: 14))),
+  //         ),
+  //         DataCell(
+  //           Center(
+  //               child: Text(data.available.toString(),
+  //                   style: TextStyle(fontSize: 14))),
+  //         ),
+  //       ]);
+  //     }).toList(),
+  //   );
+  // }
 
-// Widget _buildLeaveDetail() {
-//   if (_selectedDay == null || !leaveDataMap.containsKey(_selectedDay!)) {
-//     return Center(
-//       child: Text(
-//         'No leave data available for the selected date.',
-//         style: TextStyle(fontSize: 14),
-//       ),
-//     );
-//   }
-//
-//   List<LeaveData> leaveList = leaveDataMap[_selectedDay!] ?? [];
-//
-//   if (leaveList.isEmpty) {
-//     return Center(
-//       child: Text(
-//         'No leave data available for the selected date.',
-//         style: TextStyle(fontSize: 14),
-//       ),
-//     );
-//   }
-//
-//   return ListView.builder(
-//     shrinkWrap: true,
-//     physics: NeverScrollableScrollPhysics(),
-//     itemCount: leaveList.length,
-//     itemBuilder: (context, index) {
-//       LeaveData leave = leaveList[index];
-//       return Card(
-//         elevation: 4,
-//         margin: EdgeInsets.symmetric(
-//           vertical: 8.0,
-//           horizontal: 5.0,
-//         ),
-//         child: ListTile(
-//           title: Text(
-//             leave.date ?? 'No Date',
-//             style: TextStyle(
-//               fontWeight: FontWeight.bold,
-//               color: Color(0xff4d2880),
-//             ),
-//           ),
-//           subtitle: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Text('Status: ${leave.status ?? 'N/A'}'),
-//               // Text('AMD In: ${leave.amdIn ?? 'N/A'}'),
-//               // Text('REC In: ${leave.recIn ?? 'N/A'}'),
-//               // Text('AMD Out: ${leave.amdOut ?? 'N/A'}'),
-//               // Text('REC Out: ${leave.recOut ?? 'N/A'}'),
-//               Text('Comment: ${leave.comment ?? 'N/A'}'),
-//               IconButton(
-//                 icon: Icon(Icons.delete, color: Colors.red),
-//                 onPressed: () {
-//                   // _removeLeaveRequest(
-//                   //     widget.token, value[index].timeOfDay);
-//
-//                   String date =
-//                       DateFormat('yyyy-MM-dd').format(_selectedDay!);
-//                   _submitLeaveRemoval(widget.token, [date]);
-//                 },
-//               ),
-//             ],
-//           ),
-//         ),
-//       );
-//     },
-//   );
-// }
+  // Widget _buildLeaveDetail() {
+  //   if (_selectedDay == null || !leaveDataMap.containsKey(_selectedDay!)) {
+  //     return Center(
+  //       child: Text(
+  //         'No leave data available for the selected date.',
+  //         style: TextStyle(fontSize: 14),
+  //       ),
+  //     );
+  //   }
+  //
+  //   List<LeaveData> leaveList = leaveDataMap[_selectedDay!] ?? [];
+  //
+  //   if (leaveList.isEmpty) {
+  //     return Center(
+  //       child: Text(
+  //         'No leave data available for the selected date.',
+  //         style: TextStyle(fontSize: 14),
+  //       ),
+  //     );
+  //   }
+  //
+  //   return ListView.builder(
+  //     shrinkWrap: true,
+  //     physics: NeverScrollableScrollPhysics(),
+  //     itemCount: leaveList.length,
+  //     itemBuilder: (context, index) {
+  //       LeaveData leave = leaveList[index];
+  //       return Card(
+  //         elevation: 4,
+  //         margin: EdgeInsets.symmetric(
+  //           vertical: 8.0,
+  //           horizontal: 5.0,
+  //         ),
+  //         child: ListTile(
+  //           title: Text(
+  //             leave.date ?? 'No Date',
+  //             style: TextStyle(
+  //               fontWeight: FontWeight.bold,
+  //               color: Color(0xff4d2880),
+  //             ),
+  //           ),
+  //           subtitle: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Text('Status: ${leave.status ?? 'N/A'}'),
+  //               // Text('AMD In: ${leave.amdIn ?? 'N/A'}'),
+  //               // Text('REC In: ${leave.recIn ?? 'N/A'}'),
+  //               // Text('AMD Out: ${leave.amdOut ?? 'N/A'}'),
+  //               // Text('REC Out: ${leave.recOut ?? 'N/A'}'),
+  //               Text('Comment: ${leave.comment ?? 'N/A'}'),
+  //               IconButton(
+  //                 icon: Icon(Icons.delete, color: Colors.red),
+  //                 onPressed: () {
+  //                   // _removeLeaveRequest(
+  //                   //     widget.token, value[index].timeOfDay);
+  //
+  //                   String date =
+  //                       DateFormat('yyyy-MM-dd').format(_selectedDay!);
+  //                   _submitLeaveRemoval(widget.token, [date]);
+  //                 },
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }
 
 class Event {
