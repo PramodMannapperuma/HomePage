@@ -9,7 +9,7 @@ import '../../Backend/models/cover_ups.dart';
 import '../../Backend/models/leave_balance_model.dart';
 import '../../Backend/models/leave_model.dart';
 import '../../Backend/models/leave_types.dart';
-import '../app_bar.dart';
+import 'package:intl/intl.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
@@ -54,6 +54,7 @@ class _LeavePageState extends State<Leave> {
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
     futureLeaveData = apiService.fetchLeaveData(widget.token, _selectedDay!);
     print('Token in leave page is ${widget.token}');
+
   }
 
   Future<void> _fetchLeaveTypes() async {
@@ -108,14 +109,14 @@ class _LeavePageState extends State<Leave> {
     return events[day] ?? [];
   }
 
-  
   Future<void> _submitLeave(
+    BuildContext context,
     String token,
     String selectedDay,
     String selectedTypeOfDay,
     String comment,
     String coverUp,
-    String removeString,
+    List<String> removeDays,
   ) async {
     final datesData = [
       {
@@ -128,12 +129,17 @@ class _LeavePageState extends State<Leave> {
         }
       }
     ];
+
     final uri = Uri.parse('http://hris.accelution.lk/api/leave');
     final request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = '*/*'
       ..headers['Authorization'] = 'Bearer $token'
       ..fields['dates'] = jsonEncode(datesData) // As a JSON string
-      ..fields['remove'] = removeString;
+      ..fields['remove'] = '[]'; // As a JSON string
+
+    print('Dates data: ${jsonEncode(datesData)}');
+    print('Remove data: ${jsonEncode(removeDays)}');
+    print('Token: $token');
 
     try {
       // Send the request
@@ -179,37 +185,54 @@ class _LeavePageState extends State<Leave> {
     }
   }
 
-  // Future<void> _removeLeaveRequest(String token, String timeOfDay) async {
-  //   final uri = Uri.parse('http://hris.accelution.lk/api/leave/remove');
-  //   final response = await http.post(
-  //     uri,
-  //     headers: {
-  //       'Accept': '*/*',
-  //       'Authorization': 'Bearer $token',
-  //     },
-  //     body: jsonEncode({
-  //       'date': timeOfDay, // Must be an int
-  //     }),
-  //   );
+  Future<void> _submitLeaveRemoval(
+    String token,
+    List<String> removeDays,
+  ) async {
+    final uri = Uri.parse('http://hris.accelution.lk/api/leave');
+    final request = http.MultipartRequest('POST', uri)
+      ..headers['Accept'] = '*/*'
+      ..headers['Authorization'] = 'Bearer $token'
+      ..fields['dates'] = '[]' // As a JSON string
+      ..fields['remove'] = jsonEncode(removeDays); // As a JSON string
 
-  //   if (response.statusCode == 200) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('Leave request removed successfully!'),
-  //         duration: Duration(seconds: 2),
-  //       ),
-  //     );
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content:
-  //             Text('Failed to remove leave request: ${response.statusCode}'),
-  //         duration: Duration(seconds: 2),
-  //       ),
-  //     );
-  //     print("Error in removing leave request ${response.statusCode}");
-  //   }
-  // }
+    print('Dates data: ${jsonEncode('')}');
+    print('Remove data: ${jsonEncode(removeDays)}');
+    print('Token: $token');
+
+    try {
+      // Send the request
+      final response = await request.send();
+
+      // Handle the response
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Leave removed successfully!'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } else {
+        final responseBody = await response.stream.bytesToString();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                'Failed to remove leave: ${response.statusCode} ${responseBody}'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        print(
+            "Error in removing leave ${response.statusCode} ${responseBody}");
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An unexpected error occurred: $e'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
 
   void _clearForm() {
     setState(() {
@@ -285,7 +308,7 @@ class _LeavePageState extends State<Leave> {
                           ),
                           items: coverUps?.map((CoverUp coverUp) {
                                 return DropdownMenuItem<String>(
-                                  value: coverUp.name,
+                                  value: coverUp.id,
                                   child: Text(coverUp.name),
                                 );
                               }).toList() ??
@@ -371,6 +394,8 @@ class _LeavePageState extends State<Leave> {
                             ),
                           ),
                           onPressed: () async {
+                            String formattedDate = DateFormat('yyyy-MM-dd')
+                                .format(_selectedDay!);
                             if (_selectedLeaveType != null &&
                                 _selectedTimeOfDay != null &&
                                 _commentController.text.isNotEmpty &&
@@ -389,14 +414,19 @@ class _LeavePageState extends State<Leave> {
                                   )
                                 ];
                               });
+                              // String formattedDate = DateFormat('yyyy-MM-dd')
+                              //     .format(_selectedDay!);
                               await _submitLeave(
+                                context,
                                 widget.token,
-                                _selectedDay!.toIso8601String(),
+                                formattedDate,
+                                // _selectedDay!.toString(),
+                                // '2024-08-20',
                                 _selectedTimeOfDay!,
                                 _commentController.text,
                                 _selectedCoverUp ??
                                     '', // Assuming coverUp is an integer
-                                'string', // Example value for remove
+                                [''], // Example value for remove
                               );
 
                               _clearForm();
@@ -635,53 +665,67 @@ class _LeavePageState extends State<Leave> {
             ),
           ),
           SizedBox(height: screenHeight * 0.02),
-          // Expanded(
-          //   child: ValueListenableBuilder<List<LeaveEvent>>(
-          //     valueListenable: _selectedEvents,
-          //     builder: (context, value, _) {
-          //       return ListView.builder(
-          //         itemCount: value.length,
-          //         itemBuilder: (context, index) {
-          //           return Padding(
-          //             padding: EdgeInsets.symmetric(
-          //               horizontal: MediaQuery.of(context).size.width * 0.05,
-          //               vertical: MediaQuery.of(context).size.height * 0.01,
-          //             ),
-          //             child: Card(
-          //               elevation: 3,
-          //               child: ListTile(
-          //                 contentPadding: EdgeInsets.all(8.0),
-          //                 title: Text(
-          //                   value[index].leaveType,
-          //                   style: TextStyle(fontWeight: FontWeight.bold),
-          //                 ),
-          //                 subtitle: Column(
-          //                   crossAxisAlignment: CrossAxisAlignment.start,
-          //                   children: [
-          //                     Text("Time: ${value[index].timeOfDay}"),
-          //                     Text("Reason: ${value[index].reason}"),
-          //                     if (value[index].coverUp != null)
-          //                       Text("Cover up: ${value[index].coverUp!}"),
-          //                     if (value[index].attachment != null)
-          //                       Text(
-          //                           "Attachment: ${value[index].attachment!.split('/').last}"),
-          //                   ],
-          //                 ),
-          //                 // trailing: IconButton(
-          //                 //   icon: Icon(Icons.delete, color: Colors.red),
-          //                 //   onPressed: () {
-          //                 //     _removeLeaveRequest(
-          //                 //         widget.token, value[index].timeOfDay);
-          //                 //   },
-          //                 // ),
-          //               ),
-          //             ),
-          //           );
-          //         },
-          //       );
-          //     },
-          //   ),
-          // ),
+          Expanded(
+            child: ValueListenableBuilder<List<LeaveEvent>>(
+              valueListenable: _selectedEvents,
+              builder: (context, value, _) {
+                return ListView.builder(
+                  itemCount: value.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.05,
+                        vertical: MediaQuery.of(context).size.height * 0.01,
+                      ),
+                      child: Card(
+                        elevation: 3,
+                        child: ListTile(
+                          contentPadding: EdgeInsets.all(8.0),
+                          title: Text(
+                            value[index].leaveType,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Time: ${value[index].timeOfDay}"),
+                              Text("Reason: ${value[index].reason}"),
+                              if (value[index].coverUp != null)
+                                Text("Cover up: ${value[index].coverUp!}"),
+                              if (value[index].attachment != null)
+                                Text(
+                                    "Attachment: ${value[index].attachment!.split('/').last}"),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              // _removeLeaveRequest(
+                              //     widget.token, value[index].timeOfDay);
+
+                              String date = DateFormat('yyyy-MM-dd')
+                                  .format(_selectedDay!);
+                              _submitLeaveRemoval(widget.token, [date]);
+                              // _commentController.text = 'ns';
+                              // _submitLeave(
+                              //   context,
+                              //   widget.token,
+                              //   date,
+                              //   _selectedTimeOfDay ?? 'Full Day',
+                              //   _commentController.text ,
+                              //   _selectedCoverUp ?? '' ,
+                              //   [date,date], // Example value for remove
+                              // );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
         ]));
   }
 
