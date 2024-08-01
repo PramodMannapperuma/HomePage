@@ -54,7 +54,6 @@ class _LeavePageState extends State<Leave> {
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
     futureLeaveData = apiService.fetchLeaveData(widget.token, _selectedDay!);
     print('Token in leave page is ${widget.token}');
-
   }
 
   Future<void> _fetchLeaveTypes() async {
@@ -221,8 +220,7 @@ class _LeavePageState extends State<Leave> {
             duration: Duration(seconds: 2),
           ),
         );
-        print(
-            "Error in removing leave ${response.statusCode} ${responseBody}");
+        print("Error in removing leave ${response.statusCode} ${responseBody}");
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -394,8 +392,8 @@ class _LeavePageState extends State<Leave> {
                             ),
                           ),
                           onPressed: () async {
-                            String formattedDate = DateFormat('yyyy-MM-dd')
-                                .format(_selectedDay!);
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(_selectedDay!);
                             if (_selectedLeaveType != null &&
                                 _selectedTimeOfDay != null &&
                                 _commentController.text.isNotEmpty &&
