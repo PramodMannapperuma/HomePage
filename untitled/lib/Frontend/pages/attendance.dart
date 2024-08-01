@@ -10,6 +10,7 @@ import '../../Backend/models/att_model.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
+
 class Attendance extends StatefulWidget {
   final String token;
 
@@ -23,12 +24,32 @@ class _AttendanceState extends State<Attendance> {
   // final String? token = widget.token;
   // final token = widget.token;
 
+  // Define static color constants
+  static const Color incompleteColor = Colors.grey;
+  static const Color amendmentColor = Colors.blue;
+  static const Color pendingColor = Colors.amber;
+  static const Color rejectedColor = Colors.red;
+  static const Color attendanceColor = Colors.green;
+  static const Color holidayColor = Colors.black;
+  static const Color leaveColor = Colors.purple;
+
+  // Map status to color
+  final Map<String, Color> statusColorMap = {
+    'incomplete': incompleteColor,
+    'amendment': amendmentColor,
+    'pending': pendingColor,
+    'rejected': rejectedColor,
+    'active-amd': attendanceColor,
+    'holiday': holidayColor,
+    'leave': leaveColor,
+  };
+
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   DateTime today = DateTime.now();
+  final Map<DateTime, String> _attendanceStatus = {};
 
-  Map<DateTime, List<Event>> events = {};
   TextEditingController _startTimeController = TextEditingController();
   TextEditingController _leaveTimeController = TextEditingController();
   TextEditingController _commentController = TextEditingController();
@@ -42,10 +63,27 @@ class _AttendanceState extends State<Attendance> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
-    futureAttendanceData =
-        apiService.fetchAttendanceData(widget.token, _selectedDay!);
-    print('Token in attendance is ${widget.token}');
+    futureAttendanceData = apiService.fetchAttendanceData(widget.token, _focusedDay);
+    _loadAttendanceData();
+    _selectedEvents = ValueNotifier([]);
+  }
+
+  Future<void> _loadAttendanceData() async {
+    try {
+      final List<AttendanceData> data = await apiService.fetchAttendanceData(widget.token, _focusedDay);
+      setState(() {
+        _attendanceStatus.clear();
+        for (var attendance in data) {
+          if (attendance.date != null) { // Check if the date is not null
+            final DateTime date = DateTime.parse(attendance.date!); // Use non-nullable type
+            _attendanceStatus[date] = attendance.status ?? 'incomplete';
+          }
+        }
+      });
+    } catch (e) {
+      // Handle error
+      print('Error loading attendance data: $e');
+    }
   }
 
   @override
@@ -65,12 +103,13 @@ class _AttendanceState extends State<Attendance> {
         futureAttendanceData =
             apiService.fetchAttendanceData(widget.token, selectedDate);
         print('Token in onDaySelected ${widget.token}');
+
       });
     }
   }
 
   List<Event> _getEventsForDay(DateTime day) {
-    return events[day] ?? [];
+    return [];
   }
 
   String formatTimeOfDayTo24Hour(TimeOfDay timeOfDay) {
@@ -82,13 +121,10 @@ class _AttendanceState extends State<Attendance> {
       timeOfDay.hour,
       timeOfDay.minute,
     );
-    print(
-        '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}');
     return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 
-  Future<void> _submitAttendance(String token, String selectedDay,
-      String startTime, String leaveTime, String comment) async {
+  Future<void> _submitAttendance(String token, String selectedDay, String startTime, String leaveTime, String comment) async {
     final url = Uri.parse('${ApiService.baseUrl}/attendance'); // replace with your actual endpoint
 
     try {
@@ -119,28 +155,17 @@ class _AttendanceState extends State<Attendance> {
         );
 
         // Fetch updated attendance data
-        futureAttendanceData = apiService.fetchAttendanceData(
-            widget.token, DateTime.parse(selectedDay));
-        // Update local state to reflect the changes immediately
+        _loadAttendanceData();
         setState(() {
-          events[_selectedDay!] = [
-            Event(
-              startTime,
-              leaveTime,
-              comment,
-            )
-          ];
           _selectedEvents.value = _getEventsForDay(_selectedDay!);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-                'Failed to submit attendance: ${response.statusCode} ${response.reasonPhrase}'),
+            content: Text('Failed to submit attendance: ${response.statusCode} ${response.reasonPhrase}'),
             duration: Duration(seconds: 2),
           ),
         );
-        print("Error in attendance ${response.statusCode} ${response.body}");
       }
     } on SocketException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -167,10 +192,10 @@ class _AttendanceState extends State<Attendance> {
   }
 
   Future<void> _showAddAttendanceBottomSheet(BuildContext context) async {
-    if (_selectedDay != null && !isSameDay(_selectedDay!, today)) {
+    if (_selectedDay != null && _selectedDay!.isAfter(today)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('You can only add attendance for today.'),
+          content: Text('You cannot add attendance for future dates.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -181,8 +206,7 @@ class _AttendanceState extends State<Attendance> {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Padding(
-          padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -210,8 +234,7 @@ class _AttendanceState extends State<Attendance> {
                       initialTime: TimeOfDay.now(),
                     );
                     if (pickedTime != null) {
-                      _startTimeController.text =
-                          formatTimeOfDayTo24Hour(pickedTime);
+                      _startTimeController.text = formatTimeOfDayTo24Hour(pickedTime);
                     }
                   },
                 ),
@@ -226,8 +249,7 @@ class _AttendanceState extends State<Attendance> {
                       initialTime: TimeOfDay.now(),
                     );
                     if (pickedTime != null) {
-                      _leaveTimeController.text =
-                          formatTimeOfDayTo24Hour(pickedTime);
+                      _leaveTimeController.text = formatTimeOfDayTo24Hour(pickedTime);
                     }
                   },
                 ),
@@ -264,7 +286,7 @@ class _AttendanceState extends State<Attendance> {
                             _commentController.text.isNotEmpty) {
                           if (_selectedDay != null && isSameDay(_selectedDay!, today)) {
                             setState(() {
-                              events[_selectedDay!] = [
+                              _selectedEvents.value = [
                                 Event(
                                   _startTimeController.text,
                                   _leaveTimeController.text,
@@ -272,8 +294,7 @@ class _AttendanceState extends State<Attendance> {
                                 )
                               ];
                             });
-                            DateTime selectedDay =
-                                _selectedDay ?? DateTime.now();
+                            DateTime selectedDay = _selectedDay ?? DateTime.now();
                             _submitAttendance(
                               widget.token,
                               selectedDay.toString().split(" ")[0],
@@ -288,7 +309,7 @@ class _AttendanceState extends State<Attendance> {
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Attendance can only be added for today.'),
+                                content: Text('You cannot add attendance for future dates.'),
                                 duration: Duration(seconds: 2),
                               ),
                             );
@@ -313,23 +334,9 @@ class _AttendanceState extends State<Attendance> {
       },
     );
   }
+
   Color _getStatusColor(String? status) {
-    switch (status) {
-      case 'holiday':
-        return Colors.black;
-      case 'leave':
-        return Colors.purple;
-      case 'incomplete':
-        return Colors.grey;
-      case 'pending':
-        return Color.fromRGBO(229, 165, 75, 1.0);
-      case 'rejected':
-        return Colors.red;
-      case 'active-amd':
-        return Colors.green;
-      default:
-        return Colors.grey; // Default color if none of the cases match
-    }
+    return statusColorMap[status] ?? Colors.grey; // Default color if none of the cases match
   }
 
   @override
@@ -425,7 +432,7 @@ class _AttendanceState extends State<Attendance> {
                 formatButtonVisible: true,
                 formatButtonShowsNext: false,
                 formatButtonDecoration: BoxDecoration(
-                  color: Color(0xff4d2880),
+                  color: Color(0xff4d2880), // Determine color based on focused day status
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 formatButtonTextStyle: TextStyle(
@@ -453,33 +460,39 @@ class _AttendanceState extends State<Attendance> {
               firstDay: DateTime.utc(2023, 01, 01),
               lastDay: DateTime.utc(3030, 12, 31),
               calendarFormat: _calendarFormat,
-              eventLoader: _getEventsForDay,
-              calendarStyle: CalendarStyle(
-                outsideDaysVisible: false,
-                todayDecoration: BoxDecoration(
-                  color: Color(0xff4d2880),
-                  shape: BoxShape.circle,
-                ),
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xff9575cd),
-                  shape: BoxShape.circle,
-                ),
-                markerDecoration: BoxDecoration(
-                  color: Color(0xff9575cd),
-                  shape: BoxShape.circle,
-                ),
+              calendarBuilders: CalendarBuilders(
+                defaultBuilder: (context, date, _) {
+                  Color? statusColor = _getStatusColor(_attendanceStatus[date]);
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        date.day.toString(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  );
+                },
+                selectedBuilder: (context, date, _) {
+                  Color? statusColor = _getStatusColor(_attendanceStatus[date]);
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        date.day.toString(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  );
+                },
               ),
-              onFormatChanged: (format) {
-                if (_calendarFormat != format) {
-                  setState(() {
-                    _calendarFormat = format;
-                  });
-                }
-              },
-              onPageChanged: (focusedDay) {
-                _focusedDay = focusedDay;
-              },
-            ),
+            )
           ),
           SizedBox(height: 10.0),
           Divider(
@@ -499,15 +512,17 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                          (element) => element.date == _selectedDay?.toString().split(" ")[0],
-                      orElse: () => AttendanceData(
-                          amdIn: 'N/A',
-                          recIn: 'N/A',
-                          amdOut: 'N/A',
-                          comment: 'N/A',
-                          recOut: 'N/A',
-                          date: _selectedDay?.toString().split(" ")[0] ?? 'N/A',
-                          status: 'N/A'));
+                        (element) => element.date == _selectedDay?.toString().split(" ")[0],
+                    orElse: () => AttendanceData(
+                      amdIn: 'N/A',
+                      recIn: 'N/A',
+                      amdOut: 'N/A',
+                      comment: 'N/A',
+                      recOut: 'N/A',
+                      date: _selectedDay?.toString().split(" ")[0] ?? 'N/A',
+                      status: 'N/A',
+                    ),
+                  );
                   return Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenWidth * 0.05,
@@ -535,7 +550,6 @@ class _AttendanceState extends State<Attendance> {
                                       fontSize: screenWidth * 0.044,
                                     ),
                                   ),
-
                                   Text(
                                     'Status: ${selectedDateData.status ?? 'N/A'}',
                                     style: TextStyle(
@@ -553,28 +567,38 @@ class _AttendanceState extends State<Attendance> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('AMD In: ${selectedDateData.amdIn ?? 'N/A'}',
-                                          style: TextStyle(fontSize: screenWidth * 0.04)),
+                                      Text(
+                                        'AMD In: ${selectedDateData.amdIn ?? 'N/A'}',
+                                        style: TextStyle(fontSize: screenWidth * 0.04),
+                                      ),
                                       SizedBox(height: 4.0),
-                                      Text('AMD Out: ${selectedDateData.amdOut ?? 'N/A'}',
-                                          style: TextStyle(fontSize: screenWidth * 0.04)),
+                                      Text(
+                                        'AMD Out: ${selectedDateData.amdOut ?? 'N/A'}',
+                                        style: TextStyle(fontSize: screenWidth * 0.04),
+                                      ),
                                     ],
                                   ),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('Rec In: ${selectedDateData.recIn ?? 'N/A'}',
-                                          style: TextStyle(fontSize: screenWidth * 0.04)),
+                                      Text(
+                                        'Rec In: ${selectedDateData.recIn ?? 'N/A'}',
+                                        style: TextStyle(fontSize: screenWidth * 0.04),
+                                      ),
                                       SizedBox(height: 4.0),
-                                      Text('Rec Out: ${selectedDateData.recOut ?? 'N/A'}',
-                                          style: TextStyle(fontSize: screenWidth * 0.04)),
+                                      Text(
+                                        'Rec Out: ${selectedDateData.recOut ?? 'N/A'}',
+                                        style: TextStyle(fontSize: screenWidth * 0.04),
+                                      ),
                                     ],
                                   ),
                                 ],
                               ),
                               Divider(thickness: 1),
-                              Text('Comment: ${selectedDateData.comment ?? 'N/A'}',
-                                  style: TextStyle(fontSize: screenWidth * 0.04)),
+                              Text(
+                                'Comment: ${selectedDateData.comment ?? 'N/A'}',
+                                style: TextStyle(fontSize: screenWidth * 0.04),
+                              ),
                             ],
                           ),
                         ),
