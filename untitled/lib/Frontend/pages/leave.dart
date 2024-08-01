@@ -805,9 +805,20 @@ class _LeavePageState extends State<Leave> {
                                   style:
                                       TextStyle(fontSize: screenWidth * 0.04),
                                 ),
-                                Row(
-                                  children: [],
-                                ),
+                                // Row(
+                                //   children: [],
+                                // ),
+                            IconButton(
+                                            icon: Icon(Icons.delete, color: Colors.red),
+                                            onPressed: () {
+                                              // _removeLeaveRequest(
+                                              //     widget.token, value[index].timeOfDay);
+
+                                              String date =
+                                                  DateFormat('yyyy-MM-dd').format(_selectedDay!);
+                                              _submitLeaveRemoval(widget.token, [date]);
+                                            },
+                                          ),
                               ],
                             ),
                           ),
