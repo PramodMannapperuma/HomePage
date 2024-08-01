@@ -10,7 +10,6 @@ import '../../Backend/models/att_model.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
-
 class Attendance extends StatefulWidget {
   final String token;
 
@@ -63,19 +62,23 @@ class _AttendanceState extends State<Attendance> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    futureAttendanceData = apiService.fetchAttendanceData(widget.token, _focusedDay);
+    futureAttendanceData =
+        apiService.fetchAttendanceData(widget.token, _focusedDay);
     _loadAttendanceData();
     _selectedEvents = ValueNotifier([]);
   }
 
   Future<void> _loadAttendanceData() async {
     try {
-      final List<AttendanceData> data = await apiService.fetchAttendanceData(widget.token, _focusedDay);
+      final List<AttendanceData> data =
+          await apiService.fetchAttendanceData(widget.token, _focusedDay);
       setState(() {
         _attendanceStatus.clear();
         for (var attendance in data) {
-          if (attendance.date != null) { // Check if the date is not null
-            final DateTime date = DateTime.parse(attendance.date!); // Use non-nullable type
+          if (attendance.date != null) {
+            // Check if the date is not null
+            final DateTime date =
+                DateTime.parse(attendance.date!); // Use non-nullable type
             _attendanceStatus[date] = attendance.status ?? 'incomplete';
           }
         }
@@ -103,7 +106,6 @@ class _AttendanceState extends State<Attendance> {
         futureAttendanceData =
             apiService.fetchAttendanceData(widget.token, selectedDate);
         print('Token in onDaySelected ${widget.token}');
-
       });
     }
   }
@@ -124,8 +126,10 @@ class _AttendanceState extends State<Attendance> {
     return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 
-  Future<void> _submitAttendance(String token, String selectedDay, String startTime, String leaveTime, String comment) async {
-    final url = Uri.parse('${ApiService.baseUrl}/attendance'); // replace with your actual endpoint
+  Future<void> _submitAttendance(String token, String selectedDay,
+      String startTime, String leaveTime, String comment) async {
+    final url = Uri.parse(
+        '${ApiService.baseUrl}/attendance'); // replace with your actual endpoint
 
     try {
       final response = await http.post(
@@ -162,7 +166,8 @@ class _AttendanceState extends State<Attendance> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to submit attendance: ${response.statusCode} ${response.reasonPhrase}'),
+            content: Text(
+                'Failed to submit attendance: ${response.statusCode} ${response.reasonPhrase}'),
             duration: Duration(seconds: 2),
           ),
         );
@@ -177,7 +182,8 @@ class _AttendanceState extends State<Attendance> {
     } on TimeoutException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('The connection has timed out. Please try again later.'),
+          content:
+              Text('The connection has timed out. Please try again later.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -206,7 +212,8 @@ class _AttendanceState extends State<Attendance> {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -234,7 +241,8 @@ class _AttendanceState extends State<Attendance> {
                       initialTime: TimeOfDay.now(),
                     );
                     if (pickedTime != null) {
-                      _startTimeController.text = formatTimeOfDayTo24Hour(pickedTime);
+                      _startTimeController.text =
+                          formatTimeOfDayTo24Hour(pickedTime);
                     }
                   },
                 ),
@@ -249,7 +257,8 @@ class _AttendanceState extends State<Attendance> {
                       initialTime: TimeOfDay.now(),
                     );
                     if (pickedTime != null) {
-                      _leaveTimeController.text = formatTimeOfDayTo24Hour(pickedTime);
+                      _leaveTimeController.text =
+                          formatTimeOfDayTo24Hour(pickedTime);
                     }
                   },
                 ),
@@ -284,7 +293,8 @@ class _AttendanceState extends State<Attendance> {
                         if (_startTimeController.text.isNotEmpty &&
                             _leaveTimeController.text.isNotEmpty &&
                             _commentController.text.isNotEmpty) {
-                          if (_selectedDay != null && isSameDay(_selectedDay!, today)) {
+                          if (_selectedDay != null &&
+                              isSameDay(_selectedDay!, today)) {
                             setState(() {
                               _selectedEvents.value = [
                                 Event(
@@ -294,7 +304,8 @@ class _AttendanceState extends State<Attendance> {
                                 )
                               ];
                             });
-                            DateTime selectedDay = _selectedDay ?? DateTime.now();
+                            DateTime selectedDay =
+                                _selectedDay ?? DateTime.now();
                             _submitAttendance(
                               widget.token,
                               selectedDay.toString().split(" ")[0],
@@ -309,7 +320,8 @@ class _AttendanceState extends State<Attendance> {
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('You cannot add attendance for future dates.'),
+                                content: Text(
+                                    'You cannot add attendance for future dates.'),
                                 duration: Duration(seconds: 2),
                               ),
                             );
@@ -336,14 +348,16 @@ class _AttendanceState extends State<Attendance> {
   }
 
   Color _getStatusColor(String? status) {
-    return statusColorMap[status] ?? Colors.grey; // Default color if none of the cases match
+    return statusColorMap[status] ??
+        Colors.grey; // Default color if none of the cases match
   }
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       appBar: AppBar(
@@ -425,75 +439,75 @@ class _AttendanceState extends State<Attendance> {
       body: Column(
         children: [
           Container(
-            child: TableCalendar(
-              rowHeight: 40,
-              headerStyle: HeaderStyle(
-                titleCentered: true,
-                formatButtonVisible: true,
-                formatButtonShowsNext: false,
-                formatButtonDecoration: BoxDecoration(
-                  color: Color(0xff4d2880), // Determine color based on focused day status
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                formatButtonTextStyle: TextStyle(
-                  color: Colors.white,
-                ),
-                titleTextStyle: TextStyle(
-                  fontSize: screenWidth * 0.05,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff4d2880),
-                ),
-                leftChevronIcon: Icon(
-                  Icons.chevron_left,
-                  color: Color(0xff4d2880),
-                ),
-                rightChevronIcon: Icon(
-                  Icons.chevron_right,
-                  color: Color(0xff4d2880),
-                ),
+              child: TableCalendar(
+            rowHeight: 40,
+            headerStyle: HeaderStyle(
+              titleCentered: true,
+              formatButtonVisible: true,
+              formatButtonShowsNext: false,
+              formatButtonDecoration: BoxDecoration(
+                color: Color(
+                    0xff4d2880), // Determine color based on focused day status
+                borderRadius: BorderRadius.circular(20.0),
               ),
-              focusedDay: _focusedDay,
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              onDaySelected: _onDaySelected,
-              availableGestures: AvailableGestures.all,
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-              firstDay: DateTime.utc(2023, 01, 01),
-              lastDay: DateTime.utc(3030, 12, 31),
-              calendarFormat: _calendarFormat,
-              calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, date, _) {
-                  Color? statusColor = _getStatusColor(_attendanceStatus[date]);
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: statusColor,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        date.day.toString(),
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  );
-                },
-                selectedBuilder: (context, date, _) {
-                  Color? statusColor = _getStatusColor(_attendanceStatus[date]);
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: statusColor,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        date.day.toString(),
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  );
-                },
+              formatButtonTextStyle: TextStyle(
+                color: Colors.white,
               ),
-            )
-          ),
+              titleTextStyle: TextStyle(
+                fontSize: screenWidth * 0.05,
+                fontWeight: FontWeight.bold,
+                color: Color(0xff4d2880),
+              ),
+              leftChevronIcon: Icon(
+                Icons.chevron_left,
+                color: Color(0xff4d2880),
+              ),
+              rightChevronIcon: Icon(
+                Icons.chevron_right,
+                color: Color(0xff4d2880),
+              ),
+            ),
+            focusedDay: _focusedDay,
+            startingDayOfWeek: StartingDayOfWeek.monday,
+            onDaySelected: _onDaySelected,
+            availableGestures: AvailableGestures.all,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            firstDay: DateTime.utc(2023, 01, 01),
+            lastDay: DateTime.utc(3030, 12, 31),
+            calendarFormat: _calendarFormat,
+            calendarBuilders: CalendarBuilders(
+              defaultBuilder: (context, date, _) {
+                Color? statusColor = _getStatusColor(_attendanceStatus[date]);
+                return Container(
+                  decoration: BoxDecoration(
+                    color: statusColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      date.day.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              },
+              selectedBuilder: (context, date, _) {
+                Color? statusColor = _getStatusColor(_attendanceStatus[date]);
+                return Container(
+                  decoration: BoxDecoration(
+                    color: statusColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      date.day.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              },
+            ),
+          )),
           SizedBox(height: 10.0),
           Divider(
             thickness: 1,
@@ -512,7 +526,8 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                        (element) => element.date == _selectedDay?.toString().split(" ")[0],
+                    (element) =>
+                        element.date == _selectedDay?.toString().split(" ")[0],
                     orElse: () => AttendanceData(
                       amdIn: 'N/A',
                       recIn: 'N/A',
@@ -541,7 +556,8 @@ class _AttendanceState extends State<Attendance> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Date: ${selectedDateData.date}',
@@ -555,40 +571,48 @@ class _AttendanceState extends State<Attendance> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: screenWidth * 0.044,
-                                      color: _getStatusColor(selectedDateData.status),
+                                      color: _getStatusColor(
+                                          selectedDateData.status),
                                     ),
                                   )
                                 ],
                               ),
                               Divider(thickness: 1),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'AMD In: ${selectedDateData.amdIn ?? 'N/A'}',
-                                        style: TextStyle(fontSize: screenWidth * 0.04),
+                                        style: TextStyle(
+                                            fontSize: screenWidth * 0.04),
                                       ),
                                       SizedBox(height: 4.0),
                                       Text(
                                         'AMD Out: ${selectedDateData.amdOut ?? 'N/A'}',
-                                        style: TextStyle(fontSize: screenWidth * 0.04),
+                                        style: TextStyle(
+                                            fontSize: screenWidth * 0.04),
                                       ),
                                     ],
                                   ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Rec In: ${selectedDateData.recIn ?? 'N/A'}',
-                                        style: TextStyle(fontSize: screenWidth * 0.04),
+                                        style: TextStyle(
+                                            fontSize: screenWidth * 0.04),
                                       ),
                                       SizedBox(height: 4.0),
                                       Text(
                                         'Rec Out: ${selectedDateData.recOut ?? 'N/A'}',
-                                        style: TextStyle(fontSize: screenWidth * 0.04),
+                                        style: TextStyle(
+                                            fontSize: screenWidth * 0.04),
                                       ),
                                     ],
                                   ),

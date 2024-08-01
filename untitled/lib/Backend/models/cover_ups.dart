@@ -12,6 +12,8 @@ class CoverUp {
   }
 
   static List<CoverUp> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((json) => CoverUp.fromJson(json as Map<String, dynamic>)).toList();
+    return jsonList
+        .map((json) => CoverUp.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 }
