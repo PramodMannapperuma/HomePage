@@ -77,6 +77,7 @@ class _LoginFormState extends State<LoginForm> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscureText = true;
 
   Future<void> _login() async {
     String username = _usernameController.text;
@@ -240,9 +241,19 @@ class _LoginFormState extends State<LoginForm> {
           height: widget.textFieldHeight * 1.2,
           child: TextField(
             controller: _passwordController,
-            obscureText: true,
+            obscureText: _obscureText,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscureText = !_obscureText;
+                  });
+                },
+              ),
             ),
           ),
         ),
