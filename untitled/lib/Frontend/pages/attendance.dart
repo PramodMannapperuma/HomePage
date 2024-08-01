@@ -488,11 +488,6 @@ class _AttendanceState extends State<Attendance> {
                     color: Color(0xff9575cd),
                     shape: BoxShape.circle,
                   ),
-                  weekendDecoration: BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                  ),
-                  weekendTextStyle: TextStyle().copyWith(color: Colors.white),
                   cellMargin: EdgeInsets.all(4.0),
                 ),
                 onFormatChanged: (format) {
