@@ -902,126 +902,126 @@ class _LeavePageState extends State<Leave> {
     );
   }
 
-  // Widget _buildLeaveTable() {
-  //   return DataTable(
-  //     columnSpacing: 12,
-  //     headingRowHeight: 35,
-  //     dataRowHeight: 32,
-  //     columns: [
-  //       DataColumn(
-  //           label: Text('Leave',
-  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-  //       DataColumn(
-  //           label: Text('Entitled',
-  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-  //       DataColumn(
-  //           label: Text('Utilized',
-  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-  //       DataColumn(
-  //           label: Text('Pending',
-  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-  //       DataColumn(
-  //           label: Text('Available',
-  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-  //     ],
-  //     rows: leaveBalanceData!.map((data) {
-  //       return DataRow(cells: [
-  //         DataCell(
-  //           Center(child: Text(data.leave, style: TextStyle(fontSize: 14))),
-  //         ),
-  //         DataCell(
-  //           Center(
-  //               child: Text(data.total.toString(),
-  //                   style: TextStyle(fontSize: 14))),
-  //         ),
-  //         DataCell(
-  //           Center(
-  //               child: Text(data.utilized.toString(),
-  //                   style: TextStyle(fontSize: 14))),
-  //         ),
-  //         DataCell(
-  //           Center(
-  //               child: Text(data.pending.toString(),
-  //                   style: TextStyle(fontSize: 14))),
-  //         ),
-  //         DataCell(
-  //           Center(
-  //               child: Text(data.available.toString(),
-  //                   style: TextStyle(fontSize: 14))),
-  //         ),
-  //       ]);
-  //     }).toList(),
-  //   );
-  // }
+  Widget _buildLeaveTable() {
+    return DataTable(
+      columnSpacing: 12,
+      headingRowHeight: 35,
+      dataRowHeight: 32,
+      columns: [
+        DataColumn(
+            label: Text('Leave',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Entitled',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Utilized',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Pending',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+        DataColumn(
+            label: Text('Available',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+      ],
+      rows: leaveBalanceData!.map((data) {
+        return DataRow(cells: [
+          DataCell(
+            Center(child: Text(data.leave, style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.total.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.utilized.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.pending.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+          DataCell(
+            Center(
+                child: Text(data.available.toString(),
+                    style: TextStyle(fontSize: 14))),
+          ),
+        ]);
+      }).toList(),
+    );
+  }
 
-  // Widget _buildLeaveDetail() {
-  //   if (_selectedDay == null || !leaveDataMap.containsKey(_selectedDay!)) {
-  //     return Center(
-  //       child: Text(
-  //         'No leave data available for the selected date.',
-  //         style: TextStyle(fontSize: 14),
-  //       ),
-  //     );
-  //   }
-  //
-  //   List<LeaveData> leaveList = leaveDataMap[_selectedDay!] ?? [];
-  //
-  //   if (leaveList.isEmpty) {
-  //     return Center(
-  //       child: Text(
-  //         'No leave data available for the selected date.',
-  //         style: TextStyle(fontSize: 14),
-  //       ),
-  //     );
-  //   }
-  //
-  //   return ListView.builder(
-  //     shrinkWrap: true,
-  //     physics: NeverScrollableScrollPhysics(),
-  //     itemCount: leaveList.length,
-  //     itemBuilder: (context, index) {
-  //       LeaveData leave = leaveList[index];
-  //       return Card(
-  //         elevation: 4,
-  //         margin: EdgeInsets.symmetric(
-  //           vertical: 8.0,
-  //           horizontal: 5.0,
-  //         ),
-  //         child: ListTile(
-  //           title: Text(
-  //             leave.date ?? 'No Date',
-  //             style: TextStyle(
-  //               fontWeight: FontWeight.bold,
-  //               color: Color(0xff4d2880),
-  //             ),
-  //           ),
-  //           subtitle: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Text('Status: ${leave.status ?? 'N/A'}'),
-  //               // Text('AMD In: ${leave.amdIn ?? 'N/A'}'),
-  //               // Text('REC In: ${leave.recIn ?? 'N/A'}'),
-  //               // Text('AMD Out: ${leave.amdOut ?? 'N/A'}'),
-  //               // Text('REC Out: ${leave.recOut ?? 'N/A'}'),
-  //               Text('Comment: ${leave.comment ?? 'N/A'}'),
-  //               IconButton(
-  //                 icon: Icon(Icons.delete, color: Colors.red),
-  //                 onPressed: () {
-  //                   // _removeLeaveRequest(
-  //                   //     widget.token, value[index].timeOfDay);
-  //
-  //                   String date =
-  //                       DateFormat('yyyy-MM-dd').format(_selectedDay!);
-  //                   _submitLeaveRemoval(widget.token, [date]);
-  //                 },
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  Widget _buildLeaveDetail() {
+    if (_selectedDay == null || !leaveDataMap.containsKey(_selectedDay!)) {
+      return Center(
+        child: Text(
+          'No leave data available for the selected date.',
+          style: TextStyle(fontSize: 14),
+        ),
+      );
+    }
+
+    List<LeaveData> leaveList = leaveDataMap[_selectedDay!] ?? [];
+
+    if (leaveList.isEmpty) {
+      return Center(
+        child: Text(
+          'No leave data available for the selected date.',
+          style: TextStyle(fontSize: 14),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: leaveList.length,
+      itemBuilder: (context, index) {
+        LeaveData leave = leaveList[index];
+        return Card(
+          elevation: 4,
+          margin: EdgeInsets.symmetric(
+            vertical: 8.0,
+            horizontal: 5.0,
+          ),
+          child: ListTile(
+            title: Text(
+              leave.date ?? 'No Date',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xff4d2880),
+              ),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Status: ${leave.status ?? 'N/A'}'),
+                // Text('AMD In: ${leave.amdIn ?? 'N/A'}'),
+                // Text('REC In: ${leave.recIn ?? 'N/A'}'),
+                // Text('AMD Out: ${leave.amdOut ?? 'N/A'}'),
+                // Text('REC Out: ${leave.recOut ?? 'N/A'}'),
+                Text('Comment: ${leave.comment ?? 'N/A'}'),
+                IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () {
+                    // _removeLeaveRequest(
+                    //     widget.token, value[index].timeOfDay);
+
+                    String date =
+                        DateFormat('yyyy-MM-dd').format(_selectedDay!);
+                    _submitLeaveRemoval(widget.token, [date]);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
 class Event {
