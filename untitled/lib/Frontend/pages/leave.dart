@@ -178,6 +178,38 @@ class _LeavePageState extends State<Leave> {
     }
   }
 
+  // Future<void> _removeLeaveRequest(String token, String timeOfDay) async {
+  //   final uri = Uri.parse('http://hris.accelution.lk/api/leave/remove');
+  //   final response = await http.post(
+  //     uri,
+  //     headers: {
+  //       'Accept': '*/*',
+  //       'Authorization': 'Bearer $token',
+  //     },
+  //     body: jsonEncode({
+  //       'date': timeOfDay, // Must be an int
+  //     }),
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('Leave request removed successfully!'),
+  //         duration: Duration(seconds: 2),
+  //       ),
+  //     );
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content:
+  //             Text('Failed to remove leave request: ${response.statusCode}'),
+  //         duration: Duration(seconds: 2),
+  //       ),
+  //     );
+  //     print("Error in removing leave request ${response.statusCode}");
+  //   }
+  // }
+
   void _clearForm() {
     setState(() {
       _selectedLeaveType = null;
@@ -602,45 +634,53 @@ class _LeavePageState extends State<Leave> {
             ),
           ),
           SizedBox(height: screenHeight * 0.02),
-          Expanded(
-            child: ValueListenableBuilder<List<LeaveEvent>>(
-              valueListenable: _selectedEvents,
-              builder: (context, value, _) {
-                return ListView.builder(
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.05,
-                        vertical: screenHeight * 0.01,
-                      ),
-                      child: Card(
-                        elevation: 3,
-                        child: ListTile(
-                          title: Text(
-                            value[index].leaveType,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Time: ${value[index].timeOfDay}"),
-                              Text("Reason: ${value[index].reason}"),
-                              if (value[index].coverUp != null)
-                                Text("Cover up: ${value[index].coverUp!}"),
-                              if (value[index].attachment != null)
-                                Text(
-                                    "Attachment: ${value[index].attachment!.split('/').last}"),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
+          // Expanded(
+          //   child: ValueListenableBuilder<List<LeaveEvent>>(
+          //     valueListenable: _selectedEvents,
+          //     builder: (context, value, _) {
+          //       return ListView.builder(
+          //         itemCount: value.length,
+          //         itemBuilder: (context, index) {
+          //           return Padding(
+          //             padding: EdgeInsets.symmetric(
+          //               horizontal: MediaQuery.of(context).size.width * 0.05,
+          //               vertical: MediaQuery.of(context).size.height * 0.01,
+          //             ),
+          //             child: Card(
+          //               elevation: 3,
+          //               child: ListTile(
+          //                 contentPadding: EdgeInsets.all(8.0),
+          //                 title: Text(
+          //                   value[index].leaveType,
+          //                   style: TextStyle(fontWeight: FontWeight.bold),
+          //                 ),
+          //                 subtitle: Column(
+          //                   crossAxisAlignment: CrossAxisAlignment.start,
+          //                   children: [
+          //                     Text("Time: ${value[index].timeOfDay}"),
+          //                     Text("Reason: ${value[index].reason}"),
+          //                     if (value[index].coverUp != null)
+          //                       Text("Cover up: ${value[index].coverUp!}"),
+          //                     if (value[index].attachment != null)
+          //                       Text(
+          //                           "Attachment: ${value[index].attachment!.split('/').last}"),
+          //                   ],
+          //                 ),
+          //                 // trailing: IconButton(
+          //                 //   icon: Icon(Icons.delete, color: Colors.red),
+          //                 //   onPressed: () {
+          //                 //     _removeLeaveRequest(
+          //                 //         widget.token, value[index].timeOfDay);
+          //                 //   },
+          //                 // ),
+          //               ),
+          //             ),
+          //           );
+          //         },
+          //       );
+          //     },
+          //   ),
+          // ),
         ]));
   }
 
