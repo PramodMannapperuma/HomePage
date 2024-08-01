@@ -440,74 +440,68 @@ class _AttendanceState extends State<Attendance> {
         children: [
           Container(
               child: TableCalendar(
-            rowHeight: 40,
-            headerStyle: HeaderStyle(
-              titleCentered: true,
-              formatButtonVisible: true,
-              formatButtonShowsNext: false,
-              formatButtonDecoration: BoxDecoration(
-                color: Color(
-                    0xff4d2880), // Determine color based on focused day status
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              formatButtonTextStyle: TextStyle(
-                color: Colors.white,
-              ),
-              titleTextStyle: TextStyle(
-                fontSize: screenWidth * 0.05,
-                fontWeight: FontWeight.bold,
-                color: Color(0xff4d2880),
-              ),
-              leftChevronIcon: Icon(
-                Icons.chevron_left,
-                color: Color(0xff4d2880),
-              ),
-              rightChevronIcon: Icon(
-                Icons.chevron_right,
-                color: Color(0xff4d2880),
-              ),
-            ),
-            focusedDay: _focusedDay,
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            onDaySelected: _onDaySelected,
-            availableGestures: AvailableGestures.all,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            firstDay: DateTime.utc(2023, 01, 01),
-            lastDay: DateTime.utc(3030, 12, 31),
-            calendarFormat: _calendarFormat,
-            calendarBuilders: CalendarBuilders(
-              defaultBuilder: (context, date, _) {
-                Color? statusColor = _getStatusColor(_attendanceStatus[date]);
-                return Container(
-                  decoration: BoxDecoration(
-                    color: statusColor,
+                rowHeight: 40,
+                headerStyle: HeaderStyle(
+                  titleCentered: true,
+                  formatButtonVisible: true,
+                  formatButtonShowsNext: false,
+                  formatButtonDecoration: BoxDecoration(
+                    color: Color(0xff4d2880),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  formatButtonTextStyle: TextStyle(
+                    color: Colors.white,
+                  ),
+                  titleTextStyle: TextStyle(
+                    fontSize: screenWidth * 0.05,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff4d2880),
+                  ),
+                  leftChevronIcon: Icon(
+                    Icons.chevron_left,
+                    color: Color(0xff4d2880),
+                  ),
+                  rightChevronIcon: Icon(
+                    Icons.chevron_right,
+                    color: Color(0xff4d2880),
+                  ),
+                ),
+                focusedDay: _focusedDay,
+                startingDayOfWeek: StartingDayOfWeek.monday,
+                onDaySelected: _onDaySelected,
+                availableGestures: AvailableGestures.all,
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                firstDay: DateTime.utc(2023, 01, 01),
+                lastDay: DateTime.utc(3030, 12, 31),
+                calendarFormat: _calendarFormat,
+                eventLoader: _getEventsForDay,
+                calendarStyle: CalendarStyle(
+                  outsideDaysVisible: false,
+                  defaultDecoration: BoxDecoration(
                     shape: BoxShape.circle,
                   ),
-                  child: Center(
-                    child: Text(
-                      date.day.toString(),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                );
-              },
-              selectedBuilder: (context, date, _) {
-                Color? statusColor = _getStatusColor(_attendanceStatus[date]);
-                return Container(
-                  decoration: BoxDecoration(
-                    color: statusColor,
+                  todayDecoration: BoxDecoration(
+                    color: Colors.deepPurple,
                     shape: BoxShape.circle,
                   ),
-                  child: Center(
-                    child: Text(
-                      date.day.toString(),
-                      style: TextStyle(color: Colors.white),
-                    ),
+                  selectedDecoration: BoxDecoration(
+                    color: Color(0xff9575cd),
+                    shape: BoxShape.circle,
                   ),
-                );
-              },
+                  cellMargin: EdgeInsets.all(4.0),
+                ),
+                onFormatChanged: (format) {
+                  if (_calendarFormat != format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  }
+                },
+                onPageChanged: (focusedDay) {
+                  _focusedDay = focusedDay;
+                },
             ),
-          )),
+          ),
           SizedBox(height: 10.0),
           Divider(
             thickness: 1,
