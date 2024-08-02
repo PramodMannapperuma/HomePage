@@ -191,268 +191,268 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     print('Token in DashboardScreen: ${widget.token}');
     return FutureBuilder<Map<String, dynamic>>(
-        future: ApiService.getProfile(widget.token),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data == null) {
-            return Center(child: Text('No data available'));
-          }
+      future: ApiService.getProfile(widget.token),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data == null) {
+          return Center(child: Text('No data available'));
+        }
 
-          final userData = snapshot.data!;
-          String name = userData['fullName'] ?? 'N/A';
-          String designation = userData['designation'] ?? 'N/A';
+        final userData = snapshot.data!;
+        String name = userData['fullName'] ?? 'N/A';
+        String designation = userData['designation'] ?? 'N/A';
 
-          return Scaffold(
-            appBar: AppBar(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/hrislogo2.png',
-                    height: 40.0,
-                  ),
-                  SizedBox(width: 8.0),
-                ],
-              ),
-              centerTitle: true,
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
-              ),
-              leading: Builder(
-                builder: (BuildContext context) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.menu_outlined,
-                        color: AppColors.background,
-                      ),
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                    ),
-                  );
-                },
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.notifications_active_outlined,
-                    color: AppColors.background,
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/news_screen',
-                        arguments: widget.token);
-                  },
+        return Scaffold(
+          appBar: AppBar(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/hrislogo2.png',
+                  height: 40.0,
                 ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.person,
-                    color: AppColors.background,
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/profile',
-                        arguments: widget.token);
-                  },
-                ),
+                SizedBox(width: 8.0),
               ],
             ),
-            drawer: CustomSidebar(token: widget.token),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/profile',
-                            arguments: widget.token);
-                      },
-                      child: Row(
-                        children: [
-                          FutureBuilder<Uint8List>(
-                            future:
-                                ApiService.fetchProfilePicture(widget.token),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return CircularProgressIndicator();
-                              } else if (snapshot.hasError) {
-                                return CircleAvatar(
-                                  radius: 45,
-                                  child: Center(
-                                    child: Text(
-                                      'Error: ${snapshot.error}',
-                                      style: TextStyle(fontSize: 8),
+            centerTitle: true,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+            ),
+            leading: Builder(
+              builder: (BuildContext context) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.menu_outlined,
+                      color: AppColors.background,
+                    ),
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  ),
+                );
+              },
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.notifications_active_outlined,
+                  color: AppColors.background,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/news_screen',
+                      arguments: widget.token);
+                },
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.person,
+                  color: AppColors.background,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/profile',
+                      arguments: widget.token);
+                },
+              ),
+            ],
+          ),
+          drawer: CustomSidebar(token: widget.token),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/profile',
+                          arguments: widget.token);
+                    },
+                    child: Row(
+                      children: [
+                        FutureBuilder<Uint8List>(
+                          future: ApiService.fetchProfilePicture(widget.token),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircleAvatar(
+                                radius: 45,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              return CircleAvatar(
+                                radius: 45,
+                                backgroundImage:
+                                    AssetImage('assets/images/profile.png'),
+                              );
+                            } else if (snapshot.hasData) {
+                              return CircleAvatar(
+                                radius: 45,
+                                backgroundImage: MemoryImage(snapshot.data!),
+                              );
+                            } else {
+                              return CircleAvatar(
+                                radius: 45,
+                                backgroundImage:
+                                    AssetImage('assets/images/profile.png'),
+                              );
+                            }
+                          },
+                        ),
+                        SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(designation),
+                            if (widget.lastLogin != null)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Last Login:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                );
-                              } else if (snapshot.hasData) {
-                                return CircleAvatar(
-                                  radius: 45,
-                                  backgroundImage: MemoryImage(snapshot.data!),
-                                );
-                              } else {
-                                return Text('No data');
-                              }
-                            },
-                          ),
-                          SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                name,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    _formatDateTime(widget.lastLogin!),
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[700],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Text(designation),
-                              if (widget.lastLogin != null)
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Last Login:',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      _formatDateTime(widget.lastLogin!),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[700],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Divider(
-                      thickness: 2,
-                      height: 10,
-                    ),
-                    SizedBox(height: 10),
-                    // Categories
-                    Text(
-                      'Categories',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    GridView.count(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: 7 / 5,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: [
-                        CategoryCard(
-                          title: 'Attendance',
-                          icon: Icons.calendar_month,
-                          route: '/attendance',
-                          token: widget.token,
-                        ),
-                        CategoryCard(
-                          title: 'Leave',
-                          icon: Icons.beach_access,
-                          route: '/leave',
-                          token: widget.token,
-                        ),
-                        CategoryCard(
-                          title: 'Requests',
-                          icon: Icons.list_alt,
-                          route: '/requests',
-                          token: widget.token,
-                        ),
-                        CategoryCard(
-                          title: 'Profile',
-                          icon: Icons.person_outline,
-                          route: '/profile',
-                          token: widget.token,
-                        ),
-                        CategoryCard(
-                          title: 'Payslips',
-                          icon: Icons.payment,
-                          route: '/payslips',
-                          token: widget.token,
-                        ),
-                        CategoryCard(
-                          title: 'Approval Task',
-                          icon: Icons.approval,
-                          route: '/taskScreen',
-                          token: widget.token,
-                        ),
-                        CategoryCard(
-                          title: 'My Team',
-                          icon: Icons.group_add_outlined,
-                          route: '/employee',
-                          token: widget.token,
-                        ),
-                        CategoryCard(
-                          title: 'Policy',
-                          icon: Icons.task_outlined,
-                          route: '/policies',
-                          token: widget.token,
-                        ),
-                        CategoryCard(
-                          title: 'News',
-                          icon: Icons.newspaper,
-                          route: '/news_screen',
-                          token: widget.token,
+                          ],
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
-                    Divider(
-                      thickness: 2,
-                      height: 10,
-                    ),
-                    SizedBox(height: 10),
+                  ),
+                  SizedBox(height: 10),
+                  Divider(thickness: 2, height: 10),
+                  SizedBox(height: 10),
 
-                    // Recent Leave Request
-                    Text(
-                      'Recent Requests',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                  // Categories
+                  Text(
+                    'Categories',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  GridView.count(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 7 / 5,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      CategoryCard(
+                        title: 'Attendance',
+                        icon: Icons.calendar_month,
+                        route: '/attendance',
+                        token: widget.token,
                       ),
+                      CategoryCard(
+                        title: 'Leave',
+                        icon: Icons.beach_access,
+                        route: '/leave',
+                        token: widget.token,
+                      ),
+                      CategoryCard(
+                        title: 'Requests',
+                        icon: Icons.list_alt,
+                        route: '/requests',
+                        token: widget.token,
+                      ),
+                      CategoryCard(
+                        title: 'Profile',
+                        icon: Icons.person_outline,
+                        route: '/profile',
+                        token: widget.token,
+                      ),
+                      CategoryCard(
+                        title: 'Payslips',
+                        icon: Icons.payment,
+                        route: '/payslips',
+                        token: widget.token,
+                      ),
+                      CategoryCard(
+                        title: 'Approval Task',
+                        icon: Icons.approval,
+                        route: '/taskScreen',
+                        token: widget.token,
+                      ),
+                      CategoryCard(
+                        title: 'My Team',
+                        icon: Icons.group_add_outlined,
+                        route: '/employee',
+                        token: widget.token,
+                      ),
+                      CategoryCard(
+                        title: 'Policy',
+                        icon: Icons.task_outlined,
+                        route: '/policies',
+                        token: widget.token,
+                      ),
+                      CategoryCard(
+                        title: 'News',
+                        icon: Icons.newspaper,
+                        route: '/news_screen',
+                        token: widget.token,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Divider(thickness: 2, height: 10),
+                  SizedBox(height: 10),
+
+                  // Recent Leave Request
+                  Text(
+                    'Recent Requests',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
-                    SizedBox(height: 10),
-                    RecentLeaveRequestCard(
-                      leaveType: '3 Days Leave',
-                      status: 'Processing',
-                    ),
-                    RecentLeaveRequestCard(
-                      leaveType: 'Attendance',
-                      status: 'Processing',
-                    ),
-                    RecentLeaveRequestCard(
-                      leaveType: 'Visa Letter',
-                      status: 'Processing',
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 10),
+                  RecentLeaveRequestCard(
+                    leaveType: '3 Days Leave',
+                    status: 'Processing',
+                  ),
+                  RecentLeaveRequestCard(
+                    leaveType: 'Attendance',
+                    status: 'Processing',
+                  ),
+                  RecentLeaveRequestCard(
+                    leaveType: 'Visa Letter',
+                    status: 'Processing',
+                  ),
+                ],
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   String _formatDateTime(String dateTimeString) {
