@@ -374,6 +374,7 @@
 
 //------------------------------------code with the calander----------------------------
 
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -513,13 +514,9 @@ class _DashMainScreenState extends State<DashMainScreen> {
                             );
                           } else if (snapshot.hasError) {
                             return CircleAvatar(
-                              radius: 30,
-                              child: Center(
-                                child: Text(
-                                  'Error',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ),
+                              radius: 45,
+                              backgroundImage:
+                                  AssetImage('assets/images/profile.png'),
                             );
                           } else if (snapshot.hasData) {
                             return CircleAvatar(
@@ -529,9 +526,8 @@ class _DashMainScreenState extends State<DashMainScreen> {
                           } else {
                             return CircleAvatar(
                               radius: 45,
-                              child: Center(
-                                child: Text('No Image'),
-                              ),
+                              backgroundImage:
+                                  AssetImage('assets/images/profile.png'),
                             );
                           }
                         },
