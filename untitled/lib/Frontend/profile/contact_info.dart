@@ -58,18 +58,18 @@ class _ContactInfoState extends State<ContactInfo> {
                         return CircularProgressIndicator();
                       } else if (snapshot.hasError) {
                         return CircleAvatar(
-                            radius: 60,
-                            child: Center(
-                                child: Text('Error: ${snapshot.error}', style: TextStyle(fontSize: 8),)));
+                          radius: 45,
+                          backgroundImage: AssetImage('assets/images/profile.png'),
+                        );
                       } else if (snapshot.hasData) {
                         return CircleAvatar(
-                            radius: 60,
-                            backgroundImage: MemoryImage(snapshot.data!));
+                          radius: 45,
+                          backgroundImage: MemoryImage(snapshot.data!),
+                        );
                       } else {
                         return CircleAvatar(
-                          radius: 60,
-                          backgroundColor: Colors.black45,
-                          child: Icon(Icons.person_rounded, color: Colors.white,),
+                          radius: 45,
+                          backgroundImage: AssetImage('assets/images/profile.png'),
                         );
                       }
                     },
