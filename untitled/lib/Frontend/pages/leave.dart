@@ -773,7 +773,7 @@ class _LeavePageState extends State<Leave> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Padding(
-                            padding: EdgeInsets.all(screenWidth * 0.06),
+                            padding: EdgeInsets.all(screenWidth * 0.03),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -796,7 +796,7 @@ class _LeavePageState extends State<Leave> {
                                         color: _getStatusColor(
                                             selectedDateData.status),
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                                 Divider(thickness: 1),
@@ -805,20 +805,24 @@ class _LeavePageState extends State<Leave> {
                                   style:
                                       TextStyle(fontSize: screenWidth * 0.04),
                                 ),
-                                // Row(
-                                //   children: [],
-                                // ),
-                            IconButton(
-                                            icon: Icon(Icons.delete, color: Colors.red),
-                                            onPressed: () {
-                                              // _removeLeaveRequest(
-                                              //     widget.token, value[index].timeOfDay);
-
-                                              String date =
-                                                  DateFormat('yyyy-MM-dd').format(_selectedDay!);
-                                              _submitLeaveRemoval(widget.token, [date]);
-                                            },
-                                          ),
+                                if (selectedDateData.status == 'leave')
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                      iconSize:
+                                          35.0, // Adjust the icon size as needed
+                                      onPressed: () {
+                                        String date = DateFormat('yyyy-MM-dd')
+                                            .format(_selectedDay!);
+                                        _submitLeaveRemoval(
+                                            widget.token, [date]);
+                                      },
+                                    ),
+                                  ),
                               ],
                             ),
                           ),
@@ -853,11 +857,12 @@ class _LeavePageState extends State<Leave> {
                                     ? Card(
                                         elevation: 4,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                         child: Padding(
-                                          padding:
-                                              EdgeInsets.all(screenWidth * 0.02),
+                                          padding: EdgeInsets.all(
+                                              screenWidth * 0.02),
                                           child: Center(
                                             child: _buildLeaveTable(),
                                           ),
