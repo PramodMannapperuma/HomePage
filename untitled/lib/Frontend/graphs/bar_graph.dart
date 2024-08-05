@@ -153,3 +153,4 @@ Widget getBottomTitles(double value, TitleMeta meta) {
           child: const Text('D', style: style), axisSide: meta.axisSide);
   }
 }
+

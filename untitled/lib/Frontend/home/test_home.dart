@@ -159,3 +159,4 @@ class TileInfo {
       // this.imagePath
 );
 }
+

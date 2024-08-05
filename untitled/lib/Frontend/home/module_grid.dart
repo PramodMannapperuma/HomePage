@@ -144,3 +144,4 @@ class ModuleCard extends StatelessWidget {
     );
   }
 }
+

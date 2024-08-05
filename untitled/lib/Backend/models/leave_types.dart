@@ -40,3 +40,4 @@ class LeaveType {
     return leaveTypes.map((leaveType) => leaveType.toJson()).toList();
   }
 }
+
