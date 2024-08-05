@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Backend/APIs/Apis.dart';
@@ -51,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
         showActions: true,
         showLeading: true,
         context: context,
-        showBackButton: true, // Show back button instead of hamburger icon
+        showBackButton: true,
       ),
       drawer: CustomSidebar(token: token),
       body: FutureBuilder<Map<String, dynamic>>(
@@ -104,24 +103,20 @@ class _ProfilePageState extends State<ProfilePage> {
                             return CircularProgressIndicator();
                           } else if (snapshot.hasError) {
                             return CircleAvatar(
-                                radius: 50,
-                                child: Center(
-                                    child: Text(
-                                  'Error: ${snapshot.error}',
-                                  style: TextStyle(fontSize: 8),
-                                )));
+                              radius: 45,
+                              backgroundImage:
+                                  AssetImage('assets/images/profile.png'),
+                            );
                           } else if (snapshot.hasData) {
                             return CircleAvatar(
-                                radius: 50,
-                                backgroundImage: MemoryImage(snapshot.data!));
+                              radius: 45,
+                              backgroundImage: MemoryImage(snapshot.data!),
+                            );
                           } else {
                             return CircleAvatar(
-                              radius: 60,
-                              backgroundColor: Colors.black45,
-                              child: Icon(
-                                Icons.person_rounded,
-                                color: Colors.white,
-                              ),
+                              radius: 45,
+                              backgroundImage:
+                                  AssetImage('assets/images/profile.png'),
                             );
                           }
                         },
@@ -147,9 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: Colors.black,
                               ),
                             ),
-                            SizedBox(
-                                height:
-                                    10), // Gap between designation and email
+                            SizedBox(height: 10),
                             Text(
                               'Supervisor: ${userData['supervisor']}',
                               style: TextStyle(
