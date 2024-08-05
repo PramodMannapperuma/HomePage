@@ -96,3 +96,4 @@ class _GeoLocationState extends State<GeoLocation> {
     );
   }
 }
+

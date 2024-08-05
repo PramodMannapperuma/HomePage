@@ -640,3 +640,4 @@ class Event {
 
   Event(this.startTime, this.leaveTime, this.comment);
 }
+

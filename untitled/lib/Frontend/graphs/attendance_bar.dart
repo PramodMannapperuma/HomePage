@@ -160,3 +160,4 @@ Widget _buildLegend(String label, Color color) {
     ],
   );
 }
+

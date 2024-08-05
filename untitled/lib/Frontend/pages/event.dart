@@ -98,3 +98,4 @@ class _EventState extends State<Event> {
     );
   }
 }
+

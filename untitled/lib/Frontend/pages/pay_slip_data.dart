@@ -19,3 +19,4 @@ class PaySlipData {
     required this.deductionDetails,
   });
 }
+
