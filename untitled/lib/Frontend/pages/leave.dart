@@ -808,17 +808,17 @@ class _LeavePageState extends State<Leave> {
                                 // Row(
                                 //   children: [],
                                 // ),
-                            IconButton(
-                                            icon: Icon(Icons.delete, color: Colors.red),
-                                            onPressed: () {
-                                              // _removeLeaveRequest(
-                                              //     widget.token, value[index].timeOfDay);
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () {
+                                    // _removeLeaveRequest(
+                                    //     widget.token, value[index].timeOfDay);
 
-                                              String date =
-                                                  DateFormat('yyyy-MM-dd').format(_selectedDay!);
-                                              _submitLeaveRemoval(widget.token, [date]);
-                                            },
-                                          ),
+                                    String date = DateFormat('yyyy-MM-dd')
+                                        .format(_selectedDay!);
+                                    _submitLeaveRemoval(widget.token, [date]);
+                                  },
+                                ),
                               ],
                             ),
                           ),
@@ -853,11 +853,12 @@ class _LeavePageState extends State<Leave> {
                                     ? Card(
                                         elevation: 4,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                         child: Padding(
-                                          padding:
-                                              EdgeInsets.all(screenWidth * 0.02),
+                                          padding: EdgeInsets.all(
+                                              screenWidth * 0.02),
                                           child: Center(
                                             child: _buildLeaveTable(),
                                           ),
