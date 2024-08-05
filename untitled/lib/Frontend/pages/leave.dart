@@ -179,14 +179,14 @@ class _LeavePageState extends State<Leave> {
   }
 
   Future<void> _submitLeave(
-    BuildContext context,
-    String token,
-    String selectedDay,
-    String selectedTypeOfDay,
-    String comment,
-    String coverUp,
-    List<String> removeDays,
-  ) async {
+      BuildContext context,
+      String token,
+      String selectedDay,
+      String selectedTypeOfDay,
+      String comment,
+      String coverUp,
+      List<String> removeDays,
+      ) async {
     final datesData = [
       {
         'date': selectedDay,
@@ -256,9 +256,9 @@ class _LeavePageState extends State<Leave> {
   }
 
   Future<void> _submitLeaveRemoval(
-    String token,
-    List<String> removeDays,
-  ) async {
+      String token,
+      List<String> removeDays,
+      ) async {
     final uri = Uri.parse('${ApiService.baseUrl}/leave');
     final request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = '*/*'
@@ -349,31 +349,31 @@ class _LeavePageState extends State<Leave> {
                     isLoading
                         ? CircularProgressIndicator()
                         : DropdownButtonFormField<String>(
-                            value: _selectedLeaveType,
-                            decoration: InputDecoration(
-                              labelText: "Leave Type",
-                            ),
-                            items: leaveTypes?.map((LeaveType leaveType) {
-                                  return DropdownMenuItem<String>(
-                                    value: leaveType.text,
-                                    child: Text(leaveType.text),
-                                  );
-                                }).toList() ??
-                                [],
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _selectedLeaveType = newValue;
-                                if (newValue != "Medical") {
-                                  _attachmentPath = null;
-                                }
-                              });
-                            },
-                          ),
+                      value: _selectedLeaveType,
+                      decoration: InputDecoration(
+                        labelText: "Leave Type",
+                      ),
+                      items: leaveTypes?.map((LeaveType leaveType) {
+                        return DropdownMenuItem<String>(
+                          value: leaveType.text,
+                          child: Text(leaveType.text),
+                        );
+                      }).toList() ??
+                          [],
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedLeaveType = newValue;
+                          if (newValue != "Medical") {
+                            _attachmentPath = null;
+                          }
+                        });
+                      },
+                    ),
                     if (_selectedLeaveType != null && leaveTypes != null) ...[
                       if (leaveTypes!
-                              .firstWhere(
-                                  (type) => type.text == _selectedLeaveType)
-                              .additionalData['coverup'] ==
+                          .firstWhere(
+                              (type) => type.text == _selectedLeaveType)
+                          .additionalData['coverup'] ==
                           'yes')
                         DropdownButtonFormField<String>(
                           value: _selectedCoverUp,
@@ -381,11 +381,11 @@ class _LeavePageState extends State<Leave> {
                             labelText: "Cover up",
                           ),
                           items: coverUps?.map((CoverUp coverUp) {
-                                return DropdownMenuItem<String>(
-                                  value: coverUp.id,
-                                  child: Text(coverUp.name),
-                                );
-                              }).toList() ??
+                            return DropdownMenuItem<String>(
+                              value: coverUp.id,
+                              child: Text(coverUp.name),
+                            );
+                          }).toList() ??
                               [],
                           onChanged: (String? newValue) {
                             setState(() {
@@ -394,9 +394,9 @@ class _LeavePageState extends State<Leave> {
                           },
                         ),
                       if (leaveTypes!
-                              .firstWhere(
-                                  (type) => type.text == _selectedLeaveType)
-                              .additionalData['attachment'] ==
+                          .firstWhere(
+                              (type) => type.text == _selectedLeaveType)
+                          .additionalData['attachment'] ==
                           'yes')
                         Column(
                           children: [
@@ -711,7 +711,7 @@ class _LeavePageState extends State<Leave> {
                     } else {
                       final data = snapshot.data!;
                       final selectedDateData = data.firstWhere(
-                        (element) => element.date == _selectedDay?.toString().split(" ")[0],
+                            (element) => element.date == _selectedDay?.toString().split(" ")[0],
                         orElse: () => LeaveData(
                           amdIn: 'N/A',
                           recIn: 'N/A',
@@ -795,24 +795,24 @@ class _LeavePageState extends State<Leave> {
                             isLoading
                                 ? Center(child: CircularProgressIndicator())
                                 : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
-                                    ? Card(
-                                        elevation: 4,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(screenWidth * 0.02),
-                                          child: Center(
-                                            child: _buildLeaveTable(),
-                                          ),
-                                        ),
-                                      )
-                                    : Center(
-                                        child: Text(
-                                          'No leave balance data available.',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ),
+                                ? Card(
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(screenWidth * 0.02),
+                                child: Center(
+                                  child: _buildLeaveTable(),
+                                ),
+                              ),
+                            )
+                                : Center(
+                              child: Text(
+                                'No leave balance data available.',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
                           ],
                         ),
                       ),
