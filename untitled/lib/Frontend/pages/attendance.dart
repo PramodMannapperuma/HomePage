@@ -32,7 +32,6 @@ class _AttendanceState extends State<Attendance> {
   static const Color holidayColor = Colors.black;
   static const Color leaveColor = Colors.purple;
 
-  // Map status to color
   final Map<String, Color> statusColorMap = {
     'incomplete': incompleteColor,
     'amendment': amendmentColor,
@@ -71,20 +70,17 @@ class _AttendanceState extends State<Attendance> {
   Future<void> _loadAttendanceData() async {
     try {
       final List<AttendanceData> data =
-          await apiService.fetchAttendanceData(widget.token, _focusedDay);
+      await apiService.fetchAttendanceData(widget.token, _focusedDay);
       setState(() {
         _attendanceStatus.clear();
         for (var attendance in data) {
           if (attendance.date != null) {
-            // Check if the date is not null
-            final DateTime date =
-                DateTime.parse(attendance.date!); // Use non-nullable type
+            final DateTime date = DateTime.parse(attendance.date!);
             _attendanceStatus[date] = attendance.status ?? 'incomplete';
           }
         }
       });
     } catch (e) {
-      // Handle error
       print('Error loading attendance data: $e');
     }
   }
@@ -105,7 +101,6 @@ class _AttendanceState extends State<Attendance> {
         _selectedEvents.value = _getEventsForDay(selectedDate);
         futureAttendanceData =
             apiService.fetchAttendanceData(widget.token, selectedDate);
-        print('Token in onDaySelected ${widget.token}');
       });
     }
   }
@@ -128,8 +123,7 @@ class _AttendanceState extends State<Attendance> {
 
   Future<void> _submitAttendance(String token, String selectedDay,
       String startTime, String leaveTime, String comment) async {
-    final url = Uri.parse(
-        '${ApiService.baseUrl}/attendance'); // replace with your actual endpoint
+    final url = Uri.parse('${ApiService.baseUrl}/attendance');
 
     try {
       final response = await http.post(
@@ -158,10 +152,12 @@ class _AttendanceState extends State<Attendance> {
           ),
         );
 
-        // Fetch updated attendance data
-        _loadAttendanceData();
+        // Fetch updated attendance data and refresh UI
+        await _loadAttendanceData();
         setState(() {
           _selectedEvents.value = _getEventsForDay(_selectedDay!);
+          futureAttendanceData =
+              apiService.fetchAttendanceData(widget.token, _focusedDay);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -183,7 +179,7 @@ class _AttendanceState extends State<Attendance> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content:
-              Text('The connection has timed out. Please try again later.'),
+          Text('The connection has timed out. Please try again later.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -213,7 +209,7 @@ class _AttendanceState extends State<Attendance> {
       builder: (BuildContext context) {
         return Padding(
           padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -348,8 +344,7 @@ class _AttendanceState extends State<Attendance> {
   }
 
   Color _getStatusColor(String? status) {
-    return statusColorMap[status] ??
-        Colors.grey; // Default color if none of the cases match
+    return statusColorMap[status] ?? Colors.grey;
   }
 
   @override
@@ -439,67 +434,68 @@ class _AttendanceState extends State<Attendance> {
       body: Column(
         children: [
           Container(
-              child: TableCalendar(
-                rowHeight: 40,
-                headerStyle: HeaderStyle(
-                  titleCentered: true,
-                  formatButtonVisible: true,
-                  formatButtonShowsNext: false,
-                  formatButtonDecoration: BoxDecoration(
-                    color: Color(0xff4d2880),
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  formatButtonTextStyle: TextStyle(
-                    color: Colors.white,
-                  ),
-                  titleTextStyle: TextStyle(
-                    fontSize: screenWidth * 0.05,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff4d2880),
-                  ),
-                  leftChevronIcon: Icon(
-                    Icons.chevron_left,
-                    color: Color(0xff4d2880),
-                  ),
-                  rightChevronIcon: Icon(
-                    Icons.chevron_right,
-                    color: Color(0xff4d2880),
-                  ),
+            child: TableCalendar(
+              rowHeight: 40,
+              headerStyle: HeaderStyle(
+                titleCentered: true,
+                formatButtonVisible: true,
+                formatButtonShowsNext: false,
+                formatButtonDecoration: BoxDecoration(
+                  color: Color(0xff4d2880),
+                  borderRadius: BorderRadius.circular(20.0),
                 ),
-                focusedDay: _focusedDay,
-                startingDayOfWeek: StartingDayOfWeek.monday,
-                onDaySelected: _onDaySelected,
-                availableGestures: AvailableGestures.all,
-                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                firstDay: DateTime.utc(2023, 01, 01),
-                lastDay: DateTime.utc(3030, 12, 31),
-                calendarFormat: _calendarFormat,
-                eventLoader: _getEventsForDay,
-                calendarStyle: CalendarStyle(
-                  outsideDaysVisible: false,
-                  defaultDecoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  todayDecoration: BoxDecoration(
-                    color: Colors.deepPurple,
-                    shape: BoxShape.circle,
-                  ),
-                  selectedDecoration: BoxDecoration(
-                    color: Color(0xff9575cd),
-                    shape: BoxShape.circle,
-                  ),
-                  cellMargin: EdgeInsets.all(4.0),
+                formatButtonTextStyle: TextStyle(
+                  color: Colors.white,
                 ),
-                onFormatChanged: (format) {
-                  if (_calendarFormat != format) {
-                    setState(() {
-                      _calendarFormat = format;
-                    });
-                  }
-                },
-                onPageChanged: (focusedDay) {
-                  _focusedDay = focusedDay;
-                },
+                titleTextStyle: TextStyle(
+                  fontSize: screenWidth * 0.05,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff4d2880),
+                ),
+                leftChevronIcon: Icon(
+                  Icons.chevron_left,
+                  color: Color(0xff4d2880),
+                ),
+                rightChevronIcon: Icon(
+                  Icons.chevron_right,
+                  color: Color(0xff4d2880),
+                ),
+              ),
+              focusedDay: _focusedDay,
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              onDaySelected: _onDaySelected,
+              availableGestures: AvailableGestures.all,
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+              firstDay: DateTime.utc(2023, 01, 01),
+              lastDay: DateTime.utc(3030, 12, 31),
+              calendarFormat: _calendarFormat,
+              eventLoader: _getEventsForDay,
+              calendarStyle: CalendarStyle(
+                outsideDaysVisible: false,
+                defaultDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                todayDecoration: BoxDecoration(
+                  color: Colors.deepPurple,
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Color(0xff9575cd),
+                  shape: BoxShape.circle,
+                ),
+                cellMargin: EdgeInsets.all(4.0),
+              ),
+              onFormatChanged: (format) {
+                if (_calendarFormat != format) {
+                  setState(() {
+                    _calendarFormat = format;
+                  });
+                }
+              },
+              onPageChanged: (focusedDay) {
+                _focusedDay = focusedDay;
+                _loadAttendanceData(); // Reload data when page changes
+              },
             ),
           ),
           SizedBox(height: 10.0),
@@ -520,8 +516,8 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                    (element) =>
-                        element.date == _selectedDay?.toString().split(" ")[0],
+                        (element) =>
+                    element.date == _selectedDay?.toString().split(" ")[0],
                     orElse: () => AttendanceData(
                       amdIn: 'N/A',
                       recIn: 'N/A',
@@ -551,7 +547,7 @@ class _AttendanceState extends State<Attendance> {
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Date: ${selectedDateData.date}',
@@ -574,11 +570,11 @@ class _AttendanceState extends State<Attendance> {
                               Divider(thickness: 1),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'AMD In: ${selectedDateData.amdIn ?? 'N/A'}',
@@ -595,7 +591,7 @@ class _AttendanceState extends State<Attendance> {
                                   ),
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Rec In: ${selectedDateData.recIn ?? 'N/A'}',
@@ -640,4 +636,3 @@ class Event {
 
   Event(this.startTime, this.leaveTime, this.comment);
 }
-
