@@ -78,7 +78,8 @@ class _LeavePageState extends State<Leave> {
 
   Future<void> _loadLeaveData() async {
     try {
-      final List<LeaveData> data = await apiService.fetchLeaveData(widget.token, _focusedDay);
+      final List<LeaveData> data =
+          await apiService.fetchLeaveData(widget.token, _focusedDay);
       setState(() {
         _leaveStatus.clear();
         for (var leave in data) {
@@ -140,7 +141,8 @@ class _LeavePageState extends State<Leave> {
 
   Future<void> _fetchLeaveData(DateTime selectedDate) async {
     try {
-      final List<LeaveData> data = await apiService.fetchLeaveData(widget.token, selectedDate);
+      final List<LeaveData> data =
+          await apiService.fetchLeaveData(widget.token, selectedDate);
       setState(() {
         leaveDataMap[selectedDate] = data;
         _leaveStatus.clear();
@@ -171,7 +173,8 @@ class _LeavePageState extends State<Leave> {
         futureLeaveData = apiService.fetchLeaveData(widget.token, selectedDate);
       });
     }
-    _fetchLeaveData(selectedDate); // Ensure data is fetched and state is updated
+    _fetchLeaveData(
+        selectedDate); // Ensure data is fetched and state is updated
   }
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -179,14 +182,14 @@ class _LeavePageState extends State<Leave> {
   }
 
   Future<void> _submitLeave(
-      BuildContext context,
-      String token,
-      String selectedDay,
-      String selectedTypeOfDay,
-      String comment,
-      String coverUp,
-      List<String> removeDays,
-      ) async {
+    BuildContext context,
+    String token,
+    String selectedDay,
+    String selectedTypeOfDay,
+    String comment,
+    String coverUp,
+    List<String> removeDays,
+  ) async {
     final datesData = [
       {
         'date': selectedDay,
@@ -229,11 +232,13 @@ class _LeavePageState extends State<Leave> {
         final responseBody = await response.stream.bytesToString();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to submit leave: ${response.statusCode} ${responseBody}'),
+            content: Text(
+                'Failed to submit leave: ${response.statusCode} ${responseBody}'),
             duration: Duration(seconds: 2),
           ),
         );
-        print("Error in submitting leave ${response.statusCode} ${responseBody}");
+        print(
+            "Error in submitting leave ${response.statusCode} ${responseBody}");
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -256,9 +261,9 @@ class _LeavePageState extends State<Leave> {
   }
 
   Future<void> _submitLeaveRemoval(
-      String token,
-      List<String> removeDays,
-      ) async {
+    String token,
+    List<String> removeDays,
+  ) async {
     final uri = Uri.parse('${ApiService.baseUrl}/leave');
     final request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = '*/*'
@@ -285,7 +290,8 @@ class _LeavePageState extends State<Leave> {
         final responseBody = await response.stream.bytesToString();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to remove leave: ${response.statusCode} ${responseBody}'),
+            content: Text(
+                'Failed to remove leave: ${response.statusCode} ${responseBody}'),
             duration: Duration(seconds: 2),
           ),
         );
@@ -327,7 +333,8 @@ class _LeavePageState extends State<Leave> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return Padding(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -349,31 +356,31 @@ class _LeavePageState extends State<Leave> {
                     isLoading
                         ? CircularProgressIndicator()
                         : DropdownButtonFormField<String>(
-                      value: _selectedLeaveType,
-                      decoration: InputDecoration(
-                        labelText: "Leave Type",
-                      ),
-                      items: leaveTypes?.map((LeaveType leaveType) {
-                        return DropdownMenuItem<String>(
-                          value: leaveType.text,
-                          child: Text(leaveType.text),
-                        );
-                      }).toList() ??
-                          [],
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedLeaveType = newValue;
-                          if (newValue != "Medical") {
-                            _attachmentPath = null;
-                          }
-                        });
-                      },
-                    ),
+                            value: _selectedLeaveType,
+                            decoration: InputDecoration(
+                              labelText: "Leave Type",
+                            ),
+                            items: leaveTypes?.map((LeaveType leaveType) {
+                                  return DropdownMenuItem<String>(
+                                    value: leaveType.text,
+                                    child: Text(leaveType.text),
+                                  );
+                                }).toList() ??
+                                [],
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedLeaveType = newValue;
+                                if (newValue != "Medical") {
+                                  _attachmentPath = null;
+                                }
+                              });
+                            },
+                          ),
                     if (_selectedLeaveType != null && leaveTypes != null) ...[
                       if (leaveTypes!
-                          .firstWhere(
-                              (type) => type.text == _selectedLeaveType)
-                          .additionalData['coverup'] ==
+                              .firstWhere(
+                                  (type) => type.text == _selectedLeaveType)
+                              .additionalData['coverup'] ==
                           'yes')
                         DropdownButtonFormField<String>(
                           value: _selectedCoverUp,
@@ -381,11 +388,11 @@ class _LeavePageState extends State<Leave> {
                             labelText: "Cover up",
                           ),
                           items: coverUps?.map((CoverUp coverUp) {
-                            return DropdownMenuItem<String>(
-                              value: coverUp.id,
-                              child: Text(coverUp.name),
-                            );
-                          }).toList() ??
+                                return DropdownMenuItem<String>(
+                                  value: coverUp.id,
+                                  child: Text(coverUp.name),
+                                );
+                              }).toList() ??
                               [],
                           onChanged: (String? newValue) {
                             setState(() {
@@ -394,9 +401,9 @@ class _LeavePageState extends State<Leave> {
                           },
                         ),
                       if (leaveTypes!
-                          .firstWhere(
-                              (type) => type.text == _selectedLeaveType)
-                          .additionalData['attachment'] ==
+                              .firstWhere(
+                                  (type) => type.text == _selectedLeaveType)
+                              .additionalData['attachment'] ==
                           'yes')
                         Column(
                           children: [
@@ -409,10 +416,12 @@ class _LeavePageState extends State<Leave> {
                                   onPressed: _pickAttachment,
                                 ),
                               ),
-                              controller: TextEditingController(text: _attachmentPath),
+                              controller:
+                                  TextEditingController(text: _attachmentPath),
                             ),
                             if (_attachmentPath != null)
-                              Text("Selected file: ${_attachmentPath!.split('/').last}"),
+                              Text(
+                                  "Selected file: ${_attachmentPath!.split('/').last}"),
                           ],
                         ),
                     ],
@@ -466,12 +475,15 @@ class _LeavePageState extends State<Leave> {
                             ),
                           ),
                           onPressed: () async {
-                            String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDay!);
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(_selectedDay!);
                             if (_selectedLeaveType != null &&
                                 _selectedTimeOfDay != null &&
                                 _commentController.text.isNotEmpty &&
-                                (_selectedLeaveType != "Annual" || _selectedCoverUp != null) &&
-                                (_selectedLeaveType != "Medical" || _attachmentPath != null)) {
+                                (_selectedLeaveType != "Annual" ||
+                                    _selectedCoverUp != null) &&
+                                (_selectedLeaveType != "Medical" ||
+                                    _attachmentPath != null)) {
                               await _submitLeave(
                                 context,
                                 widget.token,
@@ -518,7 +530,8 @@ class _LeavePageState extends State<Leave> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       appBar: AppBar(
@@ -636,32 +649,26 @@ class _LeavePageState extends State<Leave> {
                 firstDay: DateTime.utc(2023, 01, 01),
                 lastDay: DateTime.utc(3030, 12, 31),
                 calendarFormat: _calendarFormat,
-                calendarStyle: CalendarStyle(
-                  outsideDaysVisible: false,
-                  todayDecoration: BoxDecoration(
-                    color: Color(0xff4d2880),
-                    shape: BoxShape.circle,
-                  ),
-                  selectedDecoration: BoxDecoration(
-                    color: Color(0xff9575cd),
-                    shape: BoxShape.circle,
-                  ),
-                  markerDecoration: BoxDecoration(
-                    color: Color(0xff9575cd),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                onFormatChanged: (format) {
-                  if (_calendarFormat != format) {
-                    setState(() {
-                      _calendarFormat = format;
-                    });
-                  }
-                },
-                onPageChanged: (focusedDay) {
-                  _focusedDay = focusedDay;
-                },
+                eventLoader: _getEventsForDay,
                 calendarBuilders: CalendarBuilders(
+                  defaultBuilder: (context, day, focusedDay) {
+                    final status =
+                        _leaveStatus[DateTime(day.year, day.month, day.day)];
+                    final color = _getStatusColor(status);
+
+                    return Container(
+                      margin: const EdgeInsets.all(6.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        '${day.day}',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
+                  },
                   markerBuilder: (context, day, events) {
                     final status = _leaveStatus[day];
                     if (status != null) {
@@ -689,6 +696,16 @@ class _LeavePageState extends State<Leave> {
                     return null;
                   },
                 ),
+                onFormatChanged: (format) {
+                  if (_calendarFormat != format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  }
+                },
+                onPageChanged: (focusedDay) {
+                  _focusedDay = focusedDay;
+                },
               ),
             ),
             Column(
@@ -711,7 +728,9 @@ class _LeavePageState extends State<Leave> {
                     } else {
                       final data = snapshot.data!;
                       final selectedDateData = data.firstWhere(
-                            (element) => element.date == _selectedDay?.toString().split(" ")[0],
+                        (element) =>
+                            element.date ==
+                            _selectedDay?.toString().split(" ")[0],
                         orElse: () => LeaveData(
                           amdIn: 'N/A',
                           recIn: 'N/A',
@@ -735,7 +754,8 @@ class _LeavePageState extends State<Leave> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'Date: ${selectedDateData.date}',
@@ -749,7 +769,8 @@ class _LeavePageState extends State<Leave> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: screenWidth * 0.044,
-                                        color: _getStatusColor(selectedDateData.status),
+                                        color: _getStatusColor(
+                                            selectedDateData.status),
                                       ),
                                     ),
                                   ],
@@ -757,7 +778,8 @@ class _LeavePageState extends State<Leave> {
                                 Divider(thickness: 1),
                                 Text(
                                   'Comment: ${selectedDateData.comment ?? 'N/A'}',
-                                  style: TextStyle(fontSize: screenWidth * 0.04),
+                                  style:
+                                      TextStyle(fontSize: screenWidth * 0.04),
                                 ),
                                 if (selectedDateData.status == 'leave')
                                   Align(
@@ -769,8 +791,10 @@ class _LeavePageState extends State<Leave> {
                                       ),
                                       iconSize: 35.0,
                                       onPressed: () {
-                                        String date = DateFormat('yyyy-MM-dd').format(_selectedDay!);
-                                        _submitLeaveRemoval(widget.token, [date]);
+                                        String date = DateFormat('yyyy-MM-dd')
+                                            .format(_selectedDay!);
+                                        _submitLeaveRemoval(
+                                            widget.token, [date]);
                                       },
                                     ),
                                   ),
@@ -794,25 +818,28 @@ class _LeavePageState extends State<Leave> {
                           children: [
                             isLoading
                                 ? Center(child: CircularProgressIndicator())
-                                : leaveBalanceData != null && leaveBalanceData!.isNotEmpty
-                                ? Card(
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(screenWidth * 0.02),
-                                child: Center(
-                                  child: _buildLeaveTable(),
-                                ),
-                              ),
-                            )
-                                : Center(
-                              child: Text(
-                                'No leave balance data available.',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ),
+                                : leaveBalanceData != null &&
+                                        leaveBalanceData!.isNotEmpty
+                                    ? Card(
+                                        elevation: 4,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(
+                                              screenWidth * 0.02),
+                                          child: Center(
+                                            child: _buildLeaveTable(),
+                                          ),
+                                        ),
+                                      )
+                                    : Center(
+                                        child: Text(
+                                          'No leave balance data available.',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ),
                           ],
                         ),
                       ),
@@ -833,15 +860,20 @@ class _LeavePageState extends State<Leave> {
       headingRowHeight: 35,
       columns: [
         DataColumn(
-            label: Text('Leave', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+            label: Text('Leave',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
         DataColumn(
-            label: Text('Entitled', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+            label: Text('Entitled',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
         DataColumn(
-            label: Text('Utilized', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+            label: Text('Utilized',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
         DataColumn(
-            label: Text('Pending', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+            label: Text('Pending',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
         DataColumn(
-            label: Text('Available', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+            label: Text('Available',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
       ],
       rows: leaveBalanceData!.map((data) {
         return DataRow(cells: [
@@ -849,16 +881,24 @@ class _LeavePageState extends State<Leave> {
             Center(child: Text(data.leave, style: TextStyle(fontSize: 14))),
           ),
           DataCell(
-            Center(child: Text(data.total.toString(), style: TextStyle(fontSize: 14))),
+            Center(
+                child: Text(data.total.toString(),
+                    style: TextStyle(fontSize: 14))),
           ),
           DataCell(
-            Center(child: Text(data.utilized.toString(), style: TextStyle(fontSize: 14))),
+            Center(
+                child: Text(data.utilized.toString(),
+                    style: TextStyle(fontSize: 14))),
           ),
           DataCell(
-            Center(child: Text(data.pending.toString(), style: TextStyle(fontSize: 14))),
+            Center(
+                child: Text(data.pending.toString(),
+                    style: TextStyle(fontSize: 14))),
           ),
           DataCell(
-            Center(child: Text(data.available.toString(), style: TextStyle(fontSize: 14))),
+            Center(
+                child: Text(data.available.toString(),
+                    style: TextStyle(fontSize: 14))),
           ),
         ]);
       }).toList(),
