@@ -676,6 +676,7 @@ class _LeavePageState extends State<Leave> {
                       decoration: BoxDecoration(
                         color: color,
                         shape: BoxShape.circle,
+                        
                       ),
                       child: Text(
                         '${day.day}',
