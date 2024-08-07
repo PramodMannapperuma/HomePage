@@ -338,38 +338,7 @@
 //       ],
 //     );
 //   }
-//   //
-//   // Widget _buildTaskItem(String title, String subtitle, Color color) {
-//   //   return Padding(
-//   //     padding: const EdgeInsets.symmetric(vertical: 8.0),
-//   //     child: Row(
-//   //       children: [
-//   //         Icon(Icons.check_circle_outline, color: color),
-//   //         SizedBox(width: 10),
-//   //         Column(
-//   //           crossAxisAlignment: CrossAxisAlignment.start,
-//   //           children: [
-//   //             Text(
-//   //               title,
-//   //               style: TextStyle(
-//   //                 fontSize: 16,
-//   //                 fontWeight: FontWeight.bold,
-//   //               ),
-//   //             ),
-//   //             SizedBox(height: 5),
-//   //             Text(
-//   //               subtitle,
-//   //               style: TextStyle(
-//   //                 fontSize: 14,
-//   //                 color: Colors.grey,
-//   //               ),
-//   //             ),
-//   //           ],
-//   //         ),
-//   //       ],
-//   //     ),
-//   //   );
-//   // }
+//   
 // }
 
 //------------------------------------code with the calander----------------------------
