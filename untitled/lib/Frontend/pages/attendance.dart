@@ -972,7 +972,10 @@ class _AttendanceState extends State<Attendance> {
                           );
                         }
                       },
-                      child: Text("Save"),
+                      child: Text(
+                        "Submit",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
