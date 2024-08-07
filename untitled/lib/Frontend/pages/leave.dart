@@ -72,20 +72,20 @@ class _LeavePageState extends State<Leave> {
     _fetchCoverUps();
     _selectedDay = _focusedDay;
     futureLeaveData = apiService.fetchLeaveData(widget.token, _focusedDay);
-    _loadLeaveData();
+    _loadLeaveData(_focusedDay); // Ensure data is fetched on init
     _selectedEvents = ValueNotifier([]);
   }
 
-  Future<void> _loadLeaveData() async {
+  Future<void> _loadLeaveData(DateTime selectedDate) async {
     try {
-      final List<LeaveData> data =
-          await apiService.fetchLeaveData(widget.token, _focusedDay);
+      final List<LeaveData> data = await apiService.fetchLeaveData(widget.token, selectedDate);
       setState(() {
+        leaveDataMap[selectedDate] = data;
         _leaveStatus.clear();
         for (var leave in data) {
           if (leave.date != null) {
             final DateTime date = DateTime.parse(leave.date!);
-            _leaveStatus[date] = leave.status ?? 'pending';
+            _leaveStatus[date] = leave.status ?? 'N/A';
           }
         }
       });
@@ -141,15 +141,14 @@ class _LeavePageState extends State<Leave> {
 
   Future<void> _fetchLeaveData(DateTime selectedDate) async {
     try {
-      final List<LeaveData> data =
-          await apiService.fetchLeaveData(widget.token, selectedDate);
+      final List<LeaveData> data = await apiService.fetchLeaveData(widget.token, selectedDate);
       setState(() {
         leaveDataMap[selectedDate] = data;
         _leaveStatus.clear();
         for (var leave in data) {
           if (leave.date != null) {
             final DateTime date = DateTime.parse(leave.date!);
-            _leaveStatus[date] = leave.status ?? 'pending';
+            _leaveStatus[date] = leave.status ?? 'N/A';
           }
         }
       });
@@ -173,8 +172,7 @@ class _LeavePageState extends State<Leave> {
         futureLeaveData = apiService.fetchLeaveData(widget.token, selectedDate);
       });
     }
-    _fetchLeaveData(
-        selectedDate); // Ensure data is fetched and state is updated
+    _fetchLeaveData(selectedDate); // Ensure data is fetched and state is updated
   }
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -182,14 +180,14 @@ class _LeavePageState extends State<Leave> {
   }
 
   Future<void> _submitLeave(
-    BuildContext context,
-    String token,
-    String selectedDay,
-    String selectedTypeOfDay,
-    String comment,
-    String coverUp,
-    List<String> removeDays,
-  ) async {
+      BuildContext context,
+      String token,
+      String selectedDay,
+      String selectedTypeOfDay,
+      String comment,
+      String coverUp,
+      List<String> removeDays,
+      ) async {
     final datesData = [
       {
         'date': selectedDay,
@@ -232,13 +230,11 @@ class _LeavePageState extends State<Leave> {
         final responseBody = await response.stream.bytesToString();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-                'Failed to submit leave: ${response.statusCode} ${responseBody}'),
+            content: Text('Failed to submit leave: ${response.statusCode} ${responseBody}'),
             duration: Duration(seconds: 2),
           ),
         );
-        print(
-            "Error in submitting leave ${response.statusCode} ${responseBody}");
+        print("Error in submitting leave ${response.statusCode} ${responseBody}");
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -261,9 +257,9 @@ class _LeavePageState extends State<Leave> {
   }
 
   Future<void> _submitLeaveRemoval(
-    String token,
-    List<String> removeDays,
-  ) async {
+      String token,
+      List<String> removeDays,
+      ) async {
     final uri = Uri.parse('${ApiService.baseUrl}/leave');
     final request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = '*/*'
@@ -290,8 +286,7 @@ class _LeavePageState extends State<Leave> {
         final responseBody = await response.stream.bytesToString();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-                'Failed to remove leave: ${response.statusCode} ${responseBody}'),
+            content: Text('Failed to remove leave: ${response.statusCode} ${responseBody}'),
             duration: Duration(seconds: 2),
           ),
         );
@@ -356,31 +351,31 @@ class _LeavePageState extends State<Leave> {
                     isLoading
                         ? CircularProgressIndicator()
                         : DropdownButtonFormField<String>(
-                            value: _selectedLeaveType,
-                            decoration: InputDecoration(
-                              labelText: "Leave Type",
-                            ),
-                            items: leaveTypes?.map((LeaveType leaveType) {
-                                  return DropdownMenuItem<String>(
-                                    value: leaveType.text,
-                                    child: Text(leaveType.text),
-                                  );
-                                }).toList() ??
-                                [],
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _selectedLeaveType = newValue;
-                                if (newValue != "Medical") {
-                                  _attachmentPath = null;
-                                }
-                              });
-                            },
-                          ),
+                      value: _selectedLeaveType,
+                      decoration: InputDecoration(
+                        labelText: "Leave Type",
+                      ),
+                      items: leaveTypes?.map((LeaveType leaveType) {
+                        return DropdownMenuItem<String>(
+                          value: leaveType.text,
+                          child: Text(leaveType.text),
+                        );
+                      }).toList() ??
+                          [],
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedLeaveType = newValue;
+                          if (newValue != "Medical") {
+                            _attachmentPath = null;
+                          }
+                        });
+                      },
+                    ),
                     if (_selectedLeaveType != null && leaveTypes != null) ...[
                       if (leaveTypes!
-                              .firstWhere(
-                                  (type) => type.text == _selectedLeaveType)
-                              .additionalData['coverup'] ==
+                          .firstWhere(
+                              (type) => type.text == _selectedLeaveType)
+                          .additionalData['coverup'] ==
                           'yes')
                         DropdownButtonFormField<String>(
                           value: _selectedCoverUp,
@@ -388,11 +383,11 @@ class _LeavePageState extends State<Leave> {
                             labelText: "Cover up",
                           ),
                           items: coverUps?.map((CoverUp coverUp) {
-                                return DropdownMenuItem<String>(
-                                  value: coverUp.id,
-                                  child: Text(coverUp.name),
-                                );
-                              }).toList() ??
+                            return DropdownMenuItem<String>(
+                              value: coverUp.id,
+                              child: Text(coverUp.name),
+                            );
+                          }).toList() ??
                               [],
                           onChanged: (String? newValue) {
                             setState(() {
@@ -401,9 +396,9 @@ class _LeavePageState extends State<Leave> {
                           },
                         ),
                       if (leaveTypes!
-                              .firstWhere(
-                                  (type) => type.text == _selectedLeaveType)
-                              .additionalData['attachment'] ==
+                          .firstWhere(
+                              (type) => type.text == _selectedLeaveType)
+                          .additionalData['attachment'] ==
                           'yes')
                         Column(
                           children: [
@@ -417,7 +412,7 @@ class _LeavePageState extends State<Leave> {
                                 ),
                               ),
                               controller:
-                                  TextEditingController(text: _attachmentPath),
+                              TextEditingController(text: _attachmentPath),
                             ),
                             if (_attachmentPath != null)
                               Text(
@@ -476,7 +471,7 @@ class _LeavePageState extends State<Leave> {
                           ),
                           onPressed: () async {
                             String formattedDate =
-                                DateFormat('yyyy-MM-dd').format(_selectedDay!);
+                            DateFormat('yyyy-MM-dd').format(_selectedDay!);
                             if (_selectedLeaveType != null &&
                                 _selectedTimeOfDay != null &&
                                 _commentController.text.isNotEmpty &&
@@ -530,8 +525,7 @@ class _LeavePageState extends State<Leave> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final bool isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       appBar: AppBar(
@@ -652,8 +646,7 @@ class _LeavePageState extends State<Leave> {
                 eventLoader: _getEventsForDay,
                 calendarBuilders: CalendarBuilders(
                   defaultBuilder: (context, day, focusedDay) {
-                    final status =
-                        _leaveStatus[DateTime(day.year, day.month, day.day)];
+                    final status = _leaveStatus[DateTime(day.year, day.month, day.day)];
                     final color = _getStatusColor(status);
 
                     return Container(
@@ -705,6 +698,7 @@ class _LeavePageState extends State<Leave> {
                 },
                 onPageChanged: (focusedDay) {
                   _focusedDay = focusedDay;
+                  _loadLeaveData(focusedDay); // Ensure data is fetched on page change
                 },
               ),
             ),
