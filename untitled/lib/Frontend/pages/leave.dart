@@ -187,6 +187,7 @@ class _LeavePageState extends State<Leave> {
       String comment,
       String coverUp,
       List<String> removeDays,
+      VoidCallback refreshDataCallback,
       ) async {
     final datesData = [
       {
@@ -226,6 +227,7 @@ class _LeavePageState extends State<Leave> {
           _leaveStatus[DateTime.parse(selectedDay)] = 'pending';
           _selectedEvents.value = _getEventsForDay(_selectedDay!);
         });
+        refreshDataCallback(); // Refresh the parent state
       } else {
         final responseBody = await response.stream.bytesToString();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -259,6 +261,7 @@ class _LeavePageState extends State<Leave> {
   Future<void> _submitLeaveRemoval(
       String token,
       List<String> removeDays,
+      VoidCallback refreshDataCallback,
       ) async {
     final uri = Uri.parse('${ApiService.baseUrl}/leave');
     final request = http.MultipartRequest('POST', uri)
@@ -282,6 +285,7 @@ class _LeavePageState extends State<Leave> {
           _leaveStatus.remove(DateTime.parse(removeDays.first));
           _selectedEvents.value = _getEventsForDay(_selectedDay!);
         });
+        refreshDataCallback(); // Refresh the parent state
       } else {
         final responseBody = await response.stream.bytesToString();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -311,7 +315,7 @@ class _LeavePageState extends State<Leave> {
     });
   }
 
-  Future<void> _showAddLeaveBottomSheet(BuildContext context) async {
+  Future<void> _showAddLeaveBottomSheet(BuildContext context, VoidCallback refreshDataCallback) async {
     if (_selectedDay != null && _selectedDay!.isBefore(today)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -487,6 +491,7 @@ class _LeavePageState extends State<Leave> {
                                 _commentController.text,
                                 _selectedCoverUp ?? '',
                                 [''],
+                                refreshDataCallback, // Pass the callback
                               );
 
                               _clearForm();
@@ -526,6 +531,13 @@ class _LeavePageState extends State<Leave> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    void _refreshData() {
+      setState(() {
+        futureLeaveData = apiService.fetchLeaveData(widget.token, _focusedDay);
+        _loadLeaveData(_focusedDay); // Refresh the data
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -597,7 +609,7 @@ class _LeavePageState extends State<Leave> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4d2880),
         onPressed: () {
-          _showAddLeaveBottomSheet(context);
+          _showAddLeaveBottomSheet(context, _refreshData);
         },
         child: Icon(
           Icons.add,
@@ -722,8 +734,8 @@ class _LeavePageState extends State<Leave> {
                     } else {
                       final data = snapshot.data!;
                       final selectedDateData = data.firstWhere(
-                        (element) =>
-                            element.date ==
+                            (element) =>
+                        element.date ==
                             _selectedDay?.toString().split(" ")[0],
                         orElse: () => LeaveData(
                           amdIn: 'N/A',
@@ -749,7 +761,7 @@ class _LeavePageState extends State<Leave> {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'Date: ${selectedDateData.date}',
@@ -773,7 +785,7 @@ class _LeavePageState extends State<Leave> {
                                 Text(
                                   'Comment: ${selectedDateData.comment ?? 'N/A'}',
                                   style:
-                                      TextStyle(fontSize: screenWidth * 0.04),
+                                  TextStyle(fontSize: screenWidth * 0.04),
                                 ),
                                 if (selectedDateData.status == 'leave')
                                   Align(
@@ -788,7 +800,7 @@ class _LeavePageState extends State<Leave> {
                                         String date = DateFormat('yyyy-MM-dd')
                                             .format(_selectedDay!);
                                         _submitLeaveRemoval(
-                                            widget.token, [date]);
+                                            widget.token, [date], _refreshData);
                                       },
                                     ),
                                   ),
