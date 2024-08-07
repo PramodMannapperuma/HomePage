@@ -129,20 +129,6 @@ class Tile extends StatelessWidget {
         ),
       ),
     );
-
-    // if (bottomSpace == null) {
-    //   return child;
-    // }
-    //
-    // return Column(
-    //   children: [
-    //     Expanded(child: child),
-    //     Container(
-    //       height: bottomSpace,
-    //       color: Colors.green,
-    //     )
-    //   ],
-    // );
     return child;
   }
 }
