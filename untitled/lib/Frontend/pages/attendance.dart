@@ -839,6 +839,17 @@ class _AttendanceState extends State<Attendance> {
       );
       return;
     }
+
+    if (_selectedDay != null && (_selectedDay!.weekday == DateTime.saturday || _selectedDay!.weekday == DateTime.sunday)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Today is a weekend'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
