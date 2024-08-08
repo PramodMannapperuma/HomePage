@@ -7,6 +7,7 @@ import 'package:untitled/Backend/models/leave_types.dart';
 import '../models/att_model.dart';
 import '../models/cover_ups.dart';
 import '../models/dash_model.dart';
+import '../models/policy_model.dart';
 
 class ApiService {
   static const String _baseUrl = 'http://hris.accelution.lk/api';
@@ -239,5 +240,29 @@ class ApiService {
       throw Exception('Failed to load cover-ups');
     }
   }
+
+  Future<List<Policy>> fetchPolicies(String token) async {
+    // final String url = 'http://hris.accelution.lk/api/policies?length=10&start=0';
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/policies?length=10&start=0'),
+      headers: {
+        'accept': '*/*',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    _logResponse(response);
+
+    if (response.statusCode == 200) {
+      // Parse the JSON response into a list of policies.
+      List<dynamic> body = jsonDecode(response.body);
+      List<Policy> policies = body.map((dynamic item) => Policy.fromJson(item)).toList();
+      return policies;
+    } else {
+      // If the server did not return a 200 OK response, throw an exception.
+      throw Exception('Failed to load policies');
+    }
+  }
+
 }
 

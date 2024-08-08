@@ -1,34 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/Backend/APIs/Apis.dart';
+import '../../Backend/models/policy_model.dart';
 import '../app_bar.dart';
 import '../styles/sidebar.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
 
 class Policies extends StatelessWidget {
+  final String token;
+  const Policies({super.key, required this.token});
+
   @override
   Widget build(BuildContext context) {
-    return PolicyScreen();
+    return PolicyScreen(
+      token: token,
+    );
   }
 }
 
 class PolicyScreen extends StatefulWidget {
+  final String token;
+  const PolicyScreen({super.key, required this.token});
+
   @override
   _PolicyScreenState createState() => _PolicyScreenState();
 }
 
 class _PolicyScreenState extends State<PolicyScreen> {
   TextEditingController _searchController = TextEditingController();
-  List<String> _policies = [
-    'Leave Policy',
-    'Attendance Policy',
-    'Request Policy',
-    'Leave Policy',
-    'Leave Policy'
-  ];
-  List<String> _filteredPolicies = [];
+  List<Policy> _policies = [];
+  List<Policy> _filteredPolicies = [];
+  bool _isLoading = true;
+  final ApiService apiService = ApiService();
 
   @override
   void initState() {
     super.initState();
-    _filteredPolicies = _policies;
+    _fetchPolicy();
     _searchController.addListener(_filterPolicies);
   }
 
@@ -39,14 +47,39 @@ class _PolicyScreenState extends State<PolicyScreen> {
     super.dispose();
   }
 
+  Future<void> _fetchPolicy() async {
+    try {
+      final List<Policy> data = await apiService.fetchPolicies(widget.token);
+      setState(() {
+        _policies = data;
+        _filteredPolicies = data;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error loading policy data: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   void _filterPolicies() {
     setState(() {
       _filteredPolicies = _policies
-          .where((policy) =>
-          policy.toLowerCase().contains(_searchController.text.toLowerCase()))
+          .where((policy) => policy.name.toLowerCase().contains(_searchController.text.toLowerCase()))
           .toList();
     });
   }
+
+  // void _filterPolicies() {
+  //   setState(() {
+  //     _filteredPolicies = _policies
+  //         .where((policy) => policy
+  //             .toLowerCase()
+  //             .contains(_searchController.text.toLowerCase()))
+  //         .toList();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -77,19 +110,35 @@ class _PolicyScreenState extends State<PolicyScreen> {
               ),
             ),
             SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _filteredPolicies.length,
-                itemBuilder: (context, index) {
-                  return PolicyItem(
-                    policyName: _filteredPolicies[index],
-                    onTap: () {
-                      Navigator.pushNamed(context, '/leavePolicy');
-                    },
-                  );
-                },
-              ),
-            ),
+            //   Expanded(
+            //     child: ListView.builder(
+            //       itemCount: _filteredPolicies.length,
+            //       itemBuilder: (context, index) {
+            //         return PolicyItem(
+            //           policyName: _filteredPolicies[index],
+            //           onTap: () {
+            //             Navigator.pushNamed(context, '/leavePolicy');
+            //           },
+            //         );
+            //       },
+            //     ),
+            //   ),
+            // ],
+            _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: _filteredPolicies.length,
+                      itemBuilder: (context, index) {
+                        return PolicyItem(
+                          policyName: _filteredPolicies[index].name,
+                          onTap: () {
+                            Navigator.pushNamed(context, '/leavePolicy');
+                          },
+                        );
+                      },
+                    ),
+                  ),
           ],
         ),
       ),
