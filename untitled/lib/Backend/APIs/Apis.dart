@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:untitled/Backend/models/leave_model.dart';
@@ -261,6 +263,32 @@ class ApiService {
     } else {
       // If the server did not return a 200 OK response, throw an exception.
       throw Exception('Failed to load policies');
+    }
+  }
+
+  Future<String> fetchPolicy(String token) async {
+    final url = Uri.parse('http://hris.accelution.lk/api/view-policy/1.pdf');
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'accept': '*/*',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final directory = await getApplicationDocumentsDirectory();
+        final filePath = '${directory.path}/1.pdf';
+        final pdfFile = File(filePath);
+        await pdfFile.writeAsBytes(response.bodyBytes);
+        return filePath;
+      } else {
+        throw Exception('Failed to download PDF. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching PDF: $e');
     }
   }
 

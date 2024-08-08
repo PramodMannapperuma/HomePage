@@ -63,7 +63,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/employee':
       return MaterialPageRoute(builder: (context) => EmployeeScreen());
     case '/leavePolicy':
-      return MaterialPageRoute(builder: (context) => LeavePolicy());
+      return MaterialPageRoute(builder: (context) => LeavePolicy(token: args ?? '',));
     default:
       return MaterialPageRoute(builder: (context) => Login()); // Default route
   }
