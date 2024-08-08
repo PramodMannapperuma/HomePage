@@ -24,7 +24,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
         showActions: true,
         showLeading: true,
         context: context,
-        showBackButton: true, // Show back button instead of hamburger icon
+        showBackButton: true,
       ),
       drawer: CustomSidebar(token: '',),
       body: Padding(
@@ -53,6 +53,29 @@ class _PolicyScreenState extends State<PolicyScreen> {
                 ),
               ],
             ),
+// TODO: Process the load out
+          //TODO: future builder
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/leavePolicy');
+                  },
+                  child: Text(
+                    'Leave Policy',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/leavePolicy');
+                  },
+                  icon: Icon(Icons.navigate_next),
+                ),
+              ],
+            ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
