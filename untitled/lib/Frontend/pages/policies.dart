@@ -133,7 +133,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
                         return PolicyItem(
                           policyName: _filteredPolicies[index].name,
                           onTap: () {
-                            Navigator.pushNamed(context, '/leavePolicy');
+                            Navigator.pushNamed(context, '/leavePolicy', arguments: widget.token);
                           },
                         );
                       },
