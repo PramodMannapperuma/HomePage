@@ -37,7 +37,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/news_screen':
       return MaterialPageRoute(builder: (context) => NewsScreen());
     case '/policies':
-      return MaterialPageRoute(builder: (context) => Policies());
+      return MaterialPageRoute(builder: (context) => Policies(token: args ?? '',));
     case '/requests':
       return MaterialPageRoute(builder: (context) => Requests());
     case '/celebrations':
