@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/Frontend/geolocation.dart';
 import 'Frontend/graphs/attendance_tracker.dart';
+import 'Frontend/pages/approval.dart';
 import 'Frontend/pages/celebrations.dart';
 import 'Frontend/pages/employee.dart';
 import 'Frontend/pages/leave.dart';
@@ -62,6 +63,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => EmployeeGridScreen());
     case '/employee':
       return MaterialPageRoute(builder: (context) => EmployeeScreen());
+    case '/approval':
+      return MaterialPageRoute(builder: (context) => ApprovalScreen(token: args ?? '',));
     case '/leavePolicy':
       return MaterialPageRoute(builder: (context) => LeavePolicy(token: args ?? '',));
     default:
