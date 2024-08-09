@@ -41,11 +41,11 @@ class _AdminScreenState extends State<ApprovalScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
+            icon: Icon(Icons.beach_access),
             label: 'Leave',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
+            icon: Icon(Icons.calendar_month),
             label: 'Attendance',
           ),
         ],

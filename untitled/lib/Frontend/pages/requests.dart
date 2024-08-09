@@ -94,7 +94,7 @@ class _RequestsState extends State<Requests> {
               ListTile(
                 title: Text('Date: ${_date.toString().split(' ')[0]}'),
                 trailing:
-                    Icon(Icons.calendar_today, color: AppColors.background),
+                    Icon(Icons.calendar_month, color: AppColors.background),
                 onTap: () async {
                   final DateTime? picked = await showDatePicker(
                     context: context,
