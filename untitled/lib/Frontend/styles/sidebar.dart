@@ -385,6 +385,18 @@ class CustomSidebar extends StatelessWidget {
                 Navigator.pushNamed(context, '/news_screen');
               },
             ),
+            ListTile(
+              leading: Icon(
+                Icons.newspaper,
+                color: Color.fromRGBO(77, 40, 128, 0.5),
+                size: 35,
+              ),
+              title: Text('Approval'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/approval');
+              },
+            ),
             Divider(
               thickness: 0.5,
             ),
