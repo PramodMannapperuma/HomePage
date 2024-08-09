@@ -363,7 +363,7 @@ class CustomSidebar extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(
-                Icons.newspaper,
+                Icons.task_outlined,
                 color: Color.fromRGBO(77, 40, 128, 0.5),
                 size: 35,
               ),
@@ -387,7 +387,7 @@ class CustomSidebar extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(
-                Icons.newspaper,
+                Icons.approval,
                 color: Color.fromRGBO(77, 40, 128, 0.5),
                 size: 35,
               ),
