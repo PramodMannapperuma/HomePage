@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import '../app_bar.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 import '../../Backend/APIs/Apis.dart';
@@ -15,8 +16,10 @@ import '../../Backend/models/leave_types.dart';
 
 class Leave extends StatefulWidget {
   final String token;
+  final bool isFromSidebar;
 
-  const Leave({Key? key, required this.token}) : super(key: key);
+  const Leave({Key? key, required this.token, this.isFromSidebar = false})
+      : super(key: key);
 
   @override
   State<Leave> createState() => _LeavePageState();
@@ -548,7 +551,15 @@ class _LeavePageState extends State<Leave> {
     }
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: widget.isFromSidebar
+          ? customAppBar(
+        title: 'Attendance',
+        showActions: true,
+        showLeading: true,
+        context: context,
+        showBackButton: true,
+      )
+          : AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -564,9 +575,10 @@ class _LeavePageState extends State<Leave> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                padding:
+                EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 child: Text(
-                  "Leave",
+                  "Attendance",
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
@@ -608,7 +620,8 @@ class _LeavePageState extends State<Leave> {
               color: AppColors.background,
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/profile', arguments: widget.token);
+              Navigator.pushNamed(context, '/profile',
+                  arguments: widget.token);
             },
           ),
         ],
