@@ -18,16 +18,36 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
   // late String token;
 
   @override
   void initState() {
     super.initState();
-    // Future.delayed(Duration.zero, () {
-    //   // token = (ModalRoute.of(context)!.settings.arguments as String?)!;
-    //   setState(() {});
-    // });
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(1.5, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _startAnimation() async {
+    await _controller.forward();
+    _logout(context); // Call logout after animation completes
   }
 
   Future<void> _logout(BuildContext context) async {
@@ -39,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
     // Navigate to the login screen
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
-
+  
   @override
   Widget build(BuildContext context) {
     final String token = widget.token;
@@ -229,7 +249,31 @@ class _ProfilePageState extends State<ProfilePage> {
                   icon: Icons.logout,
                   textColor: Colors.red,
                   endIcon: false,
-                  onPress: () => _logout(context),
+                  onPress: _startAnimation,
+                  animatedTransition: SlideTransition(
+                    position: _offsetAnimation,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(Icons.logout, color: Colors.white, size: 20),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          "Log Out",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -248,6 +292,7 @@ class ProfileMenuWidget extends StatelessWidget {
     required this.onPress,
     this.endIcon = true,
     this.textColor,
+    this.animatedTransition,
   });
 
   final String title;
@@ -255,45 +300,51 @@ class ProfileMenuWidget extends StatelessWidget {
   final VoidCallback onPress;
   final bool endIcon;
   final Color? textColor;
+  final Widget? animatedTransition;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onPress,
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: Colors.blueGrey.withOpacity(0.1),
-        ),
-        child: Icon(
-          icon,
-          color: AppColors.background,
-        ),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 16.0,
-          color: textColor,
-        ),
-      ),
-      trailing: endIcon
-          ? Container(
-              width: 30,
-              height: 30,
+    return animatedTransition != null
+        ? GestureDetector(
+            onTap: onPress,
+            child: animatedTransition,
+          )
+        : ListTile(
+            onTap: onPress,
+            leading: Container(
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.blueGrey.withOpacity(0.1),
               ),
-              child: const Icon(
-                Icons.keyboard_arrow_right,
-                color: Color.fromRGBO(77, 40, 128, 0.5),
+              child: Icon(
+                icon,
+                color: AppColors.background,
               ),
-            )
-          : null,
-    );
+            ),
+            title: Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.0,
+                color: textColor,
+              ),
+            ),
+            trailing: endIcon
+                ? Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                    child: const Icon(
+                      Icons.keyboard_arrow_right,
+                      color: Color.fromRGBO(77, 40, 128, 0.5),
+                    ),
+                  )
+                : null,
+          );
   }
 }
 

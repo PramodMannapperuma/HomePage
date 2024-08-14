@@ -265,17 +265,21 @@ class CustomSidebar extends StatelessWidget {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Home',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/dashbord', arguments: token);
+                      },
+                      child: Text(
+                        'Home',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                   LogoutButton(onLogout: () => _logout(context)),
                 ],
               ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/dashboard', arguments: token);
-              },
             ),
             ListTile(
               leading: Icon(
@@ -428,7 +432,7 @@ class _LogoutButtonState extends State<LogoutButton> with SingleTickerProviderSt
     );
     _offsetAnimation = Tween<Offset>(
       begin: Offset.zero,
-      end: Offset(2.0, 0.0), // Adjust the end value to slide further out of view
+      end: Offset(2.0, 0.0),
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
