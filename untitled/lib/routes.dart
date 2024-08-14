@@ -20,6 +20,7 @@ import 'Frontend/pages/users.dart';
 import 'Frontend/profile/career_profile.dart';
 import 'Frontend/profile/contact_info.dart';
 import 'Frontend/profile/personal_info.dart';
+import 'Frontend/home/Dashbord.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   final args = settings.arguments as String?;
@@ -29,30 +30,41 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => Login());
     case '/home':
       return MaterialPageRoute(builder: (context) => MyHomePage(token: args));
+    case '/dashbord':
+      return MaterialPageRoute(builder: (context) => MainScreen(token: args ?? ''));
     case '/attendance':
-      return MaterialPageRoute(builder: (context) => Attendance(token: args ?? ''));
+      return MaterialPageRoute(
+          builder: (context) => Attendance(token: args ?? ''));
     case '/leave':
       return MaterialPageRoute(builder: (context) => Leave(token: args ?? ''));
     case '/geolocation':
-      return MaterialPageRoute(builder: (context) => GeoLocation(token: args ?? ''));
+      return MaterialPageRoute(
+          builder: (context) => GeoLocation(token: args ?? ''));
     case '/news_screen':
       return MaterialPageRoute(builder: (context) => NewsScreen());
     case '/policies':
-      return MaterialPageRoute(builder: (context) => Policies(token: args ?? '',));
+      return MaterialPageRoute(
+          builder: (context) => Policies(
+                token: args ?? '',
+              ));
     case '/requests':
       return MaterialPageRoute(builder: (context) => Requests());
     case '/celebrations':
       return MaterialPageRoute(builder: (context) => Celebrations());
     case '/personalInfo':
-      return MaterialPageRoute(builder: (context) => PersonalInfo(token: args ?? ''));
+      return MaterialPageRoute(
+          builder: (context) => PersonalInfo(token: args ?? ''));
     case '/payslips':
       return MaterialPageRoute(builder: (context) => PaySlip());
     case '/careerProfile':
-      return MaterialPageRoute(builder: (context) => CareerProfile(token: args ?? ''));
+      return MaterialPageRoute(
+          builder: (context) => CareerProfile(token: args ?? ''));
     case '/profile':
-      return MaterialPageRoute(builder: (context) => ProfilePage(token: args ?? ''));
+      return MaterialPageRoute(
+          builder: (context) => ProfilePage(token: args ?? ''));
     case '/contactInfo':
-      return MaterialPageRoute(builder: (context) => ContactInfo(token: args ?? ''));
+      return MaterialPageRoute(
+          builder: (context) => ContactInfo(token: args ?? ''));
     case '/attendanceTracker':
       return MaterialPageRoute(builder: (context) => AttendanceTracker());
     case '/taskScreen':
@@ -64,9 +76,15 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/employee':
       return MaterialPageRoute(builder: (context) => EmployeeScreen());
     case '/approval':
-      return MaterialPageRoute(builder: (context) => ApprovalScreen(token: args ?? '',));
+      return MaterialPageRoute(
+          builder: (context) => ApprovalScreen(
+                token: args ?? '',
+              ));
     case '/leavePolicy':
-      return MaterialPageRoute(builder: (context) => LeavePolicy(token: args ?? '',));
+      return MaterialPageRoute(
+          builder: (context) => LeavePolicy(
+                token: args ?? '',
+              ));
     default:
       return MaterialPageRoute(builder: (context) => Login()); // Default route
   }
