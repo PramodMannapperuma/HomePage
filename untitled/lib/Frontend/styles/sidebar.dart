@@ -210,6 +210,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled/Frontend/pages/attendance.dart';
+import 'package:untitled/Frontend/pages/leave.dart';
+
 
 class CustomSidebar extends StatelessWidget {
   final String token;
@@ -290,7 +293,12 @@ class CustomSidebar extends StatelessWidget {
               title: Text('Attendance'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/attendance', arguments: token);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Attendance(token: token, isFromSidebar: true),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -302,7 +310,12 @@ class CustomSidebar extends StatelessWidget {
               title: Text('Leaves'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/leave', arguments: token);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Leave(token: token, isFromSidebar: true),
+                  ),
+                );
               },
             ),
             ListTile(
