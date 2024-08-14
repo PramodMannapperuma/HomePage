@@ -7,13 +7,16 @@ import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:untitled/Backend/APIs/Apis.dart';
 import '../../Backend/models/att_model.dart';
+import '../app_bar.dart';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
 class Attendance extends StatefulWidget {
   final String token;
+  final bool isFromSidebar;
 
-  const Attendance({Key? key, required this.token}) : super(key: key);
+  const Attendance({Key? key, required this.token, this.isFromSidebar = false})
+      : super(key: key);
 
   @override
   State<Attendance> createState() => _AttendanceState();
@@ -57,20 +60,23 @@ class _AttendanceState extends State<Attendance> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    futureAttendanceData = apiService.fetchAttendanceData(widget.token, _focusedDay);
+    futureAttendanceData =
+        apiService.fetchAttendanceData(widget.token, _focusedDay);
     _loadAttendanceData(_focusedDay);
     _selectedEvents = ValueNotifier([]);
   }
 
   Future<void> _loadAttendanceData(DateTime date) async {
     try {
-      final List<AttendanceData> data = await apiService.fetchAttendanceData(widget.token, date);
+      final List<AttendanceData> data =
+          await apiService.fetchAttendanceData(widget.token, date);
       setState(() {
         _attendanceStatus.clear();
         for (var attendance in data) {
           if (attendance.date != null) {
             final DateTime date = DateTime.parse(attendance.date!);
-            _attendanceStatus[DateTime(date.year, date.month, date.day)] = attendance.status ?? 'incomplete';
+            _attendanceStatus[DateTime(date.year, date.month, date.day)] =
+                attendance.status ?? 'incomplete';
           }
         }
       });
@@ -93,7 +99,8 @@ class _AttendanceState extends State<Attendance> {
         _selectedDay = selectedDate;
         _focusedDay = focusedDay;
         _selectedEvents.value = _getEventsForDay(selectedDate);
-        futureAttendanceData = apiService.fetchAttendanceData(widget.token, selectedDate);
+        futureAttendanceData =
+            apiService.fetchAttendanceData(widget.token, selectedDate);
       });
     }
   }
@@ -114,7 +121,8 @@ class _AttendanceState extends State<Attendance> {
     return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 
-  Future<void> _submitAttendance(String token, String selectedDay, String startTime, String leaveTime, String comment) async {
+  Future<void> _submitAttendance(String token, String selectedDay,
+      String startTime, String leaveTime, String comment) async {
     final url = Uri.parse('${ApiService.baseUrl}/attendance');
 
     try {
@@ -148,12 +156,14 @@ class _AttendanceState extends State<Attendance> {
         await _loadAttendanceData(_focusedDay);
         setState(() {
           _selectedEvents.value = _getEventsForDay(_selectedDay!);
-          futureAttendanceData = apiService.fetchAttendanceData(widget.token, _focusedDay);
+          futureAttendanceData =
+              apiService.fetchAttendanceData(widget.token, _focusedDay);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to submit attendance: ${response.statusCode} ${response.reasonPhrase}'),
+            content: Text(
+                'Failed to submit attendance: ${response.statusCode} ${response.reasonPhrase}'),
             duration: Duration(seconds: 2),
           ),
         );
@@ -168,7 +178,8 @@ class _AttendanceState extends State<Attendance> {
     } on TimeoutException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('The connection has timed out. Please try again later.'),
+          content:
+              Text('The connection has timed out. Please try again later.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -193,7 +204,9 @@ class _AttendanceState extends State<Attendance> {
       return;
     }
 
-    if (_selectedDay != null && (_selectedDay!.weekday == DateTime.saturday || _selectedDay!.weekday == DateTime.sunday)) {
+    if (_selectedDay != null &&
+        (_selectedDay!.weekday == DateTime.saturday ||
+            _selectedDay!.weekday == DateTime.sunday)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('You cannot add attendance for weekends.'),
@@ -225,7 +238,8 @@ class _AttendanceState extends State<Attendance> {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -253,7 +267,8 @@ class _AttendanceState extends State<Attendance> {
                       initialTime: TimeOfDay.now(),
                     );
                     if (pickedTime != null) {
-                      _startTimeController.text = formatTimeOfDayTo24Hour(pickedTime);
+                      _startTimeController.text =
+                          formatTimeOfDayTo24Hour(pickedTime);
                     }
                   },
                 ),
@@ -268,7 +283,8 @@ class _AttendanceState extends State<Attendance> {
                       initialTime: TimeOfDay.now(),
                     );
                     if (pickedTime != null) {
-                      _leaveTimeController.text = formatTimeOfDayTo24Hour(pickedTime);
+                      _leaveTimeController.text =
+                          formatTimeOfDayTo24Hour(pickedTime);
                     }
                   },
                 ),
@@ -356,74 +372,85 @@ class _AttendanceState extends State<Attendance> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/hrislogo2.png',
-              height: isPortrait ? 40.0 : 30.0,
-            ),
-            SizedBox(width: 8.0),
-          ],
-        ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(35.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                child: Text(
-                  "Attendance",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
+      appBar: widget.isFromSidebar
+          ? customAppBar(
+              title: 'Attendance',
+              showActions: true,
+              showLeading: true,
+              context: context,
+              showBackButton: true,
+            )
+          : AppBar(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/hrislogo2.png',
+                    height: isPortrait ? 40.0 : 30.0,
                   ),
+                  SizedBox(width: 8.0),
+                ],
+              ),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(35.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                      child: Text(
+                        "Attendance",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.black,
+                      thickness: 0.2,
+                    ),
+                  ],
                 ),
               ),
-              Divider(
-                color: Colors.black,
-                thickness: 0.2,
+              centerTitle: true,
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.dark,
               ),
-            ],
-          ),
-        ),
-        centerTitle: true,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-        ),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return Padding(
-              padding: EdgeInsets.all(screenWidth * 0.02),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.menu_outlined,
-                  color: AppColors.background,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return Padding(
+                    padding: EdgeInsets.all(screenWidth * 0.02),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.menu_outlined,
+                        color: AppColors.background,
+                      ),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                    ),
+                  );
                 },
               ),
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.person,
-              color: AppColors.background,
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.person,
+                    color: AppColors.background,
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/profile',
+                        arguments: widget.token);
+                  },
+                ),
+              ],
             ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/profile', arguments: widget.token);
-            },
-          ),
-        ],
-      ),
       drawer: CustomSidebar(token: widget.token),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4d2880),
@@ -476,7 +503,8 @@ class _AttendanceState extends State<Attendance> {
               eventLoader: _getEventsForDay,
               calendarBuilders: CalendarBuilders(
                 defaultBuilder: (context, day, focusedDay) {
-                  final status = _attendanceStatus[DateTime(day.year, day.month, day.day)];
+                  final status =
+                      _attendanceStatus[DateTime(day.year, day.month, day.day)];
                   final color = _getStatusColor(status);
 
                   return Container(
@@ -502,7 +530,8 @@ class _AttendanceState extends State<Attendance> {
               },
               onPageChanged: (focusedDay) {
                 _focusedDay = focusedDay;
-                _loadAttendanceData(focusedDay); // Reload data when page changes
+                _loadAttendanceData(
+                    focusedDay); // Reload data when page changes
               },
             ),
           ),
@@ -524,7 +553,8 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                    (element) => element.date == _selectedDay?.toString().split(" ")[0],
+                    (element) =>
+                        element.date == _selectedDay?.toString().split(" ")[0],
                     orElse: () => AttendanceData(
                       amdIn: 'N/A',
                       recIn: 'N/A',
@@ -553,7 +583,8 @@ class _AttendanceState extends State<Attendance> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Date: ${selectedDateData.date}',
@@ -567,17 +598,20 @@ class _AttendanceState extends State<Attendance> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: screenWidth * 0.044,
-                                      color: _getStatusColor(selectedDateData.status),
+                                      color: _getStatusColor(
+                                          selectedDateData.status),
                                     ),
                                   )
                                 ],
                               ),
                               Divider(thickness: 1),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'AMD In: ${selectedDateData.amdIn ?? 'N/A'}',
@@ -593,7 +627,8 @@ class _AttendanceState extends State<Attendance> {
                                     ],
                                   ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Rec In: ${selectedDateData.recIn ?? 'N/A'}',
@@ -610,7 +645,7 @@ class _AttendanceState extends State<Attendance> {
                                   ),
                                 ],
                               ),
-                              Divider(thickness: 1),
+                              SizedBox(height: 8.0),
                               Text(
                                 'Comment: ${selectedDateData.comment ?? 'N/A'}',
                                 style: TextStyle(fontSize: screenWidth * 0.04),
