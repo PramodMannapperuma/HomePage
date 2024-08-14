@@ -67,10 +67,40 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  Future<bool> _onWillPop() async {
+    bool? shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Logout'),
+        content: Text('Are you sure you want to log out from the app?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout ?? false) {
+      // Perform the logout operation and navigate to the login page
+      Navigator.of(context).pushReplacementNamed('/login');
+      return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: WillPopScope(
+        onWillPop: _onWillPop,
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
       bottomNavigationBar: Container(
         height: 86,
         child: Column(
@@ -153,7 +183,7 @@ class _FadeInTextState extends State<FadeInText>
     return FadeTransition(
       opacity: _opacityAnimation!,
       child: Text(
-        '© Powerd by Accelution',
+        '© Powered by Accelution',
         style: TextStyle(
           fontSize: 16,
           color: Colors.black87,
@@ -281,7 +311,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               return CircleAvatar(
                                 radius: 45,
                                 backgroundImage:
-                                    AssetImage('assets/images/profile.png'),
+                                AssetImage('assets/images/profile.png'),
                               );
                             } else if (snapshot.hasData) {
                               return CircleAvatar(
@@ -292,7 +322,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               return CircleAvatar(
                                 radius: 45,
                                 backgroundImage:
-                                    AssetImage('assets/images/profile.png'),
+                                AssetImage('assets/images/profile.png'),
                               );
                             }
                           },
@@ -461,9 +491,9 @@ class CategoryCard extends StatelessWidget {
 
   const CategoryCard(
       {required this.title,
-      required this.icon,
-      required this.route,
-      required this.token});
+        required this.icon,
+        required this.route,
+        required this.token});
 
   @override
   Widget build(BuildContext context) {
