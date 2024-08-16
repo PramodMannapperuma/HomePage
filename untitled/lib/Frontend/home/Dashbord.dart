@@ -419,7 +419,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       CategoryCard(
                         title: 'Approval Task',
                         icon: Icons.approval,
-                        route: '/taskScreen',
+                        route: '/approval',
+                        // route: '/taskScreen',
                         token: widget.token,
                       ),
                       CategoryCard(
