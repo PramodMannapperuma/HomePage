@@ -6,11 +6,14 @@ import 'package:http/http.dart' as http;
 import 'package:untitled/Backend/models/leave_model.dart';
 import 'package:untitled/Backend/models/leave_balance_model.dart';
 import 'package:untitled/Backend/models/leave_types.dart';
+import '../models/att_approval.dart';
 import '../models/att_model.dart';
 import '../models/cover_ups.dart';
 import '../models/dash_model.dart';
+import '../models/leave_approval.dart';
 import '../models/policy_model.dart';
 import '../models/approval_items.dart';
+import '../models/subordinate_model.dart';
 import '../models/team_member_model.dart';
 
 class ApiService {
@@ -90,6 +93,28 @@ class ApiService {
     } else {
       throw Exception(
           'Failed to load dashboard data: ${response.reasonPhrase}');
+    }
+  }
+  // New method to fetch team members' details
+  static Future<List<TeamMember>> fetchTeamMembers(String token) async {
+    try {
+      final response = await http
+          .get(
+        Uri.parse('$_baseUrl/team'),
+        headers: _headers(token),
+      )
+          .timeout(Duration(seconds: 60));
+
+      _logResponse(response);
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return data.map((item) => TeamMember.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load team members: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('An error occurred while fetching team members: $e');
     }
   }
 
@@ -245,32 +270,9 @@ class ApiService {
     }
   }
 
-  // New method to fetch team members' details
-  static Future<List<TeamMember>> fetchTeamMembers(String token) async {
-    try {
-      final response = await http
-          .get(
-        Uri.parse('$_baseUrl/team'),
-        headers: _headers(token),
-      )
-          .timeout(Duration(seconds: 60));
-
-      _logResponse(response);
-
-      if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body);
-        return data.map((item) => TeamMember.fromJson(item)).toList();
-      } else {
-        throw Exception('Failed to load team members: ${response.statusCode} - ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      throw Exception('An error occurred while fetching team members: $e');
-    }
-  }
-
   Future<List<Policy>> fetchPolicies(String token) async {
     // final String url = 'http://hris.accelution.lk/api/policies?length=10&start=0';
-    
+
     final response = await http.get(
       Uri.parse('$baseUrl/policies?length=10&start=0'),
       headers: {
@@ -317,6 +319,30 @@ class ApiService {
     }
   }
 
+  Future<List<Subordinate>> fetchSubordinates(String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/team/subordinates'),
+        headers: _headers(token),
+      ).timeout(Duration(seconds: 60));
+
+      _logResponse(response);
+
+      if (response.statusCode == 200) {
+        // Directly decode the response body to a List
+        List<dynamic> data = json.decode(response.body);
+
+        // Map the dynamic list to a list of Subordinate objects
+        return data.map((item) => Subordinate.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load subordinates: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('An error occurred while fetching subordinates: $e');
+    }
+  }
+
+
   static Future<List<ApprovalItem>> fetchPendingApprovals(String token) async {
 
     try {
@@ -335,6 +361,36 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('An error occurred while fetching pending approvals: $e');
+    }
+  }
+
+  // Fetch leave requests for a specific employee
+  Future<List<LeaveApproval>> fetchLeaveRequests(String employeeId, String token) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/approvals/leave?length=10&start=0&employeeId=$employeeId'),
+      headers: _headers(token),
+    ).timeout(Duration(seconds: 60));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      return data.map((item) => LeaveApproval.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load leave requests');
+    }
+  }
+
+  // Fetch attendance records for a specific employee
+  Future<List<AttApproval>> fetchAttendanceRecords(String employeeId, String token) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/approvals/attendance?length=10&start=0&employeeId=$employeeId'),
+      headers: _headers(token),
+    ).timeout(Duration(seconds: 60));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      return data.map((item) => AttApproval.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load attendance records');
     }
   }
 }
