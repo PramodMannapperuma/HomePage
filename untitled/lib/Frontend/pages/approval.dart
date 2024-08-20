@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../app_bar.dart';
 import '../styles/sidebar.dart';
 
@@ -32,6 +31,8 @@ class _ApprovalScreenState extends State<ApprovalScreen> {
 }
 
 class EmployeeListScreen extends StatefulWidget {
+  const EmployeeListScreen({super.key});
+
   @override
   _EmployeeListScreenState createState() => _EmployeeListScreenState();
 }
