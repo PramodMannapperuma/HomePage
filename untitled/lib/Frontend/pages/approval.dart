@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../Backend/APIs/apis.dart'; // Corrected the import
+import '../../Backend/models/approval_items.dart';
 import '../app_bar.dart';
 import '../styles/sidebar.dart';
 
@@ -12,6 +14,15 @@ class ApprovalScreen extends StatefulWidget {
 }
 
 class _ApprovalScreenState extends State<ApprovalScreen> {
+  late Future<List<ApprovalItem>> _approvalItems;
+
+  @override
+  void initState() {
+    super.initState();
+    print('Fetching approvals with token: ${widget.token}');
+    _approvalItems = ApiService.fetchPendingApprovals(widget.token);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,276 +36,84 @@ class _ApprovalScreenState extends State<ApprovalScreen> {
       drawer: CustomSidebar(
         token: widget.token,
       ),
-      body: EmployeeListScreen(),
-    );
-  }
-}
-
-class EmployeeListScreen extends StatefulWidget {
-  const EmployeeListScreen({super.key});
-
-  @override
-  _EmployeeListScreenState createState() => _EmployeeListScreenState();
-}
-
-class _EmployeeListScreenState extends State<EmployeeListScreen> {
-  final List<String> employees = List.generate(10, (index) => 'Employee ${index + 1}');
-  late List<String> filteredEmployees;
-  TextEditingController searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    filteredEmployees = employees;
-    searchController.addListener(_filterEmployees);
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
-
-  void _filterEmployees() {
-    setState(() {
-      filteredEmployees = employees
-          .where((employee) =>
-          employee.toLowerCase().contains(searchController.text.toLowerCase()))
-          .toList();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            controller: searchController,
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: 'Search Employees',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide.none,
-              ),
-              filled: true,
-              fillColor: Colors.grey[200],
-            ),
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: filteredEmployees.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                title: Text(
-                  filteredEmployees[index],
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EmployeeDetailsScreen(employeeName: filteredEmployees[index]),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class EmployeeDetailsScreen extends StatelessWidget {
-  final String employeeName;
-
-  const EmployeeDetailsScreen({Key? key, required this.employeeName}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: customAppBar(
-        title: '$employeeName - Approval Details',
-        showActions: false,
-        showLeading: true,
-        context: context,
-        showBackButton: true,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(10.0),
-        children: [
-          // Attendance Details Section
-          SectionHeader(title: 'Attendance Details'),
-          AttendanceDetailsTab(employeeName: employeeName),
-
-          // Leave Requests Section
-          SectionHeader(title: 'Leave Request Details'),
-          LeaveRequestsTab(employeeName: employeeName),
-
-          // Request Letters Section
-          SectionHeader(title: 'Request Letters Details'),
-          RequestLettersTab(employeeName: employeeName),
-        ],
+      body: FutureBuilder<List<ApprovalItem>>(
+        future: _approvalItems,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No pending approvals.'));
+          } else {
+            return ListView.builder(
+              padding: const EdgeInsets.all(10.0),
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final approval = snapshot.data![index];
+                return ApprovalCard(
+                  title: approval.item,
+                  details: [
+                    'Employee: ${approval.employee}',
+                    'Designation: ${approval.designation}',
+                    'Code: ${approval.code}',
+                  ],
+                );
+              },
+            );
+          }
+        },
       ),
     );
   }
 }
 
-class SectionHeader extends StatelessWidget {
+class ApprovalCard extends StatelessWidget {
   final String title;
+  final List<String> details;
 
-  const SectionHeader({Key? key, required this.title}) : super(key: key);
+  const ApprovalCard({Key? key, required this.title, required this.details}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Text(
-        title,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 5.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
+            ),
+            SizedBox(height: 10.0), // Space between title and details
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: details.map((detail) => Text(detail)).toList(),
+            ),
+            SizedBox(height: 20.0), // Space between details and buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end, // Align buttons to the right
+              children: [
+                ActionButtons(),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class AttendanceDetailsTab extends StatelessWidget {
-  final String employeeName;
 
-  const AttendanceDetailsTab({Key? key, required this.employeeName}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: 3, // Replace with your actual data source length
-      itemBuilder: (context, index) {
-        return Card(
-          margin: EdgeInsets.symmetric(vertical: 5.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          elevation: 2,
-          child: ListTile(
-            contentPadding: EdgeInsets.all(15.0),
-            title: Text(
-              employeeName,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Date: 2024-08-09'),
-                Text('Actual In: 09:00 AM'),
-                Text('Actual Out: 05:00 PM'),
-                Text('Comment: On Time'),
-              ],
-            ),
-            trailing: ActionButtons(),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class LeaveRequestsTab extends StatelessWidget {
-  final String employeeName;
-
-  const LeaveRequestsTab({Key? key, required this.employeeName}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: 3, // Replace with your actual data source length
-      itemBuilder: (context, index) {
-        return Card(
-          margin: EdgeInsets.symmetric(vertical: 5.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          elevation: 3,
-          child: ListTile(
-            contentPadding: EdgeInsets.all(15.0),
-            title: Text(
-              employeeName,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Leave Type: Casual'),
-                Text('Date: 2024-08-09'),
-                Text('Reason: Personal Matter'),
-                Text('Time of the day: Half day'),
-              ],
-            ),
-            trailing: ActionButtons(),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class RequestLettersTab extends StatelessWidget {
-  final String employeeName;
-
-  const RequestLettersTab({Key? key, required this.employeeName}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: 3, // Replace with your actual data source length
-      itemBuilder: (context, index) {
-        return Card(
-          margin: EdgeInsets.symmetric(vertical: 5.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          elevation: 3,
-          child: ListTile(
-            contentPadding: EdgeInsets.all(15.0),
-            title: Text(
-              'Request Letter ${index + 1}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Request Type: General'),
-                Text('Date: 2024-08-09'),
-                Text('Details: Request details go here.'),
-              ],
-            ),
-            trailing: ActionButtons(),
-          ),
-        );
-      },
-    );
-  }
-}
 
 class ActionButtons extends StatelessWidget {
   @override

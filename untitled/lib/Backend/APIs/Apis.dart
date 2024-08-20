@@ -10,23 +10,25 @@ import '../models/att_model.dart';
 import '../models/cover_ups.dart';
 import '../models/dash_model.dart';
 import '../models/policy_model.dart';
+import '../models/approval_items.dart';
 
 class ApiService {
   static const String _baseUrl = 'http://hris.accelution.lk/api';
   static String get baseUrl => _baseUrl;
 
   static Map<String, String> _headers(String token) => {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+
 
   static Future<Map<String, dynamic>> getProfile(String token) async {
     try {
       final response = await http
           .get(
-            Uri.parse('$_baseUrl/profile'),
-            headers: _headers(token),
-          )
+        Uri.parse('$_baseUrl/profile'),
+        headers: _headers(token),
+      )
           .timeout(Duration(seconds: 60)); // Adjust timeout as needed
 
       _logResponse(response);
@@ -71,9 +73,9 @@ class ApiService {
   Future<DashboardData> fetchDashboardData(String token) async {
     final response = await http
         .get(
-          Uri.parse('$_baseUrl/dashboard'),
-          headers: _headers(token),
-        )
+      Uri.parse('$_baseUrl/dashboard'),
+      headers: _headers(token),
+    )
         .timeout(Duration(seconds: 60));
 
     _logResponse(response);
@@ -95,9 +97,9 @@ class ApiService {
     final formattedDate = _formatDate(selectedDate);
     final response = await http
         .get(
-          Uri.parse('$_baseUrl/attendance/$formattedDate'),
-          headers: _headers(token),
-        )
+      Uri.parse('$_baseUrl/attendance/$formattedDate'),
+      headers: _headers(token),
+    )
         .timeout(Duration(seconds: 60));
 
     _logResponse(response);
@@ -181,7 +183,6 @@ class ApiService {
     }
   }
 
-
   static String _formatDate(DateTime date) {
     return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
   }
@@ -245,7 +246,7 @@ class ApiService {
 
   Future<List<Policy>> fetchPolicies(String token) async {
     // final String url = 'http://hris.accelution.lk/api/policies?length=10&start=0';
-
+    
     final response = await http.get(
       Uri.parse('$baseUrl/policies?length=10&start=0'),
       headers: {
@@ -292,5 +293,27 @@ class ApiService {
     }
   }
 
+  static Future<List<ApprovalItem>> fetchPendingApprovals(String token) async {
+
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/approvals/pending?length=10&start=0'),
+        headers: _headers(token),
+      );
+
+      _logResponse(response);
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return data.map((item) => ApprovalItem.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load pending approvals: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('An error occurred while fetching pending approvals: $e');
+    }
+  }
 }
+
+
 
