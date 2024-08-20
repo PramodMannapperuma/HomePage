@@ -11,6 +11,7 @@ import '../models/cover_ups.dart';
 import '../models/dash_model.dart';
 import '../models/policy_model.dart';
 import '../models/approval_items.dart';
+import '../models/team_member_model.dart';
 
 class ApiService {
   static const String _baseUrl = 'http://hris.accelution.lk/api';
@@ -241,6 +242,29 @@ class ApiService {
       return coverups.map((dynamic item) => CoverUp.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load cover-ups');
+    }
+  }
+
+  // New method to fetch team members' details
+  static Future<List<TeamMember>> fetchTeamMembers(String token) async {
+    try {
+      final response = await http
+          .get(
+        Uri.parse('$_baseUrl/team'),
+        headers: _headers(token),
+      )
+          .timeout(Duration(seconds: 60));
+
+      _logResponse(response);
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return data.map((item) => TeamMember.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load team members: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('An error occurred while fetching team members: $e');
     }
   }
 

@@ -244,6 +244,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                     );
                   },
                 ),
+                SizedBox(height: 20),
                 ProfileMenuWidget(
                   title: "Log Out",
                   icon: Icons.logout,
@@ -252,9 +253,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                   onPress: _startAnimation,
                   animatedTransition: SlideTransition(
                     position: _offsetAnimation,
-                    child: Row(
-                      children: [
-                        Container(
+                    child: ListTile(
+                         leading: Container(
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
@@ -263,7 +263,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                           ),
                           child: Icon(Icons.logout, color: Colors.white, size: 20),
                         ),
-                        SizedBox(width: 10),
+                        title:
                         Text(
                           "Log Out",
                           style: TextStyle(
@@ -271,7 +271,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                             color: Colors.red,
                           ),
                         ),
-                      ],
+                      
                     ),
                   ),
                 ),

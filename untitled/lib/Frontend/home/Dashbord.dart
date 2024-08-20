@@ -37,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
       Leave(token: widget.token),
       DashboardScreen(token: widget.token, lastLogin: _lastLogin),
       DashMainScreen(token: widget.token),
-      EmployeeScreen(),
+      EmployeeScreen(token: widget.token),
     ];
   }
 
