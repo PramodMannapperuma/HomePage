@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../Backend/APIs/apis.dart'; // Corrected the import
-import '../../Backend/models/approval_items.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../app_bar.dart';
+import '../../Backend/models/subordinate_model.dart';
+import '../../Backend/models/leave_approval.dart';
+import '../../Backend/models/att_approval.dart';
+import 'package:untitled/Backend/APIs/Apis.dart';
 import '../styles/sidebar.dart';
 
 class ApprovalScreen extends StatefulWidget {
@@ -14,15 +18,6 @@ class ApprovalScreen extends StatefulWidget {
 }
 
 class _ApprovalScreenState extends State<ApprovalScreen> {
-  late Future<List<ApprovalItem>> _approvalItems;
-
-  @override
-  void initState() {
-    super.initState();
-    print('Fetching approvals with token: ${widget.token}');
-    _approvalItems = ApiService.fetchPendingApprovals(widget.token);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,84 +31,346 @@ class _ApprovalScreenState extends State<ApprovalScreen> {
       drawer: CustomSidebar(
         token: widget.token,
       ),
-      body: FutureBuilder<List<ApprovalItem>>(
-        future: _approvalItems,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No pending approvals.'));
-          } else {
-            return ListView.builder(
-              padding: const EdgeInsets.all(10.0),
-              itemCount: snapshot.data!.length,
+      body: EmployeeListScreen(token: widget.token),
+    );
+  }
+}
+
+class EmployeeListScreen extends StatefulWidget {
+  final String token;
+
+  const EmployeeListScreen({Key? key, required this.token}) : super(key: key);
+
+  @override
+  _EmployeeListScreenState createState() => _EmployeeListScreenState();
+}
+
+class _EmployeeListScreenState extends State<EmployeeListScreen> {
+  List<Subordinate> subordinates = [];
+  List<Subordinate> filteredSubordinates = [];
+  TextEditingController searchController = TextEditingController();
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchSubordinates();
+    searchController.addListener(_filterSubordinates);
+  }
+
+  Future<void> _fetchSubordinates() async {
+    try {
+      subordinates = await ApiService().fetchSubordinates(widget.token);
+      setState(() {
+        filteredSubordinates = subordinates;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print('Error fetching subordinates: $e');
+    }
+  }
+
+  void _filterSubordinates() {
+    setState(() {
+      filteredSubordinates = subordinates
+          .where((subordinate) =>
+          subordinate.name
+              .toLowerCase()
+              .contains(searchController.text.toLowerCase()))
+          .toList();
+    });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          TextField(
+            controller: searchController,
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+              hintText: 'Search Employees',
+              hintStyle: TextStyle(color: Colors.grey[600]),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: Colors.grey[200],
+            ),
+          ),
+          SizedBox(height: 10.0),
+          Expanded(
+            child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : ListView.builder(
+              itemCount: filteredSubordinates.length,
               itemBuilder: (context, index) {
-                final approval = snapshot.data![index];
-                return ApprovalCard(
-                  title: approval.item,
-                  details: [
-                    'Employee: ${approval.employee}',
-                    'Designation: ${approval.designation}',
-                    'Code: ${approval.code}',
-                  ],
+                return ListTile(
+                  contentPadding: EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 10.0),
+                  title: Text(
+                    filteredSubordinates[index].name,
+                    style: TextStyle(
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    filteredSubordinates[index].designation,
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey[600],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            EmployeeDetailsScreen(
+                              employeeName:
+                              filteredSubordinates[index].name,
+                              employeeId: filteredSubordinates[index].id,
+                              token: widget.token,
+                            ),
+                      ),
+                    );
+                  },
                 );
               },
-            );
-          }
-        },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class ApprovalCard extends StatelessWidget {
-  final String title;
-  final List<String> details;
+class EmployeeDetailsScreen extends StatefulWidget {
+  final String employeeName;
+  final String employeeId;
+  final String token;
 
-  const ApprovalCard({Key? key, required this.title, required this.details}) : super(key: key);
+  const EmployeeDetailsScreen({
+    Key? key,
+    required this.employeeName,
+    required this.employeeId,
+    required this.token,
+  }) : super(key: key);
+
+  @override
+  _EmployeeDetailsScreenState createState() => _EmployeeDetailsScreenState();
+}
+
+class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
+  bool isLoading = true;
+  List<LeaveApproval> leaveRequests = [];
+  List<AttApproval> attendanceRecords = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLeaveRequests();
+    _fetchAttendanceRecords();
+  }
+
+  Future<void> _fetchLeaveRequests() async {
+    try {
+      final response = await ApiService()
+          .fetchLeaveRequests(widget.employeeId, widget.token);
+      leaveRequests = response;
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print('Error fetching leave requests: $e');
+    }
+  }
+
+  Future<void> _fetchAttendanceRecords() async {
+    try {
+      final response = await ApiService()
+          .fetchAttendanceRecords(widget.employeeId, widget.token);
+      attendanceRecords = response.cast<AttApproval>();
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print('Error fetching attendance records: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 5.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
+    return Scaffold(
+      appBar: customAppBar(
+        title: '${widget.employeeName} - Approval Details',
+        showActions: false,
+        showLeading: true,
+        context: context,
+        showBackButton: true,
       ),
-      elevation: 3,
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ListView(
+                children: [
+                  SectionHeader(title: 'Attendance Details'),
+                  AttendanceDetailsTab(attendanceRecords: attendanceRecords),
+                  SectionHeader(title: 'Leave Request Details'),
+                  LeaveRequestsTab(leaveRequests: leaveRequests),
+                ],
               ),
             ),
-            SizedBox(height: 10.0), // Space between title and details
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: details.map((detail) => Text(detail)).toList(),
-            ),
-            SizedBox(height: 20.0), // Space between details and buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end, // Align buttons to the right
-              children: [
-                ActionButtons(),
-              ],
-            ),
-          ],
+    );
+  }
+}
+
+class SectionHeader extends StatelessWidget {
+  final String title;
+
+  const SectionHeader({Key? key, required this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Center(
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color(0xff4d2880),
+          ),
+          textAlign: TextAlign.center,
         ),
       ),
     );
   }
 }
 
+class AttendanceDetailsTab extends StatelessWidget {
+  final List<AttApproval> attendanceRecords;
 
+  const AttendanceDetailsTab({Key? key, required this.attendanceRecords})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: attendanceRecords.length,
+      itemBuilder: (context, index) {
+        return Card(
+          margin: EdgeInsets.symmetric(vertical: 8.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          elevation: 2,
+          child: ListTile(
+            contentPadding: EdgeInsets.all(15.0),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Date: ${attendanceRecords[index].date}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                ),
+                Text(
+                  'Time In: ${attendanceRecords[index].amdIn}',
+                    style: TextStyle(fontSize: 15.0),
+                ),
+                Text(
+                  'Time Out: ${attendanceRecords[index].amdOut}',
+                    style: TextStyle(fontSize: 15.0),
+                  ),
+
+                Text(
+                  'Comment: ${attendanceRecords[index].amdComment}',
+                    style: TextStyle(fontSize: 15.0),
+                ),
+              ],
+            ),
+            trailing: ActionButtons(), // trailing: ActionButtons(),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class LeaveRequestsTab extends StatelessWidget {
+  final List<LeaveApproval> leaveRequests;
+
+  const LeaveRequestsTab({Key? key, required this.leaveRequests})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: leaveRequests.length,
+      itemBuilder: (context, index) {
+        return Card(
+          margin: EdgeInsets.symmetric(vertical: 8.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          elevation: 2,
+          child: ListTile(
+            contentPadding: EdgeInsets.all(15.0),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Date: ${leaveRequests[index].date}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                ),
+                Text('Leave Type: ${leaveRequests[index].leaveType}',
+                    style: TextStyle(fontSize: 15.0)),
+                Text(
+                  'Reason: ${leaveRequests[index].reason}',
+                  style: TextStyle(fontSize: 15.0),
+                ),
+                Text(
+                  'Time: ${leaveRequests[index].time}',
+                  style: TextStyle(fontSize: 15.0),
+                ),
+              ],
+            ),
+            trailing: ActionButtons(),
+          ),
+        );
+      },
+    );
+  }
+}
 
 class ActionButtons extends StatelessWidget {
   @override
@@ -127,6 +384,8 @@ class ActionButtons extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6.0),
             ),
+            padding: EdgeInsets.symmetric(
+                horizontal: 8.0, vertical: 4.0), // Smaller button
           ),
           onPressed: () {
             // Handle accept action
@@ -136,13 +395,15 @@ class ActionButtons extends StatelessWidget {
             style: TextStyle(color: Colors.white),
           ),
         ),
-        SizedBox(width: 3.0),
+        SizedBox(width: 4.0),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.red,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6.0),
             ),
+            padding: EdgeInsets.symmetric(
+                horizontal: 8.0, vertical: 4.0), // Smaller button
           ),
           onPressed: () {
             // Handle decline action
