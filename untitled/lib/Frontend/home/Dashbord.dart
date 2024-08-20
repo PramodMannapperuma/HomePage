@@ -129,7 +129,7 @@ class _MainScreenState extends State<MainScreen> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.group_add_outlined,
                       color: AppColors.background),
-                  label: 'Tracking',
+                  label: 'My Team',
                 ),
               ],
               currentIndex: _selectedIndex,

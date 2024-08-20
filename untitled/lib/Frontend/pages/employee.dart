@@ -220,11 +220,13 @@ import 'package:untitled/Backend/models/team_member_model.dart';
 import 'dart:typed_data';
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
+import '../app_bar.dart';
 
 class EmployeeScreen extends StatefulWidget {
   final String token;
+  final bool isFromSidebar;
 
-  const EmployeeScreen({Key? key, required this.token}) : super(key: key);
+  const EmployeeScreen({Key? key, required this.token, this.isFromSidebar = false}) : super(key: key);
 
   @override
   _EmployeeScreenState createState() => _EmployeeScreenState();
@@ -246,7 +248,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
 
     // Assuming the supervisor has a specific ID or flag in your data.
     _supervisor = teamMembers.firstWhere(
-      (member) => member.supervisor == 0, // Assuming 0 indicates the supervisor
+          (member) => member.supervisor == 0, // Assuming 0 indicates the supervisor
       orElse: () => teamMembers.first,
     );
 
@@ -270,17 +272,52 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Scaffold(
-      appBar: AppBar(
+      appBar: widget.isFromSidebar
+          ? customAppBar(
+        title: 'My Team',
+        showActions: true,
+        showLeading: true,
+        context: context,
+        showBackButton: true,
+      )
+          : AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
               'assets/images/hrislogo2.png',
-              height: 40.0,
+              height: isPortrait ? 40.0 : 30.0,
             ),
             SizedBox(width: 8.0),
           ],
+        ),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(35.0),
+          child: Column(
+            children: [
+              Padding(
+                padding:
+                EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                child: Text(
+                  "My Team",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Divider(
+                color: Colors.black,
+                thickness: 0.2,
+              ),
+            ],
+          ),
         ),
         centerTitle: true,
         systemOverlayStyle: const SystemUiOverlayStyle(
@@ -290,7 +327,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         leading: Builder(
           builder: (BuildContext context) {
             return Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(screenWidth * 0.02),
               child: IconButton(
                 icon: const Icon(
                   Icons.menu_outlined,
@@ -352,8 +389,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
-                        childAspectRatio: MediaQuery.of(context).size.width / 
-                          (MediaQuery.of(context).size.height / 2),
+                        childAspectRatio: MediaQuery.of(context).size.width /
+                            (MediaQuery.of(context).size.height / 2),
                       ),
                       itemCount: teamMembers.length,
                       itemBuilder: (context, index) {
