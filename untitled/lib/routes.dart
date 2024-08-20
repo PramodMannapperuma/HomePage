@@ -74,7 +74,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/employeeScreen':
       return MaterialPageRoute(builder: (context) => EmployeeGridScreen());
     case '/employee':
-      return MaterialPageRoute(builder: (context) => EmployeeScreen());
+      return MaterialPageRoute(builder: (context) => EmployeeScreen(token: args ?? ''));
     case '/approval':
       return MaterialPageRoute(
           builder: (context) => ApprovalScreen(
