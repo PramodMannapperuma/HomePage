@@ -553,7 +553,7 @@ class _LeavePageState extends State<Leave> {
     return Scaffold(
       appBar: widget.isFromSidebar
           ? customAppBar(
-        title: 'Attendance',
+        title: 'Leave',
         showActions: true,
         showLeading: true,
         context: context,
@@ -578,7 +578,7 @@ class _LeavePageState extends State<Leave> {
                 padding:
                 EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 child: Text(
-                  "Attendance",
+                  "Leave",
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
