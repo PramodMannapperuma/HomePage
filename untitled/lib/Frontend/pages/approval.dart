@@ -474,15 +474,15 @@
 //   }
 // }
 
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:untitled/Backend/APIs/Apis.dart';
 import '../app_bar.dart';
 import '../../Backend/models/subordinate_model.dart';
+import '../../Backend/models/cover_up_detail.dart';
 import '../../Backend/models/leave_approval.dart';
 import '../../Backend/models/att_approval.dart';
-import '../../Backend/models/cover_up_detail.dart'; // Import CoverUpDetail model
-import 'package:untitled/Backend/APIs/Apis.dart';
 import '../styles/sidebar.dart';
 
 class ApprovalScreen extends StatefulWidget {
@@ -554,7 +554,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
     setState(() {
       filteredSubordinates = subordinates
           .where((subordinate) =>
-              subordinate.name.toLowerCase().contains(searchController.text.toLowerCase()))
+          subordinate.name.toLowerCase().contains(searchController.text.toLowerCase()))
           .toList();
     });
   }
@@ -589,45 +589,46 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
           Expanded(
             child: isLoading
                 ? Center(child: CircularProgressIndicator())
+                : filteredSubordinates.isEmpty
+                ? Center(child: Text('No employees found'))
                 : ListView.builder(
-                    itemCount: filteredSubordinates.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 10.0),
-                        title: Text(
-                          filteredSubordinates[index].name,
-                          style: TextStyle(
-                            fontSize: 17.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          filteredSubordinates[index].designation,
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.grey[600],
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EmployeeDetailsScreen(
-                                employeeName: filteredSubordinates[index].name,
-                                employeeId: filteredSubordinates[index].id,
-                                token: widget.token,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
+              itemCount: filteredSubordinates.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  title: Text(
+                    filteredSubordinates[index].name,
+                    style: TextStyle(
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                  subtitle: Text(
+                    filteredSubordinates[index].designation,
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey[600],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EmployeeDetailsScreen(
+                          employeeName: filteredSubordinates[index].name,
+                          employeeId: filteredSubordinates[index].id,
+                          token: widget.token,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -655,22 +656,21 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
   bool isLoading = true;
   List<LeaveApproval> leaveRequests = [];
   List<AttApproval> attendanceRecords = [];
-  List<CoverUpDetail> coverUpDetails = []; // Add this to store cover-up details
+  List<CoverUpDetail> coverUpDetails = [];
 
   @override
   void initState() {
     super.initState();
     _fetchLeaveRequests();
     _fetchAttendanceRecords();
-    _fetchCoverUpDetails(); // Fetch cover-up details
+    _fetchCoverUpDetails();
   }
 
   Future<void> _fetchLeaveRequests() async {
     try {
-      final response = await ApiService()
-          .fetchLeaveRequests(widget.employeeId, widget.token);
-      leaveRequests = response;
+      final response = await ApiService().fetchLeaveRequests(widget.employeeId, widget.token);
       setState(() {
+        leaveRequests = response;
         isLoading = false;
       });
     } catch (e) {
@@ -683,10 +683,9 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
 
   Future<void> _fetchAttendanceRecords() async {
     try {
-      final response = await ApiService()
-          .fetchAttendanceRecords(widget.employeeId, widget.token);
-      attendanceRecords = response.cast<AttApproval>();
+      final response = await ApiService().fetchAttendanceRecords(widget.employeeId, widget.token);
       setState(() {
+        attendanceRecords = response;
         isLoading = false;
       });
     } catch (e) {
@@ -700,8 +699,8 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
   Future<void> _fetchCoverUpDetails() async {
     try {
       final response = await ApiService.getCoverUpDetails(widget.token, int.parse(widget.employeeId));
-      coverUpDetails = response;
       setState(() {
+        coverUpDetails = response;
         isLoading = false;
       });
     } catch (e) {
@@ -725,18 +724,24 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ListView(
-                children: [
-                  SectionHeader(title: 'Attendance Details'),
-                  AttendanceDetailsTab(attendanceRecords: attendanceRecords),
-                  SectionHeader(title: 'Leave Request Details'),
-                  LeaveRequestsTab(leaveRequests: leaveRequests),
-                  SectionHeader(title: 'Cover-Up Request Details'), // Add Cover-Up section header
-                  CoverUpDetailsTab(coverUpDetails: coverUpDetails), // Display Cover-Up details
-                ],
-              ),
-            ),
+        padding: const EdgeInsets.all(10.0),
+        child: ListView(
+          children: [
+            SectionHeader(title: 'Attendance Details'),
+            attendanceRecords.isEmpty
+                ? Center(child: Text('No attendance records found'))
+                : AttendanceDetailsTab(attendanceRecords: attendanceRecords, token: widget.token),
+            SectionHeader(title: 'Leave Request Details'),
+            leaveRequests.isEmpty
+                ? Center(child: Text('No leave requests found'))
+                : LeaveRequestsTab(leaveRequests: leaveRequests, token: widget.token),
+            SectionHeader(title: 'Cover-Up Request Details'),
+            coverUpDetails.isEmpty
+                ? Center(child: Text('No cover-up requests found'))
+                : CoverUpRequestTab(coverUpDetails: coverUpDetails, token: widget.token),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -767,9 +772,9 @@ class SectionHeader extends StatelessWidget {
 
 class AttendanceDetailsTab extends StatelessWidget {
   final List<AttApproval> attendanceRecords;
+  final String token;
 
-  const AttendanceDetailsTab({Key? key, required this.attendanceRecords})
-      : super(key: key);
+  const AttendanceDetailsTab({Key? key, required this.attendanceRecords, required this.token}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -799,20 +804,22 @@ class AttendanceDetailsTab extends StatelessWidget {
                 ),
                 Text(
                   'Time In: ${attendanceRecords[index].amdIn}',
-                    style: TextStyle(fontSize: 15.0),
+                  style: TextStyle(fontSize: 15.0),
                 ),
                 Text(
                   'Time Out: ${attendanceRecords[index].amdOut}',
-                    style: TextStyle(fontSize: 15.0),
-                  ),
-
+                  style: TextStyle(fontSize: 15.0),
+                ),
                 Text(
                   'Comment: ${attendanceRecords[index].amdComment}',
-                    style: TextStyle(fontSize: 15.0),
+                  style: TextStyle(fontSize: 15.0),
                 ),
               ],
             ),
-            trailing: ActionButton(), // trailing: ActionButtons(),
+            trailing: AttActionButton(
+              token: token,
+              id: attendanceRecords[index].id,
+            ),
           ),
         );
       },
@@ -822,9 +829,9 @@ class AttendanceDetailsTab extends StatelessWidget {
 
 class LeaveRequestsTab extends StatelessWidget {
   final List<LeaveApproval> leaveRequests;
+  final String token;
 
-  const LeaveRequestsTab({Key? key, required this.leaveRequests})
-      : super(key: key);
+  const LeaveRequestsTab({Key? key, required this.leaveRequests, required this.token}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -845,11 +852,14 @@ class LeaveRequestsTab extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
+                  'ID: ${leaveRequests[index].id}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                ),
+                Text(
                   'Date: ${leaveRequests[index].date}',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                 ),
-                Text('Leave Type: ${leaveRequests[index].leaveType}',
-                    style: TextStyle(fontSize: 15.0)),
+                Text('Leave Type: ${leaveRequests[index].leaveType}', style: TextStyle(fontSize: 15.0)),
                 Text(
                   'Reason: ${leaveRequests[index].reason}',
                   style: TextStyle(fontSize: 15.0),
@@ -860,7 +870,10 @@ class LeaveRequestsTab extends StatelessWidget {
                 ),
               ],
             ),
-            trailing: ActionButtons(),
+            trailing: LeaveActionButton(
+              token: token,
+              id: leaveRequests[index].id,
+            ),
           ),
         );
       },
@@ -868,10 +881,11 @@ class LeaveRequestsTab extends StatelessWidget {
   }
 }
 
-class CoverUpDetailsTab extends StatelessWidget {
+class CoverUpRequestTab extends StatelessWidget {
   final List<CoverUpDetail> coverUpDetails;
+  final String token;
 
-  const CoverUpDetailsTab({Key? key, required this.coverUpDetails}) : super(key: key);
+  const CoverUpRequestTab({Key? key, required this.coverUpDetails, required this.token}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -911,7 +925,10 @@ class CoverUpDetailsTab extends StatelessWidget {
                 ),
               ],
             ),
-            trailing: ActionButtons(),
+            trailing: CoverActionButton(
+              token: token,
+              id: coverUpDetails[index].id,
+            ),
           ),
         );
       },
@@ -919,7 +936,116 @@ class CoverUpDetailsTab extends StatelessWidget {
   }
 }
 
-class ActionButton extends StatelessWidget {
+class AttActionButton extends StatelessWidget {
+  final String token;
+  final int id;
+
+  const AttActionButton({Key? key, required this.token, required this.id}) : super(key: key);
+
+  Future<void> _showCommentDialog(BuildContext context, String action) async {
+    TextEditingController commentController = TextEditingController();
+    bool isLoading = false;
+    bool isSubmitted = false;
+    String? errorMessage; // To store the error message
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Add Comment'),
+              content: isLoading
+                  ? Center(
+                child: SpinKitCircle(
+                  color: Theme.of(context).primaryColor,
+                  size: 50.0,
+                ),
+              )
+                  : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: commentController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your comment',
+                      errorText: errorMessage, // Display error message
+                    ),
+                  ),
+                  if (isSubmitted)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: FlareActor(
+                          "assets/checkmark.flr",
+                          alignment: Alignment.center,
+                          fit: BoxFit.contain,
+                          animation: "checkmark",
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: isLoading
+                      ? null
+                      : () async {
+                    setState(() {
+                      isLoading = true;
+                      errorMessage = null; // Clear any previous error message
+                    });
+
+                    try {
+                      await ApiService().approveAttendance(
+                        token,
+                        [id],
+                        action,
+                        commentController.text,
+                      );
+                      setState(() {
+                        isSubmitted = true;
+                      });
+                      await Future.delayed(Duration(seconds: 2)); // Wait for animation
+                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                    } catch (e) {
+                      setState(() {
+                        isLoading = false;
+                        errorMessage = 'Failed to submit. Please try again.'; // Set error message
+                      });
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -931,14 +1057,9 @@ class ActionButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6.0),
             ),
-            padding: EdgeInsets.symmetric(
-                horizontal: 8.0, vertical: 4.0), // Smaller button
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           ),
-          onPressed: () {
-            // Handle accept action
-            //Call POST function to accept the attendance
-            //Have to send id in a list and action
-          },
+          onPressed: () => _showCommentDialog(context, "approve"),
           child: Text(
             'Accept',
             style: TextStyle(color: Colors.white),
@@ -951,12 +1072,9 @@ class ActionButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6.0),
             ),
-            padding: EdgeInsets.symmetric(
-                horizontal: 8.0, vertical: 4.0), // Smaller button
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           ),
-          onPressed: () {
-            // Handle decline action
-          },
+          onPressed: () => _showCommentDialog(context, "reject"),
           child: Text(
             'Decline',
             style: TextStyle(color: Colors.white),
@@ -967,7 +1085,132 @@ class ActionButton extends StatelessWidget {
   }
 }
 
-class ActionButtons extends StatelessWidget {
+// The following classes are similarly updated:
+
+class LeaveActionButton extends StatelessWidget {
+  final String token;
+  final int id;
+
+  const LeaveActionButton({Key? key, required this.token, required this.id}) : super(key: key);
+
+  Future<void> _showCommentDialog(BuildContext context, String action) async {
+    TextEditingController commentController = TextEditingController();
+    bool isLoading = false;
+    bool isSubmitted = false;
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Add Comment'),
+              content: isLoading
+                  ? Center(
+                child: SpinKitCircle(
+                  color: Theme.of(context).primaryColor,
+                  size: 50.0,
+                ),
+              )
+                  : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: commentController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your comment',
+                    ),
+                  ),
+                  if (isSubmitted)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: FlareActor(
+                          "assets/checkmark.flr",
+                          alignment: Alignment.center,
+                          fit: BoxFit.contain,
+                          animation: "checkmark",
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: isLoading
+                      ? null
+                      : () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+
+                    try {
+                      await ApiService().approveLeave(
+                        token,
+                        [id],
+                        action,
+                        commentController.text,
+                      );
+                      setState(() {
+                        isSubmitted = true;
+                      });
+                      await Future.delayed(Duration(seconds: 2)); // Wait for animation
+                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Leave ${action == "approve" ? "Approved" : "Rejected"}',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor:
+                          action == "approve" ? Colors.green : Colors.red,
+                        ),
+                      );
+                    } catch (e) {
+                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                      print('Error $action leave: $e');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Failed to ${action == "approve" ? "approve" : "reject"} leave',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -979,14 +1222,9 @@ class ActionButtons extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6.0),
             ),
-            padding: EdgeInsets.symmetric(
-                horizontal: 8.0, vertical: 4.0), // Smaller button
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           ),
-          onPressed: () {
-            // Handle accept action
-            //Call POST function to accept the leave
-            //Have to send id in a list and action
-          },
+          onPressed: () => _showCommentDialog(context, "approve"),
           child: Text(
             'Accept',
             style: TextStyle(color: Colors.white),
@@ -999,12 +1237,172 @@ class ActionButtons extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6.0),
             ),
-            padding: EdgeInsets.symmetric(
-                horizontal: 8.0, vertical: 4.0), // Smaller button
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           ),
-          onPressed: () {
-            // Handle decline action
+          onPressed: () => _showCommentDialog(context, "reject"),
+          child: Text(
+            'Decline',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CoverActionButton extends StatelessWidget {
+  final String token;
+  final int id;
+
+  const CoverActionButton({Key? key, required this.token, required this.id}) : super(key: key);
+
+  Future<void> _showCommentDialog(BuildContext context, String action) async {
+    TextEditingController commentController = TextEditingController();
+    bool isLoading = false;
+    bool isSubmitted = false;
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Add Comment'),
+              content: isLoading
+                  ? Center(
+                child: SpinKitCircle(
+                  color: Theme.of(context).primaryColor,
+                  size: 50.0,
+                ),
+              )
+                  : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: commentController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your comment',
+                    ),
+                  ),
+                  if (isSubmitted)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: FlareActor(
+                          "assets/checkmark.flr",
+                          alignment: Alignment.center,
+                          fit: BoxFit.contain,
+                          animation: "checkmark",
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: isLoading
+                      ? null
+                      : () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+
+                    try {
+                      await ApiService().approveAttendance(
+                        token,
+                        [id],
+                        action,
+                        commentController.text,
+                      );
+                      setState(() {
+                        isSubmitted = true;
+                      });
+                      await Future.delayed(Duration(seconds: 2)); // Wait for animation
+                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Cover-Up ${action == "approve" ? "Approved" : "Rejected"}',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor:
+                          action == "approve" ? Colors.green : Colors.red,
+                        ),
+                      );
+                    } catch (e) {
+                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                      print('Error $action cover-up: $e');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Failed to ${action == "approve" ? "approve" : "reject"} cover-up',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
+            );
           },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          ),
+          onPressed: () => _showCommentDialog(context, "approve"),
+          child: Text(
+            'Accept',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        SizedBox(width: 4.0),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          ),
+          onPressed: () => _showCommentDialog(context, "reject"),
           child: Text(
             'Decline',
             style: TextStyle(color: Colors.white),

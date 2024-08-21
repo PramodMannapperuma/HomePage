@@ -15,7 +15,7 @@ class AttApproval {
 
   factory AttApproval.fromJson(Map<String, dynamic> json) {
     return AttApproval(
-      id: json['id'] ?? 'shit',
+      id: json['id'] ?? 'N/A',
       date: json['date'] ?? 'N/A',
       amdIn: json['amdIn'] ?? 'N/A',
       amdOut: json['amdOut'] ?? 'N/A',
