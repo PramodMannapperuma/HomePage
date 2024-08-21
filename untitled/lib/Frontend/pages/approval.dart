@@ -182,12 +182,14 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
   bool isLoading = true;
   List<LeaveApproval> leaveRequests = [];
   List<AttApproval> attendanceRecords = [];
+  //ID list to be sent
 
   @override
   void initState() {
     super.initState();
     _fetchLeaveRequests();
     _fetchAttendanceRecords();
+    //POST of leave and attendance approval
   }
 
   Future<void> _fetchLeaveRequests() async {
@@ -221,6 +223,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
       print('Error fetching attendance records: $e');
     }
   }
+  //post to send attenace and leave
 
   @override
   Widget build(BuildContext context) {
@@ -298,6 +301,10 @@ class AttendanceDetailsTab extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
+                  'ID: ${attendanceRecords[index].id}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                ),
+                Text(
                   'Date: ${attendanceRecords[index].date}',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                 ),
@@ -316,7 +323,7 @@ class AttendanceDetailsTab extends StatelessWidget {
                 ),
               ],
             ),
-            trailing: ActionButtons(), // trailing: ActionButtons(),
+            trailing: ActionButton(), // trailing: ActionButtons(),
           ),
         );
       },
@@ -371,6 +378,53 @@ class LeaveRequestsTab extends StatelessWidget {
     );
   }
 }
+class ActionButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+            padding: EdgeInsets.symmetric(
+                horizontal: 8.0, vertical: 4.0), // Smaller button
+          ),
+          onPressed: () {
+            // Handle accept action
+            //Call POST function to accept the attendance
+            //Have to send id ina list and action
+          },
+          child: Text(
+            'Accept',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        SizedBox(width: 4.0),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+            padding: EdgeInsets.symmetric(
+                horizontal: 8.0, vertical: 4.0), // Smaller button
+          ),
+          onPressed: () {
+            // Handle decline action
+          },
+          child: Text(
+            'Decline',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 class ActionButtons extends StatelessWidget {
   @override
@@ -389,6 +443,8 @@ class ActionButtons extends StatelessWidget {
           ),
           onPressed: () {
             // Handle accept action
+            //Call POST function to accept the leave
+            //Have to send id ina list and action
           },
           child: Text(
             'Accept',
