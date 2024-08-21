@@ -226,7 +226,9 @@ class EmployeeScreen extends StatefulWidget {
   final String token;
   final bool isFromSidebar;
 
-  const EmployeeScreen({Key? key, required this.token, this.isFromSidebar = false}) : super(key: key);
+  const EmployeeScreen(
+      {Key? key, required this.token, this.isFromSidebar = false})
+      : super(key: key);
 
   @override
   _EmployeeScreenState createState() => _EmployeeScreenState();
@@ -244,11 +246,12 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   }
 
   Future<List<TeamMember>> _fetchTeamMembers() async {
-    List<TeamMember> teamMembers = await ApiService.fetchTeamMembers(widget.token);
+    List<TeamMember> teamMembers =
+        await ApiService.fetchTeamMembers(widget.token);
 
     // Assuming the supervisor has a specific ID or flag in your data.
     _supervisor = teamMembers.firstWhere(
-          (member) => member.supervisor == 0, // Assuming 0 indicates the supervisor
+      (member) => member.supervisor == 0, // Assuming 0 indicates the supervisor
       orElse: () => teamMembers.first,
     );
 
@@ -280,79 +283,79 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     return Scaffold(
       appBar: widget.isFromSidebar
           ? customAppBar(
-        title: 'My Team',
-        showActions: true,
-        showLeading: true,
-        context: context,
-        showBackButton: true,
-      )
+              title: 'My Team',
+              showActions: true,
+              showLeading: true,
+              context: context,
+              showBackButton: true,
+            )
           : AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/hrislogo2.png',
-              height: isPortrait ? 40.0 : 30.0,
-            ),
-            SizedBox(width: 8.0),
-          ],
-        ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(35.0),
-          child: Column(
-            children: [
-              Padding(
-                padding:
-                EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                child: Text(
-                  "My Team",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/hrislogo2.png',
+                    height: isPortrait ? 40.0 : 30.0,
                   ),
+                  SizedBox(width: 8.0),
+                ],
+              ),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(35.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                      child: Text(
+                        "My Team",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.black,
+                      thickness: 0.2,
+                    ),
+                  ],
                 ),
               ),
-              Divider(
-                color: Colors.black,
-                thickness: 0.2,
+              centerTitle: true,
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.dark,
               ),
-            ],
-          ),
-        ),
-        centerTitle: true,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-        ),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return Padding(
-              padding: EdgeInsets.all(screenWidth * 0.02),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.menu_outlined,
-                  color: AppColors.background,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return Padding(
+                    padding: EdgeInsets.all(screenWidth * 0.02),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.menu_outlined,
+                        color: AppColors.background,
+                      ),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                    ),
+                  );
                 },
               ),
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.person,
-              color: AppColors.background,
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.person,
+                    color: AppColors.background,
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/profile',
+                        arguments: widget.token);
+                  },
+                ),
+              ],
             ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/profile',
-                  arguments: widget.token);
-            },
-          ),
-        ],
-      ),
       drawer: CustomSidebar(token: widget.token),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -376,7 +379,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _buildMemberCard(_supervisor!, _profilePicture, isSupervisor: true),
+                            _buildMemberCard(_supervisor!, _profilePicture,
+                                isSupervisor: true),
                           ],
                         ),
                         SizedBox(height: 20),
@@ -408,7 +412,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     );
   }
 
-  Widget _buildMemberCard(TeamMember member, Uint8List? profilePicture, {bool isSupervisor = false}) {
+  Widget _buildMemberCard(TeamMember member, Uint8List? profilePicture,
+      {bool isSupervisor = false}) {
     return Column(
       children: [
         Stack(
@@ -417,7 +422,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             CircleAvatar(
               radius: 40,
               backgroundImage: profilePicture != null
-                  ? MemoryImage(profilePicture) as ImageProvider<Object> // Corrected cast to ImageProvider<Object>
+                  ? MemoryImage(profilePicture) as ImageProvider<
+                      Object> // Corrected cast to ImageProvider<Object>
                   : AssetImage('assets/images/profile.png'), // Default image
             ),
             Positioned(
@@ -439,8 +445,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         Text(member.designation,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14)),
+            textAlign: TextAlign.center, style: TextStyle(fontSize: 14)),
       ],
     );
   }

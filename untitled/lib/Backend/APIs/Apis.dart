@@ -371,6 +371,8 @@ class ApiService {
       headers: _headers(token),
     ).timeout(Duration(seconds: 60));
 
+    _logResponse(response);
+
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((item) => LeaveApproval.fromJson(item)).toList();
@@ -385,6 +387,8 @@ class ApiService {
       Uri.parse('$_baseUrl/approvals/attendance?length=10&start=0&employeeId=$employeeId'),
       headers: _headers(token),
     ).timeout(Duration(seconds: 60));
+
+    _logResponse(response);
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
