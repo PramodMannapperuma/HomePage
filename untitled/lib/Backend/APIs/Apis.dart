@@ -320,26 +320,6 @@ class ApiService {
     }
   }
 
-   static Future<List<CoverUpDetail>> getCoverUpDetails(String token, int employeeId) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$_baseUrl/approvals/coverup?length=10&start=0&employeeId=$employeeId'),
-        headers: _headers(token),
-      ).timeout(Duration(seconds: 60));
-
-      _logResponse(response);
-
-      if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body);
-        return data.map((item) => CoverUpDetail.fromJson(item)).toList();
-      } else {
-        throw Exception('Failed to load cover-up details: ${response.statusCode} - ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      throw Exception('An error occurred while fetching cover-up details: $e');
-    }
-  }
-
   Future<List<Subordinate>> fetchSubordinates(String token) async {
     try {
       final response = await http.get(
@@ -416,6 +396,82 @@ class ApiService {
       return data.map((item) => AttApproval.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load attendance records');
+    }
+  }
+
+  static Future<List<CoverUpDetail>> getCoverUpDetails(String token, int employeeId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/approvals/coverup?length=10&start=0&employeeId=$employeeId'),
+        headers: _headers(token),
+      ).timeout(Duration(seconds: 60));
+
+      _logResponse(response);
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return data.map((item) => CoverUpDetail.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load cover-up details: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('An error occurred while fetching cover-up details: $e');
+    }
+  }
+
+  Future<void> approveAttendance(String token, List<int> ids, String action, String comment) async {
+    final String url = '$_baseUrl/approvals/approve-attendance';
+    final Map<String, dynamic> body = {
+      'data': json.encode(ids), // Ensure this is correctly formatted
+      'action': action,
+      'comment': comment,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: _headers(token),
+        body: json.encode(body), // Ensure you're encoding the body as JSON
+      );
+
+      if (response.statusCode == 200) {
+        print('Attendance successfully approved.');
+      } else {
+        // Log the full response for debugging
+        print('Failed to approve attendance: ${response.statusCode} - ${response.reasonPhrase}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to approve attendance: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      // Additional logging for errors
+      print('An error occurred while approving attendance: $e');
+      throw Exception('An error occurred while approving attendance: $e');
+    }
+  }
+
+
+  Future<void> approveLeave(String token, List<int> ids, String action, String comment) async {
+    final String url = '$_baseUrl/approvals/approve-leave';
+    final Map<String, dynamic> body = {
+      'data': json.encode(ids),
+      'action': action,
+      'comment': comment,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: _headers(token),
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        print('Leave successfully approved.');
+      } else {
+        throw Exception('Failed to approve leave: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('An error occurred while approving leave: $e');
     }
   }
 }
