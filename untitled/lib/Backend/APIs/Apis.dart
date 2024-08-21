@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
+import 'package:untitled/Backend/models/cover_up_detail.dart';
 import 'package:untitled/Backend/models/leave_model.dart';
 import 'package:untitled/Backend/models/leave_balance_model.dart';
 import 'package:untitled/Backend/models/leave_types.dart';
@@ -316,6 +317,26 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Error fetching PDF: $e');
+    }
+  }
+
+   static Future<List<CoverUpDetail>> getCoverUpDetails(String token, int employeeId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/approvals/coverup?length=10&start=0&employeeId=$employeeId'),
+        headers: _headers(token),
+      ).timeout(Duration(seconds: 60));
+
+      _logResponse(response);
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return data.map((item) => CoverUpDetail.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load cover-up details: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('An error occurred while fetching cover-up details: $e');
     }
   }
 
