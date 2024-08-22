@@ -419,62 +419,91 @@ class ApiService {
     }
   }
 
-  Future<void> approveAttendance(String token, List<int> ids, String action, String comment) async {
-    final String url = '$_baseUrl/approvals/approve-attendance';
-    final Map<String, dynamic> body = {
-      'data': json.encode(ids), // Ensure this is correctly formatted
-      'action': action,
-      'comment': comment,
-    };
+ Future<void> approveAttendance(String token, List<int> ids, String action, String comment) async {
+  final String url = '$_baseUrl/approvals/approve-attendance';
 
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: _headers(token),
-        body: json.encode(body), // Ensure you're encoding the body as JSON
-      );
+  // Convert the list of IDs to a URL-encoded string format
+  final String data = jsonEncode(ids);
 
-      if (response.statusCode == 200) {
-        print('Attendance successfully approved.');
-      } else {
-        // Log the full response for debugging
-        print('Failed to approve attendance: ${response.statusCode} - ${response.reasonPhrase}');
-        print('Response body: ${response.body}');
-        throw Exception('Failed to approve attendance: ${response.statusCode} - ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      // Additional logging for errors
-      print('An error occurred while approving attendance: $e');
-      throw Exception('An error occurred while approving attendance: $e');
+  // Build the complete URL with query parameters
+  final Uri uri = Uri.parse('$url?data=$data&action=$action&comment=$comment');
+
+  try {
+    final response = await http.post(
+      uri,
+      headers: _headers(token),
+    );
+
+    if (response.statusCode == 200) {
+      print('Attendance successfully approved.');
+    } else {
+      print('Failed to approve attendance: ${response.statusCode} - ${response.reasonPhrase}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to approve attendance: ${response.statusCode} - ${response.reasonPhrase}');
     }
-  }
-
-
-  Future<void> approveLeave(String token, List<int> ids, String action, String comment) async {
-    final String url = '$_baseUrl/approvals/approve-leave';
-    final Map<String, dynamic> body = {
-      'data': json.encode(ids),
-      'action': action,
-      'comment': comment,
-    };
-
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: _headers(token),
-        body: json.encode(body),
-      );
-
-      if (response.statusCode == 200) {
-        print('Leave successfully approved.');
-      } else {
-        throw Exception('Failed to approve leave: ${response.statusCode} - ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      throw Exception('An error occurred while approving leave: $e');
-    }
+  } catch (e) {
+    print('An error occurred while approving attendance: $e');
+    throw Exception('An error occurred while approving attendance: $e');
   }
 }
 
 
+Future<void> approveLeave(String token, List<int> ids, String action, String comment) async {
+  final String url = '$_baseUrl/approvals/approve-leave';
+
+  // Convert the list of IDs to a URL-encoded string format
+  final String data = jsonEncode(ids);
+
+  // Build the complete URL with query parameters
+  final Uri uri = Uri.parse('$url?data=$data&action=$action&comment=$comment');
+
+  try {
+    final response = await http.post(
+      uri,
+      headers: _headers(token),
+    );
+
+    if (response.statusCode == 200) {
+      print('Leave successfully approved.');
+    } else {
+      print('Failed to approve leave: ${response.statusCode} - ${response.reasonPhrase}');
+      throw Exception('Failed to approve leave: ${response.statusCode} - ${response.reasonPhrase}');
+    }
+  } catch (e) {
+    print('An error occurred while approving leave: $e');
+    throw Exception('An error occurred while approving leave: $e');
+  }
+}
+
+Future<void> approveCoverUp(String token, List<int> ids, String action, String comment) async {
+  final String url = '$_baseUrl/approvals/approve-coverup';
+  
+  // Convert the list of ids to a string and URL encode it
+  final String encodedIds = json.encode(ids);
+  
+  // Construct the full URL with query parameters
+  final String fullUrl = '$url?data=$encodedIds&action=$action&comment=${Uri.encodeComponent(comment)}';
+
+  try {
+    final response = await http.post(
+      Uri.parse(fullUrl),
+      headers: _headers(token),
+    );
+
+    if (response.statusCode == 200) {
+      print('Cover-up successfully approved.');
+    } else {
+      // Log the full response for better debugging
+      print('Failed to approve cover-up: ${response.statusCode} - ${response.reasonPhrase}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to approve cover-up: ${response.statusCode} - ${response.reasonPhrase}');
+    }
+  } catch (e) {
+    // Log the error
+    print('An error occurred while approving cover-up: $e');
+    throw Exception('An error occurred while approving cover-up: $e');
+  }
+}
+
+}
 
