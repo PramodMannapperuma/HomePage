@@ -961,12 +961,13 @@ class AttActionButton extends StatelessWidget {
       },
     );
   }
-
+  
   Future<void> _showCommentDialog(BuildContext context, String action) async {
     TextEditingController commentController = TextEditingController();
     bool isLoading = false;
     bool isSubmitted = false;
-    String? errorMessage;
+    bool hasError = false;
+    String? message;
 
     return showDialog<void>(
       context: context,
@@ -978,37 +979,51 @@ class AttActionButton extends StatelessWidget {
               title: Text('Add Comment'),
               content: isLoading
                   ? Center(
-                      child: SpinKitCircle(
-                        color: Theme.of(context).primaryColor,
-                        size: 50.0,
-                      ),
-                    )
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          controller: commentController,
-                          decoration: InputDecoration(
-                            hintText: 'Enter your comment',
-                            errorText: errorMessage,
-                          ),
-                        ),
-                        if (isSubmitted)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: FlareActor(
-                                "assets/checkmark.flr",
-                                alignment: Alignment.center,
-                                fit: BoxFit.contain,
-                                animation: "checkmark",
-                              ),
-                            ),
-                          ),
-                      ],
+                child: SpinKitCircle(
+                  color: Theme.of(context).primaryColor,
+                  size: 50.0,
+                ),
+              )
+                  : isSubmitted
+                  ? Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: hasError
+                      ? Colors.red.withOpacity(0.1)
+                      : Colors.green.withOpacity(0.1),
+                  border: Border.all(
+                    color: hasError ? Colors.red : Colors.green,
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      hasError ? Icons.error : Icons.check_circle,
+                      color: hasError ? Colors.red : Colors.green,
+                      size: 48.0,
                     ),
+                    SizedBox(height: 10),
+                    Text(
+                      message!,
+                      style: TextStyle(
+                        color: hasError ? Colors.red : Colors.green,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+                  : TextField(
+                controller: commentController,
+                decoration: InputDecoration(
+                  hintText: 'Enter your comment',
+                  errorText: hasError ? message : null,
+                ),
+              ),
               actions: <Widget>[
                 TextButton(
                   child: Text(
@@ -1033,31 +1048,37 @@ class AttActionButton extends StatelessWidget {
                   onPressed: isLoading
                       ? null
                       : () async {
-                          setState(() {
-                            isLoading = true;
-                            errorMessage = null;
-                          });
+                    setState(() {
+                      isLoading = true;
+                      isSubmitted = false;
+                      hasError = false;
+                      message = null;
+                    });
 
-                          try {
-                            await ApiService().approveAttendance(
-                              token,
-                              [id],
-                              action,
-                              commentController.text,
-                            );
-                            setState(() {
-                              isSubmitted = true;
-                            });
-                            await Future.delayed(Duration(seconds: 2)); // Wait for animation
-                            Navigator.of(dialogContext).pop(); // Dismiss the dialog
-                            await _showSuccessDialog(context, 'Attendance $action successfully!');
-                          } catch (e) {
-                            setState(() {
-                              isLoading = false;
-                              errorMessage = 'Failed to submit. Please try again.';
-                            });
-                          }
-                        },
+                    try {
+                      await ApiService().approveLeave(
+                        token,
+                        [id],
+                        action,
+                        commentController.text,
+                      );
+                      setState(() {
+                        isSubmitted = true;
+                        isLoading = false;
+                        message = 'Submission Successful';
+                      });
+                      await Future.delayed(Duration(seconds: 2)); // Wait for 2 seconds
+                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                      await _showSuccessDialog(context, 'Leave $action successfully!');
+                    } catch (e) {
+                      setState(() {
+                        isLoading = false;
+                        isSubmitted = true;
+                        hasError = true;
+                        message = 'Failed to submit. Please try again.';
+                      });
+                    }
+                  },
                 ),
               ],
             );
@@ -1136,7 +1157,8 @@ class LeaveActionButton extends StatelessWidget {
     TextEditingController commentController = TextEditingController();
     bool isLoading = false;
     bool isSubmitted = false;
-    String? errorMessage;
+    bool hasError = false;
+    String? message;
 
     return showDialog<void>(
       context: context,
@@ -1148,37 +1170,51 @@ class LeaveActionButton extends StatelessWidget {
               title: Text('Add Comment'),
               content: isLoading
                   ? Center(
-                      child: SpinKitCircle(
-                        color: Theme.of(context).primaryColor,
-                        size: 50.0,
-                      ),
-                    )
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          controller: commentController,
-                          decoration: InputDecoration(
-                            hintText: 'Enter your comment',
-                            errorText: errorMessage,
-                          ),
-                        ),
-                        if (isSubmitted)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: FlareActor(
-                                "assets/checkmark.flr",
-                                alignment: Alignment.center,
-                                fit: BoxFit.contain,
-                                animation: "checkmark",
-                              ),
-                            ),
-                          ),
-                      ],
+                child: SpinKitCircle(
+                  color: Theme.of(context).primaryColor,
+                  size: 50.0,
+                ),
+              )
+                  : isSubmitted
+                  ? Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: hasError
+                      ? Colors.red.withOpacity(0.1)
+                      : Colors.green.withOpacity(0.1),
+                  border: Border.all(
+                    color: hasError ? Colors.red : Colors.green,
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      hasError ? Icons.error : Icons.check_circle,
+                      color: hasError ? Colors.red : Colors.green,
+                      size: 48.0,
                     ),
+                    SizedBox(height: 10),
+                    Text(
+                      message!,
+                      style: TextStyle(
+                        color: hasError ? Colors.red : Colors.green,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+                  : TextField(
+                controller: commentController,
+                decoration: InputDecoration(
+                  hintText: 'Enter your comment',
+                  errorText: hasError ? message : null,
+                ),
+              ),
               actions: <Widget>[
                 TextButton(
                   child: Text(
@@ -1203,31 +1239,37 @@ class LeaveActionButton extends StatelessWidget {
                   onPressed: isLoading
                       ? null
                       : () async {
-                          setState(() {
-                            isLoading = true;
-                            errorMessage = null;
-                          });
+                    setState(() {
+                      isLoading = true;
+                      isSubmitted = false;
+                      hasError = false;
+                      message = null;
+                    });
 
-                          try {
-                            await ApiService().approveLeave(
-                              token,
-                              [id],
-                              action,
-                              commentController.text,
-                            );
-                            setState(() {
-                              isSubmitted = true;
-                            });
-                            await Future.delayed(Duration(seconds: 2)); // Wait for animation
-                            Navigator.of(dialogContext).pop(); // Dismiss the dialog
-                            await _showSuccessDialog(context, 'Leave $action successfully!');
-                          } catch (e) {
-                            setState(() {
-                              isLoading = false;
-                              errorMessage = 'Failed to submit. Please try again.';
-                            });
-                          }
-                        },
+                    try {
+                      await ApiService().approveLeave(
+                        token,
+                        [id],
+                        action,
+                        commentController.text,
+                      );
+                      setState(() {
+                        isSubmitted = true;
+                        isLoading = false;
+                        message = 'Submission Successful';
+                      });
+                      await Future.delayed(Duration(seconds: 2)); // Wait for 2 seconds
+                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                      await _showSuccessDialog(context, 'Leave $action successfully!');
+                    } catch (e) {
+                      setState(() {
+                        isLoading = false;
+                        isSubmitted = true;
+                        hasError = true;
+                        message = 'Failed to submit. Please try again.';
+                      });
+                    }
+                  },
                 ),
               ],
             );
@@ -1236,6 +1278,8 @@ class LeaveActionButton extends StatelessWidget {
       },
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -1306,6 +1350,8 @@ class CoverActionButton extends StatelessWidget {
     TextEditingController commentController = TextEditingController();
     bool isLoading = false;
     bool isSubmitted = false;
+    bool hasError = false;
+    String? message;
 
     return showDialog<void>(
       context: context,
@@ -1317,36 +1363,51 @@ class CoverActionButton extends StatelessWidget {
               title: Text('Add Comment'),
               content: isLoading
                   ? Center(
-                      child: SpinKitCircle(
-                        color: Theme.of(context).primaryColor,
-                        size: 50.0,
-                      ),
-                    )
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          controller: commentController,
-                          decoration: InputDecoration(
-                            hintText: 'Enter your comment',
-                          ),
-                        ),
-                        if (isSubmitted)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: FlareActor(
-                                "assets/checkmark.flr",
-                                alignment: Alignment.center,
-                                fit: BoxFit.contain,
-                                animation: "checkmark",
-                              ),
-                            ),
-                          ),
-                      ],
+                child: SpinKitCircle(
+                  color: Theme.of(context).primaryColor,
+                  size: 50.0,
+                ),
+              )
+                  : isSubmitted
+                  ? Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: hasError
+                      ? Colors.red.withOpacity(0.1)
+                      : Colors.green.withOpacity(0.1),
+                  border: Border.all(
+                    color: hasError ? Colors.red : Colors.green,
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      hasError ? Icons.error : Icons.check_circle,
+                      color: hasError ? Colors.red : Colors.green,
+                      size: 48.0,
                     ),
+                    SizedBox(height: 10),
+                    Text(
+                      message!,
+                      style: TextStyle(
+                        color: hasError ? Colors.red : Colors.green,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+                  : TextField(
+                controller: commentController,
+                decoration: InputDecoration(
+                  hintText: 'Enter your comment',
+                  errorText: hasError ? message : null,
+                ),
+              ),
               actions: <Widget>[
                 TextButton(
                   child: Text(
@@ -1371,37 +1432,37 @@ class CoverActionButton extends StatelessWidget {
                   onPressed: isLoading
                       ? null
                       : () async {
-                          setState(() {
-                            isLoading = true;
-                          });
+                    setState(() {
+                      isLoading = true;
+                      isSubmitted = false;
+                      hasError = false;
+                      message = null;
+                    });
 
-                          try {
-                            await ApiService().approveCoverUp(
-                              token,
-                              [id],
-                              action,
-                              commentController.text,
-                            );
-                            setState(() {
-                              isSubmitted = true;
-                            });
-                            await Future.delayed(Duration(seconds: 2)); // Wait for animation
-                            Navigator.of(dialogContext).pop(); // Dismiss the dialog
-                            await _showSuccessDialog(context, 'Cover-Up $action successfully!');
-                          } catch (e) {
-                            Navigator.of(dialogContext).pop(); // Dismiss the dialog
-                            print('Error $action cover-up: $e');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Failed to ${action == "approve" ? "approve" : "reject"} cover-up',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        },
+                    try {
+                      await ApiService().approveLeave(
+                        token,
+                        [id],
+                        action,
+                        commentController.text,
+                      );
+                      setState(() {
+                        isSubmitted = true;
+                        isLoading = false;
+                        message = 'Submission Successful';
+                      });
+                      await Future.delayed(Duration(seconds: 2)); // Wait for 2 seconds
+                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                      await _showSuccessDialog(context, 'Leave $action successfully!');
+                    } catch (e) {
+                      setState(() {
+                        isLoading = false;
+                        isSubmitted = true;
+                        hasError = true;
+                        message = 'Failed to submit. Please try again.';
+                      });
+                    }
+                  },
                 ),
               ],
             );
