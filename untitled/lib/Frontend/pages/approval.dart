@@ -474,7 +474,6 @@
 //   }
 // }
 
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:untitled/Backend/APIs/Apis.dart';
@@ -553,8 +552,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
   void _filterSubordinates() {
     setState(() {
       filteredSubordinates = subordinates
-          .where((subordinate) =>
-              subordinate.name.toLowerCase().contains(searchController.text.toLowerCase()))
+          .where((subordinate) => subordinate.name.toLowerCase().contains(searchController.text.toLowerCase()))
           .toList();
     });
   }
@@ -590,45 +588,45 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
             child: isLoading
                 ? Center(child: CircularProgressIndicator())
                 : filteredSubordinates.isEmpty
-                    ? Center(child: Text('No employees found'))
-                    : ListView.builder(
-                        itemCount: filteredSubordinates.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                            title: Text(
-                              filteredSubordinates[index].name,
-                              style: TextStyle(
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Text(
-                              filteredSubordinates[index].designation,
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                            trailing: Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.grey[600],
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EmployeeDetailsScreen(
-                                    employeeName: filteredSubordinates[index].name,
-                                    employeeId: filteredSubordinates[index].id,
-                                    token: widget.token,
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
+                ? Center(child: Text('No employees found'))
+                : ListView.builder(
+              itemCount: filteredSubordinates.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  title: Text(
+                    filteredSubordinates[index].name,
+                    style: TextStyle(
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    filteredSubordinates[index].designation,
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey[600],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EmployeeDetailsScreen(
+                          employeeName: filteredSubordinates[index].name,
+                          employeeId: filteredSubordinates[index].id,
+                          token: widget.token,
+                        ),
                       ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -724,24 +722,24 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ListView(
-                children: [
-                  SectionHeader(title: 'Attendance Details'),
-                  attendanceRecords.isEmpty
-                      ? Center(child: Text('No attendance records found'))
-                      : AttendanceDetailsTab(attendanceRecords: attendanceRecords, token: widget.token),
-                  SectionHeader(title: 'Leave Request Details'),
-                  leaveRequests.isEmpty
-                      ? Center(child: Text('No leave requests found'))
-                      : LeaveRequestsTab(leaveRequests: leaveRequests, token: widget.token),
-                  SectionHeader(title: 'Cover-Up Request Details'),
-                  coverUpDetails.isEmpty
-                      ? Center(child: Text('No cover-up requests found'))
-                      : CoverUpRequestTab(coverUpDetails: coverUpDetails, token: widget.token),
-                ],
-              ),
-            ),
+        padding: const EdgeInsets.all(10.0),
+        child: ListView(
+          children: [
+            SectionHeader(title: 'Attendance Details'),
+            attendanceRecords.isEmpty
+                ? Center(child: Text('No attendance records found'))
+                : AttendanceDetailsTab(attendanceRecords: attendanceRecords, token: widget.token),
+            SectionHeader(title: 'Leave Request Details'),
+            leaveRequests.isEmpty
+                ? Center(child: Text('No leave requests found'))
+                : LeaveRequestsTab(leaveRequests: leaveRequests, token: widget.token),
+            SectionHeader(title: 'Cover-Up Request Details'),
+            coverUpDetails.isEmpty
+                ? Center(child: Text('No cover-up requests found'))
+                : CoverUpRequestTab(coverUpDetails: coverUpDetails, token: widget.token),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -942,12 +940,21 @@ class AttActionButton extends StatelessWidget {
 
   const AttActionButton({Key? key, required this.token, required this.id}) : super(key: key);
 
-  Future<void> _showSuccessDialog(BuildContext context, String message) async {
+  Future<void> _showSuccessDialog(BuildContext context, String message, String action) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Success'),
+          title: Row(
+            children: [
+              Icon(
+                action == "approve" ? Icons.check_circle : Icons.error,
+                color: action == "approve" ? Colors.green : Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text('Success'),
+            ],
+          ),
           content: Text(message),
           actions: <Widget>[
             TextButton(
@@ -961,12 +968,10 @@ class AttActionButton extends StatelessWidget {
       },
     );
   }
-  
+
   Future<void> _showCommentDialog(BuildContext context, String action) async {
     TextEditingController commentController = TextEditingController();
     bool isLoading = false;
-    bool isSubmitted = false;
-    bool hasError = false;
     String? message;
 
     return showDialog<void>(
@@ -984,44 +989,10 @@ class AttActionButton extends StatelessWidget {
                   size: 50.0,
                 ),
               )
-                  : isSubmitted
-                  ? Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: hasError
-                      ? Colors.red.withOpacity(0.1)
-                      : Colors.green.withOpacity(0.1),
-                  border: Border.all(
-                    color: hasError ? Colors.red : Colors.green,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      hasError ? Icons.error : Icons.check_circle,
-                      color: hasError ? Colors.red : Colors.green,
-                      size: 48.0,
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      message!,
-                      style: TextStyle(
-                        color: hasError ? Colors.red : Colors.green,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              )
                   : TextField(
                 controller: commentController,
                 decoration: InputDecoration(
                   hintText: 'Enter your comment',
-                  errorText: hasError ? message : null,
                 ),
               ),
               actions: <Widget>[
@@ -1050,31 +1021,23 @@ class AttActionButton extends StatelessWidget {
                       : () async {
                     setState(() {
                       isLoading = true;
-                      isSubmitted = false;
-                      hasError = false;
-                      message = null;
                     });
 
                     try {
-                      await ApiService().approveLeave(
+                      await ApiService().approveAttendance(
                         token,
                         [id],
                         action,
                         commentController.text,
                       );
                       setState(() {
-                        isSubmitted = true;
                         isLoading = false;
-                        message = 'Submission Successful';
                       });
-                      await Future.delayed(Duration(seconds: 2)); // Wait for 2 seconds
                       Navigator.of(dialogContext).pop(); // Dismiss the dialog
-                      await _showSuccessDialog(context, 'Leave $action successfully!');
+                      await _showSuccessDialog(context, 'Attendance $action successfully!', action);
                     } catch (e) {
                       setState(() {
                         isLoading = false;
-                        isSubmitted = true;
-                        hasError = true;
                         message = 'Failed to submit. Please try again.';
                       });
                     }
@@ -1133,12 +1096,21 @@ class LeaveActionButton extends StatelessWidget {
 
   const LeaveActionButton({Key? key, required this.token, required this.id}) : super(key: key);
 
-  Future<void> _showSuccessDialog(BuildContext context, String message) async {
+  Future<void> _showSuccessDialog(BuildContext context, String message, String action) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Success'),
+          title: Row(
+            children: [
+              Icon(
+                action == "approve" ? Icons.check_circle : Icons.error,
+                color: action == "approve" ? Colors.green : Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text('Success'),
+            ],
+          ),
           content: Text(message),
           actions: <Widget>[
             TextButton(
@@ -1156,8 +1128,6 @@ class LeaveActionButton extends StatelessWidget {
   Future<void> _showCommentDialog(BuildContext context, String action) async {
     TextEditingController commentController = TextEditingController();
     bool isLoading = false;
-    bool isSubmitted = false;
-    bool hasError = false;
     String? message;
 
     return showDialog<void>(
@@ -1175,44 +1145,10 @@ class LeaveActionButton extends StatelessWidget {
                   size: 50.0,
                 ),
               )
-                  : isSubmitted
-                  ? Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: hasError
-                      ? Colors.red.withOpacity(0.1)
-                      : Colors.green.withOpacity(0.1),
-                  border: Border.all(
-                    color: hasError ? Colors.red : Colors.green,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      hasError ? Icons.error : Icons.check_circle,
-                      color: hasError ? Colors.red : Colors.green,
-                      size: 48.0,
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      message!,
-                      style: TextStyle(
-                        color: hasError ? Colors.red : Colors.green,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              )
                   : TextField(
                 controller: commentController,
                 decoration: InputDecoration(
                   hintText: 'Enter your comment',
-                  errorText: hasError ? message : null,
                 ),
               ),
               actions: <Widget>[
@@ -1241,9 +1177,6 @@ class LeaveActionButton extends StatelessWidget {
                       : () async {
                     setState(() {
                       isLoading = true;
-                      isSubmitted = false;
-                      hasError = false;
-                      message = null;
                     });
 
                     try {
@@ -1254,18 +1187,13 @@ class LeaveActionButton extends StatelessWidget {
                         commentController.text,
                       );
                       setState(() {
-                        isSubmitted = true;
                         isLoading = false;
-                        message = 'Submission Successful';
                       });
-                      await Future.delayed(Duration(seconds: 2)); // Wait for 2 seconds
                       Navigator.of(dialogContext).pop(); // Dismiss the dialog
-                      await _showSuccessDialog(context, 'Leave $action successfully!');
+                      await _showSuccessDialog(context, 'Leave $action successfully!', action);
                     } catch (e) {
                       setState(() {
                         isLoading = false;
-                        isSubmitted = true;
-                        hasError = true;
                         message = 'Failed to submit. Please try again.';
                       });
                     }
@@ -1326,12 +1254,21 @@ class CoverActionButton extends StatelessWidget {
 
   const CoverActionButton({Key? key, required this.token, required this.id}) : super(key: key);
 
-  Future<void> _showSuccessDialog(BuildContext context, String message) async {
+  Future<void> _showSuccessDialog(BuildContext context, String message, String action) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Success'),
+          title: Row(
+            children: [
+              Icon(
+                action == "approve" ? Icons.check_circle : Icons.error,
+                color: action == "approve" ? Colors.green : Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text('Success'),
+            ],
+          ),
           content: Text(message),
           actions: <Widget>[
             TextButton(
@@ -1349,8 +1286,6 @@ class CoverActionButton extends StatelessWidget {
   Future<void> _showCommentDialog(BuildContext context, String action) async {
     TextEditingController commentController = TextEditingController();
     bool isLoading = false;
-    bool isSubmitted = false;
-    bool hasError = false;
     String? message;
 
     return showDialog<void>(
@@ -1368,44 +1303,10 @@ class CoverActionButton extends StatelessWidget {
                   size: 50.0,
                 ),
               )
-                  : isSubmitted
-                  ? Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: hasError
-                      ? Colors.red.withOpacity(0.1)
-                      : Colors.green.withOpacity(0.1),
-                  border: Border.all(
-                    color: hasError ? Colors.red : Colors.green,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      hasError ? Icons.error : Icons.check_circle,
-                      color: hasError ? Colors.red : Colors.green,
-                      size: 48.0,
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      message!,
-                      style: TextStyle(
-                        color: hasError ? Colors.red : Colors.green,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              )
                   : TextField(
                 controller: commentController,
                 decoration: InputDecoration(
                   hintText: 'Enter your comment',
-                  errorText: hasError ? message : null,
                 ),
               ),
               actions: <Widget>[
@@ -1434,31 +1335,23 @@ class CoverActionButton extends StatelessWidget {
                       : () async {
                     setState(() {
                       isLoading = true;
-                      isSubmitted = false;
-                      hasError = false;
-                      message = null;
                     });
 
                     try {
-                      await ApiService().approveLeave(
+                      await ApiService().approveCoverUp(
                         token,
                         [id],
                         action,
                         commentController.text,
                       );
                       setState(() {
-                        isSubmitted = true;
                         isLoading = false;
-                        message = 'Submission Successful';
                       });
-                      await Future.delayed(Duration(seconds: 2)); // Wait for 2 seconds
                       Navigator.of(dialogContext).pop(); // Dismiss the dialog
-                      await _showSuccessDialog(context, 'Leave $action successfully!');
+                      await _showSuccessDialog(context, 'Cover-up $action successfully!', action);
                     } catch (e) {
                       setState(() {
                         isLoading = false;
-                        isSubmitted = true;
-                        hasError = true;
                         message = 'Failed to submit. Please try again.';
                       });
                     }
