@@ -28,7 +28,7 @@ class _LoginState extends State<Login> {
       appBar: customAppBar(
         title: '',
         showActions: false,
-        showLeading: false,
+        showLeading: false, // This will hide the back arrow
         context: context,
       ),
       body: SingleChildScrollView(
@@ -174,7 +174,6 @@ class _LoginFormState extends State<LoginForm> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> cookies = prefs.getStringList('cookies') ?? [];
     String cookieHeader = cookies.join('; ');
-
     final response = await http.get(
       Uri.parse('${ApiService.baseUrl}/profile'),
       headers: <String, String>{
@@ -182,7 +181,6 @@ class _LoginFormState extends State<LoginForm> {
         'Cookie': cookieHeader,
       },
     );
-
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       print('User Profile: $data');
@@ -219,8 +217,8 @@ class _LoginFormState extends State<LoginForm> {
         SizedBox(height: 10.0),
         Text(
           'Username',
-          style:
-          TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: widget.fontSize, fontWeight: FontWeight.bold),
         ),
         Container(
           height: widget.textFieldHeight * 1.2,
@@ -234,8 +232,8 @@ class _LoginFormState extends State<LoginForm> {
         SizedBox(height: 20.0),
         Text(
           'Password',
-          style:
-          TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: widget.fontSize, fontWeight: FontWeight.bold),
         ),
         Container(
           height: widget.textFieldHeight * 1.2,
@@ -286,21 +284,21 @@ class _LoginFormState extends State<LoginForm> {
           ),
           child: _isLoading
               ? CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          )
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                )
               : Text(
-            'Login',
-            style: TextStyle(
-                fontSize: widget.fontSize * 1.2, color: Colors.white),
-          ),
+                  'Login',
+                  style: TextStyle(
+                      fontSize: widget.fontSize * 1.2, color: Colors.white),
+                ),
         ),
-        SizedBox(height: 25,),
-        Divider(thickness: 2,),
+        SizedBox(height: 25),
+        Divider(thickness: 2),
         Center(
             child: Text(
-              ' © 2023 - Accelution',
-              style: TextStyle(fontSize: 16, color: Colors.black87),
-            )),
+          ' © 2023 - Accelution',
+          style: TextStyle(fontSize: 16, color: Colors.black87),
+        )),
       ],
     );
   }
@@ -311,4 +309,29 @@ class _LoginFormState extends State<LoginForm> {
     _passwordController.dispose();
     super.dispose();
   }
+}
+
+// Custom AppBar definition
+AppBar customAppBar({
+  required String title,
+  required bool showActions,
+  required bool showLeading,
+  required BuildContext context,
+}) {
+  return AppBar(
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          'assets/images/hrislogo2.png', // Replace with your logo asset
+          height: 40,
+        ),
+      ],
+    ),
+    centerTitle: true, // Center the title (or logo) in the app bar
+    automaticallyImplyLeading: showLeading, // Controls the back arrow visibility
+    actions: showActions
+        ? [/* your actions here */]
+        : null,
+  );
 }
