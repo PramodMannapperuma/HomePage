@@ -68,7 +68,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/attendanceTracker':
       return MaterialPageRoute(builder: (context) => AttendanceTracker());
     case '/taskScreen':
-      return MaterialPageRoute(builder: (context) => TaskScreen());
+      return MaterialPageRoute(builder: (context) => TaskScreen(token: args ?? ''));
     case '/taskList':
       return MaterialPageRoute(builder: (context) => TaskListScreen());
     case '/employeeScreen':

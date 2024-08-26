@@ -438,7 +438,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       CategoryCard(
                         title: 'News',
                         icon: Icons.newspaper,
-                        route: '/news_screen',
+                        route: '/taskScreen',
                         token: widget.token,
                       ),
                     ],
