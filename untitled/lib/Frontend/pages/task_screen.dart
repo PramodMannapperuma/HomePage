@@ -206,7 +206,7 @@ class _TaskScreenState extends State<TaskScreen> {
   Future<void> _fetchData() async {
     try {
       final fetchedTasks = await _fetchTasks(); // Placeholder for fetching tasks
-      final fetchedCoverUps = await ApiService.getCoverUpDetails(widget.token, 2); // Example employeeId
+      final fetchedCoverUps = await ApiService.getCoverUpDetails(widget.token, 4); // Example employeeId
 
       setState(() {
         tasks = fetchedTasks;
@@ -518,29 +518,29 @@ class CoverActionButton extends StatelessWidget {
                   onPressed: isLoading
                       ? null
                       : () async {
-                          setState(() {
-                            isLoading = true;
-                          });
+                    setState(() {
+                      isLoading = true;
+                    });
 
-                          try {
-                            await ApiService().approveCoverUp(
-                              token,
-                              id as List<int>,
-                              action,
-                              commentController.text,
-                            );
-                            setState(() {
-                              isLoading = false;
-                            });
-                            Navigator.of(dialogContext).pop(); // Dismiss the dialog
-                            await _showSuccessDialog(context, 'Cover-Up $action successfully!', action);
-                          } catch (e) {
-                            setState(() {
-                              isLoading = false;
-                              message = 'Failed to submit. Please try again.';
-                            });
-                          }
-                        },
+                    try {
+                      await ApiService().approveCoverUp(
+                        token,
+                        [id],
+                        action,
+                        commentController.text,
+                      );
+                      setState(() {
+                        isLoading = false;
+                      });
+                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                      await _showSuccessDialog(context, 'Cover-up $action successfully!', action);
+                    } catch (e) {
+                      setState(() {
+                        isLoading = false;
+                        message = 'Failed to submit. Please try again.';
+                      });
+                    }
+                  },
                 ),
               ],
             );
