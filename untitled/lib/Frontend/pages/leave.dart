@@ -186,20 +186,35 @@ class _LeavePageState extends State<Leave> {
   }
 
   Future<void> _submitLeave(
-    BuildContext context,
-    String token,
-    String selectedDay,
-    String selectedTypeOfDay,
-    String comment,
-    String coverUp,
-    List<String> removeDays,
-    VoidCallback refreshDataCallback,
-  ) async {
+      BuildContext context,
+      String token,
+      String selectedDay,
+      String selectedLeaveType,
+      String selectedTypeOfDay,
+      String comment,
+      String coverUp,
+      List<String> removeDays,
+      VoidCallback refreshDataCallback,
+      ) async {
+    // Find the selected LeaveType object by matching the text
+    final leaveType = leaveTypes?.firstWhere((type) => type.text == selectedLeaveType);
+
+    if (leaveType == null) {
+      // Handle error when leave type is not found
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Invalid leave type selected'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
     final datesData = [
       {
         'date': selectedDay,
         'data': {
-          'leave_id': 1,
+          'leave_id': leaveType.value,  // Use the dynamic leave_id value
           'cat': selectedTypeOfDay,
           'comment': comment,
           'coverup': coverUp,
@@ -497,6 +512,7 @@ class _LeavePageState extends State<Leave> {
                                 context,
                                 widget.token,
                                 formattedDate,
+                                _selectedLeaveType!,
                                 _selectedTimeOfDay!,
                                 _commentController.text,
                                 _selectedCoverUp ?? '',
