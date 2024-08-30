@@ -36,7 +36,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (context) => Attendance(token: args ?? ''));
     case '/leave':
-      return MaterialPageRoute(builder: (context) => Leave(token: args ?? ''));
+      return MaterialPageRoute(builder: (context) => Leave(token: args ?? '', isFromSidebar: true,));
     case '/geolocation':
       return MaterialPageRoute(
           builder: (context) => GeoLocation(token: args ?? ''));
@@ -74,7 +74,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/employeeScreen':
       return MaterialPageRoute(builder: (context) => EmployeeGridScreen());
     case '/employee':
-      return MaterialPageRoute(builder: (context) => EmployeeScreen(token: args ?? ''));
+      return MaterialPageRoute(builder: (context) => EmployeeScreen(token: args ?? '', isFromSidebar: true,));
     case '/approval':
       return MaterialPageRoute(
           builder: (context) => ApprovalScreen(
