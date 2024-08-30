@@ -210,12 +210,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled/Frontend/pages/approval.dart';
 // import 'package:untitled/Backend/models/dash_model.dart';
 import 'package:untitled/Frontend/pages/attendance.dart';
 import 'package:untitled/Frontend/pages/employee.dart';
 import 'package:untitled/Frontend/pages/leave.dart';
 import 'package:untitled/Frontend/pages/policies.dart';
-
+import 'package:untitled/Frontend/pages/task_screen.dart';
 
 class CustomSidebar extends StatelessWidget {
   final String token;
@@ -275,11 +276,13 @@ class CustomSidebar extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
-                        Navigator.pushNamed(context, '/dashbord', arguments: token);
+                        Navigator.pushNamed(context, '/dashbord',
+                            arguments: token);
                       },
                       child: Text(
                         'Home',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -299,7 +302,8 @@ class CustomSidebar extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Attendance(token: token, isFromSidebar: true),
+                    builder: (context) =>
+                        Attendance(token: token, isFromSidebar: true),
                   ),
                 );
               },
@@ -316,7 +320,8 @@ class CustomSidebar extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Leave(token: token, isFromSidebar: true),
+                    builder: (context) =>
+                        Leave(token: token, isFromSidebar: true),
                   ),
                 );
               },
@@ -366,7 +371,13 @@ class CustomSidebar extends StatelessWidget {
               title: Text('Approval Tasks'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/taskScreen');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ApprovalScreen(token: token),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -433,7 +444,8 @@ class LogoutButton extends StatefulWidget {
   _LogoutButtonState createState() => _LogoutButtonState();
 }
 
-class _LogoutButtonState extends State<LogoutButton> with SingleTickerProviderStateMixin {
+class _LogoutButtonState extends State<LogoutButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
 
