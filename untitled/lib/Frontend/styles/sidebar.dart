@@ -210,8 +210,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:untitled/Backend/models/dash_model.dart';
 import 'package:untitled/Frontend/pages/attendance.dart';
+import 'package:untitled/Frontend/pages/employee.dart';
 import 'package:untitled/Frontend/pages/leave.dart';
+import 'package:untitled/Frontend/pages/policies.dart';
 
 
 class CustomSidebar extends StatelessWidget {
@@ -375,7 +378,12 @@ class CustomSidebar extends StatelessWidget {
               title: Text('My Team'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/employee');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EmployeeScreen(token: token),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -387,7 +395,12 @@ class CustomSidebar extends StatelessWidget {
               title: Text('Policy'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/policies');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PolicyScreen(token: token),
+                  ),
+                );
               },
             ),
             ListTile(
