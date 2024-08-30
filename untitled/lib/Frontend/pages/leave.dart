@@ -185,91 +185,162 @@ class _LeavePageState extends State<Leave> {
     return [];
   }
 
+  // Future<void> _submitLeave(
+  //     BuildContext context,
+  //     String token,
+  //     String selectedDay,
+  //     String selectedLeaveType,
+  //     String selectedTypeOfDay,
+  //     String comment,
+  //     String coverUp,
+  //     List<String> removeDays,
+  //     VoidCallback refreshDataCallback,
+  //     ) async {
+  //   // Find the selected LeaveType object by matching the text
+  //   final leaveType = leaveTypes?.firstWhere((type) => type.text == selectedLeaveType);
+
+  //   if (leaveType == null) {
+  //     // Handle error when leave type is not found
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('Invalid leave type selected'),
+  //         duration: Duration(seconds: 2),
+  //       ),
+  //     );
+  //     return;
+  //   }
+
+  //   final datesData = [
+  //     {
+  //       'date': selectedDay,
+  //       'data': {
+  //         'leave_id': leaveType.value,  // Use the dynamic leave_id value
+  //         'cat': selectedTypeOfDay,
+  //         'comment': comment,
+  //         'coverup': coverUp,
+  //       }
+  //     }
+  //   ];
+
+  //   final uri = Uri.parse('http://hris.accelution.lk/api/leave');
+  //   final request = http.MultipartRequest('POST', uri)
+  //     ..headers['Accept'] = '*/*'
+  //     ..headers['Authorization'] = 'Bearer $token'
+  //     ..fields['dates'] = jsonEncode(datesData)
+  //     ..fields['remove'] = '[]';
+
+  //   print('Dates data: ${jsonEncode(datesData)}');
+  //   print('Remove data: ${jsonEncode(removeDays)}');
+  //   print('Token: $token');
+
+  //   try {
+  //     final response = await request.send();
+
+  //     if (response.statusCode == 200) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text('Leave submitted successfully!'),
+  //           duration: Duration(seconds: 2),
+  //         ),
+  //       );
+  //       await _fetchLeaveData(_selectedDay!); // Refresh the data immediately
+  //       setState(() {
+  //         _leaveStatus[DateTime.parse(selectedDay)] = 'pending';
+  //         _selectedEvents.value = _getEventsForDay(_selectedDay!);
+  //       });
+  //       refreshDataCallback(); // Refresh the parent state
+  //     } else {
+  //       final responseBody = await response.stream.bytesToString();
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text(
+  //               'Failed to submit leave: ${response.statusCode} ${responseBody}'),
+  //           duration: Duration(seconds: 2),
+  //         ),
+  //       );
+  //       print(
+  //           "Error in submitting leave ${response.statusCode} ${responseBody}");
+  //     }
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('An unexpected error occurred: $e'),
+  //         duration: Duration(seconds: 2),
+  //       ),
+  //     );
+  //   }
+  // }
+
   Future<void> _submitLeave(
-      BuildContext context,
-      String token,
-      String selectedDay,
-      String selectedLeaveType,
-      String selectedTypeOfDay,
-      String comment,
-      String coverUp,
-      List<String> removeDays,
-      VoidCallback refreshDataCallback,
-      ) async {
-    // Find the selected LeaveType object by matching the text
-    final leaveType = leaveTypes?.firstWhere((type) => type.text == selectedLeaveType);
+  BuildContext context,
+  String token,
+  String selectedDay,
+  String selectedTypeOfDay,
+  String comment,
+  String coverUp,
+  List<String> removeDays,
+  VoidCallback refreshDataCallback,
+) async {
+  // Ensure the date is properly formatted
+  String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.parse(selectedDay));
 
-    if (leaveType == null) {
-      // Handle error when leave type is not found
+  final datesData = [
+    {
+      'date': formattedDate, // Use the formatted date
+      'data': {
+        'leave_id': 1,
+        'cat': selectedTypeOfDay,
+        'comment': comment,
+        'coverup': coverUp,
+      }
+    }
+  ];
+
+  final uri = Uri.parse('http://hris.accelution.lk/api/leave');
+  final request = http.MultipartRequest('POST', uri)
+    ..headers['Accept'] = '/'
+    ..headers['Authorization'] = 'Bearer $token'
+    ..fields['dates'] = jsonEncode(datesData)
+    ..fields['remove'] = '[]';
+
+  print('Formatted Date: $formattedDate');
+  print('Dates Data: ${jsonEncode(datesData)}');
+
+  try {
+    final response = await request.send();
+    if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Invalid leave type selected'),
+          content: Text('Leave submitted successfully!'),
           duration: Duration(seconds: 2),
         ),
       );
-      return;
-    }
-
-    final datesData = [
-      {
-        'date': selectedDay,
-        'data': {
-          'leave_id': leaveType.value,  // Use the dynamic leave_id value
-          'cat': selectedTypeOfDay,
-          'comment': comment,
-          'coverup': coverUp,
-        }
-      }
-    ];
-
-    final uri = Uri.parse('http://hris.accelution.lk/api/leave');
-    final request = http.MultipartRequest('POST', uri)
-      ..headers['Accept'] = '*/*'
-      ..headers['Authorization'] = 'Bearer $token'
-      ..fields['dates'] = jsonEncode(datesData)
-      ..fields['remove'] = '[]';
-
-    print('Dates data: ${jsonEncode(datesData)}');
-    print('Remove data: ${jsonEncode(removeDays)}');
-    print('Token: $token');
-
-    try {
-      final response = await request.send();
-
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Leave submitted successfully!'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-        await _fetchLeaveData(_selectedDay!); // Refresh the data immediately
-        setState(() {
-          _leaveStatus[DateTime.parse(selectedDay)] = 'pending';
-          _selectedEvents.value = _getEventsForDay(_selectedDay!);
-        });
-        refreshDataCallback(); // Refresh the parent state
-      } else {
-        final responseBody = await response.stream.bytesToString();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-                'Failed to submit leave: ${response.statusCode} ${responseBody}'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-        print(
-            "Error in submitting leave ${response.statusCode} ${responseBody}");
-      }
-    } catch (e) {
+      await _fetchLeaveData(_selectedDay!); // Refresh the data immediately
+      setState(() {
+        _leaveStatus[DateTime.parse(formattedDate)] = 'pending';
+        _selectedEvents.value = _getEventsForDay(_selectedDay!);
+      });
+      refreshDataCallback(); // Refresh the parent state
+    } else {
+      final responseBody = await response.stream.bytesToString();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('An unexpected error occurred: $e'),
+          content: Text(
+              'Failed to submit leave: ${response.statusCode} ${responseBody}'),
           duration: Duration(seconds: 2),
         ),
       );
+      print("Error in submitting leave ${response.statusCode} ${responseBody}");
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('An unexpected error occurred: $e'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
+}
 
   Future<void> _pickAttachment() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -511,7 +582,7 @@ class _LeavePageState extends State<Leave> {
                               await _submitLeave(
                                 context,
                                 widget.token,
-                                formattedDate,
+                                // formattedDate,
                                 _selectedLeaveType!,
                                 _selectedTimeOfDay!,
                                 _commentController.text,
