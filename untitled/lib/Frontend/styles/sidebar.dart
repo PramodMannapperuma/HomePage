@@ -217,6 +217,7 @@ import 'package:untitled/Frontend/pages/employee.dart';
 import 'package:untitled/Frontend/pages/leave.dart';
 import 'package:untitled/Frontend/pages/policies.dart';
 import 'package:untitled/Frontend/pages/task_screen.dart';
+import '../pages/requests.dart';
 
 class CustomSidebar extends StatelessWidget {
   final String token;
@@ -335,7 +336,13 @@ class CustomSidebar extends StatelessWidget {
               title: Text('Requests'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/requests');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        Requests(token: token, isFromSidebar: true, isFromAppbar: true,),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -392,7 +399,8 @@ class CustomSidebar extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EmployeeScreen(token: token),
+                    builder: (context) =>
+                        EmployeeScreen(token: token, isFromSidebar: true),
                   ),
                 );
               },

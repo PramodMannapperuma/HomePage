@@ -3,6 +3,7 @@ import 'package:untitled/Frontend/geolocation.dart';
 import 'Frontend/graphs/attendance_tracker.dart';
 import 'Frontend/pages/approval.dart';
 import 'Frontend/pages/celebrations.dart';
+import 'Frontend/pages/coverup_request.dart';
 import 'Frontend/pages/employee.dart';
 import 'Frontend/pages/leave.dart';
 import 'Frontend/pages/attendance.dart';
@@ -14,6 +15,7 @@ import 'Frontend/pages/policies.dart';
 import 'Frontend/pages/policy_pdf.dart';
 import 'Frontend/pages/profile.dart';
 import 'Frontend/pages/requests.dart';
+// import 'Frontend/pages/task_screen.dart';
 import 'Frontend/pages/task_screen.dart';
 import 'Frontend/pages/team_task.dart';
 import 'Frontend/pages/users.dart';
@@ -48,7 +50,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 token: args ?? '',
               ));
     case '/requests':
-      return MaterialPageRoute(builder: (context) => Requests());
+      return MaterialPageRoute(builder: (context) => Requests(token: '', isFromSidebar: true, isFromAppbar: true,));
     case '/celebrations':
       return MaterialPageRoute(builder: (context) => Celebrations());
     case '/personalInfo':
@@ -68,9 +70,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/attendanceTracker':
       return MaterialPageRoute(builder: (context) => AttendanceTracker());
     case '/taskScreen':
-      return MaterialPageRoute(builder: (context) => TaskScreen(token: args ?? ''));
+      return MaterialPageRoute(builder: (context) => TaskScreen());
     case '/taskList':
       return MaterialPageRoute(builder: (context) => TaskListScreen());
+    case '/coverupRequest':
+      return MaterialPageRoute(builder: (context) => CoverupRequestScreen(token: args ?? '', isFromSidebar: true,isFromAppbar: true,));
     case '/employeeScreen':
       return MaterialPageRoute(builder: (context) => EmployeeGridScreen());
     case '/employee':
