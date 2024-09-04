@@ -1082,6 +1082,7 @@ class _LeavePageState extends State<Leave> {
   static const Color attendanceColor = Colors.green;
   static const Color holidayColor = Colors.black;
   static const Color leaveColor = Colors.purple;
+  static const Color coverupColor =  Colors.brown;
 
   final Map<String, Color> statusColorMap = {
     'incomplete': incompleteColor,
@@ -1091,6 +1092,7 @@ class _LeavePageState extends State<Leave> {
     'active-amd': attendanceColor,
     'holiday': holidayColor,
     'leave': leaveColor,
+    'coverup': coverupColor,
   };
 
   CalendarFormat _calendarFormat = CalendarFormat.month;

@@ -4,7 +4,11 @@ import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 
 class Requests extends StatefulWidget {
-  const Requests({Key? key}) : super(key: key);
+  final String token;
+  final bool isFromSidebar;
+  final bool isFromAppbar;
+
+  const Requests({Key? key, required this.token, required this.isFromSidebar, required this.isFromAppbar}) : super(key: key);
 
   @override
   State<Requests> createState() => _RequestsState();
@@ -12,8 +16,7 @@ class Requests extends StatefulWidget {
 
 class _RequestsState extends State<Requests> {
   final _formKey = GlobalKey<FormState>();
-  String _requestType =
-      'Salary Confirmation'; // Default to the first item in the list
+  String _requestType = 'Salary Confirmation'; // Default to the first item in the list
   String _name = '';
   String _employeeId = '';
   DateTime _date = DateTime.now();
@@ -24,12 +27,15 @@ class _RequestsState extends State<Requests> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-          title: 'Requests',
-          showActions: true,
-          showLeading: true,
-          context: context,
-          showBackButton: true),
-      drawer: CustomSidebar(token: '',),
+        title: 'Requests',
+        showActions: true,
+        showLeading: true,
+        context: context,
+        showBackButton: true,
+        showBellIcon: widget.isFromAppbar, // Show the bell icon only on this page
+        token: widget.token, // Pass the token to the AppBar
+      ),
+      drawer: widget.isFromSidebar ? CustomSidebar(token: widget.token) : null,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -93,8 +99,7 @@ class _RequestsState extends State<Requests> {
               SizedBox(height: 16),
               ListTile(
                 title: Text('Date: ${_date.toString().split(' ')[0]}'),
-                trailing:
-                    Icon(Icons.calendar_month, color: AppColors.background),
+                trailing: Icon(Icons.calendar_month, color: AppColors.background),
                 onTap: () async {
                   final DateTime? picked = await showDatePicker(
                     context: context,
@@ -143,8 +148,7 @@ class _RequestsState extends State<Requests> {
                 SizedBox(height: 16),
                 Divider(),
                 ListTile(
-                  leading:
-                      Icon(Icons.download_rounded, color: AppColors.background),
+                  leading: Icon(Icons.download_rounded, color: AppColors.background),
                   title: Text('Download Approval Letter'),
                   subtitle: Text('Tap to download the letter'),
                   onTap: () {
@@ -167,4 +171,3 @@ class _RequestsState extends State<Requests> {
     );
   }
 }
-

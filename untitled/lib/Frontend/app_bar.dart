@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:untitled/Frontend/pages/coverup_request.dart';
 import 'package:untitled/Frontend/styles/app_colors.dart';
 
 AppBar customAppBar({
@@ -8,6 +9,8 @@ AppBar customAppBar({
   required bool showLeading,
   required BuildContext context,
   bool showBackButton = false,
+  bool showBellIcon = false, // New parameter to control bell icon visibility
+  String? token, // Added token parameter
 }) {
   return AppBar(
     title: Row(
@@ -18,7 +21,6 @@ AppBar customAppBar({
           height: 40.0,
         ),
         SizedBox(width: 8.0),
-        // Text(title),
       ],
     ),
     bottom: PreferredSize(
@@ -49,47 +51,64 @@ AppBar customAppBar({
     ),
     leading: showLeading
         ? showBackButton
-            ? IconButton(
-                icon: Icon(Icons.arrow_back, color: AppColors.background),
-                onPressed: () => Navigator.of(context).pop(),
-              )
-            : Builder(
-                builder: (BuildContext context) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.menu_outlined,
-                        color: AppColors.background,
-                      ),
-                      onPressed: () {
-                        Scaffold.of(context).openEndDrawer();
-                      },
-                    ),
-                  );
-                },
-              )
-        : null,
-    actions: showActions
-        ? [
-            Builder(
-              builder: (BuildContext context) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.menu_outlined,
-                      color: AppColors.background,
-                    ),
-                    onPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                  ),
-                );
-              },
+        ? IconButton(
+      icon: Icon(Icons.arrow_back, color: AppColors.background),
+      onPressed: () => Navigator.of(context).pop(),
+    )
+        : Builder(
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: IconButton(
+            icon: const Icon(
+              Icons.menu_outlined,
+              color: AppColors.background,
             ),
-          ]
+            onPressed: () {
+              Scaffold.of(context).openEndDrawer();
+            },
+          ),
+        );
+      },
+    )
         : null,
+    actions: <Widget>[
+      if (showBellIcon)
+        IconButton(
+          icon: const Icon(
+            Icons.notifications_active_outlined,
+            color: AppColors.background,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CoverupRequestScreen(
+                  token: token ?? '', // Provide a default value if token is null
+                  isFromSidebar: true,
+                  isFromAppbar: true,
+                ),
+              ),
+            );
+          },
+        ),
+      if (showActions)
+        Builder(
+          builder: (BuildContext context) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.menu_outlined,
+                  color: AppColors.background,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              ),
+            );
+          },
+        ),
+    ],
   );
 }
-
