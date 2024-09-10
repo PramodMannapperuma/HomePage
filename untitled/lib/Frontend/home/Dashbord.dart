@@ -548,8 +548,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled/Backend/APIs/Apis.dart';
 import 'package:untitled/Frontend/geolocation.dart';
-import '../../Backend/APIs/Apis.dart';
+import 'package:untitled/Frontend/home/leave_details_screen.dart';
+import 'package:untitled/Frontend/pages/pending_attendance_screen.dart';
 import '../../../Frontend/pages/attendance.dart';
 import '../../../Frontend/pages/leave.dart';
 import '../pages/employee.dart';
@@ -870,7 +872,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               return CircleAvatar(
                                 radius: 45,
                                 backgroundImage:
-                                AssetImage('assets/images/profile.png'),
+                                    AssetImage('assets/images/profile.png'),
                               );
                             } else if (snapshot.hasData) {
                               return CircleAvatar(
@@ -881,7 +883,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               return CircleAvatar(
                                 radius: 45,
                                 backgroundImage:
-                                AssetImage('assets/images/profile.png'),
+                                    AssetImage('assets/images/profile.png'),
                               );
                             }
                           },
@@ -1014,19 +1016,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  RecentLeaveRequestCard(
-                    leaveType: '3 Days Leave',
-                    status: 'Processing',
+                  // RecentLeaveRequestCard(
+                  //   leaveType: '3 Days Leave',
+                  //   status: 'Processing',
+                  // ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              LeaveDetailsScreen(token: widget.token),
+                        ),
+                      );
+                    },
+                    child: RecentLeaveRequestCard(
+                      leaveType: 'Leaves',
+                      status: 'Processing',
+                    ),
                   ),
-                  RecentLeaveRequestCard(
-                    leaveType: 'Attendance',
-                    status: 'Processing',
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PendingAttendanceScreen(token: widget.token),
+                        ),
+                      );
+                    },
+                    child: RecentLeaveRequestCard(
+                      leaveType: 'Attendance',
+                      status: 'Processing',
+                    ),
                   ),
                   RecentLeaveRequestCard(
                     leaveType: 'Visa Letter',
                     status: 'Processing',
                   ),
-                  
+
                   SizedBox(height: 20),
                   Divider(thickness: 2, height: 10),
 
@@ -1084,9 +1112,9 @@ class CategoryCard extends StatelessWidget {
 
   const CategoryCard(
       {required this.title,
-        required this.icon,
-        required this.route,
-        required this.token});
+      required this.icon,
+      required this.route,
+      required this.token});
 
   @override
   Widget build(BuildContext context) {
@@ -1179,7 +1207,9 @@ class EmployeeBirthdayCard extends StatelessWidget {
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduced padding to decrease height
+              padding: const EdgeInsets.symmetric(
+                  vertical: 6,
+                  horizontal: 10), // Reduced padding to decrease height
               decoration: BoxDecoration(
                 color: Colors.purple[100],
                 borderRadius: BorderRadius.circular(8),
