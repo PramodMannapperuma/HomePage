@@ -15,30 +15,70 @@ class PendingAttendanceScreen extends StatefulWidget {
 }
 
 class _PendingAttendanceScreenState extends State<PendingAttendanceScreen> {
+  final int _initialDaysToFetch = 30; // Start with fetching data for the most recent 5 days
+  final int _incrementDays = 5; // Incremental days to fetch on demand
+  List<AttendanceData> _pendingAttendance = [];
+  bool _isLoadingMore = false;
+  bool _hasMoreData = true;
 
-  Future<List<AttendanceData>> _fetchAllAttendance() async {
-    Set<AttendanceData> uniqueAttendance = {}; // Use a set to ensure uniqueness
+  @override
+  void initState() {
+    super.initState();
+    _fetchInitialAttendance();
+  }
+
+  Future<void> _fetchInitialAttendance() async {
+    await _fetchAttendance(_initialDaysToFetch);
+  }
+
+  Future<void> _fetchAttendance(int daysToFetch, {bool isInitialLoad = true}) async {
+    if (_isLoadingMore) return; // Prevent multiple concurrent loads
+
+    setState(() {
+      _isLoadingMore = true;
+    });
+
     DateTime today = DateTime.now();
-    int daysToFetch = 30; // Adjust this number based on how far back you want to fetch
+    List<Future<List<AttendanceData>>> fetchFutures = List.generate(
+      daysToFetch,
+          (i) async {
+        DateTime targetDate = today.subtract(Duration(days: i));
+        try {
+          // Fetch attendance for a single day
+          return await ApiService().fetchAttendanceData(widget.token, targetDate);
+        } catch (e) {
+          print('Failed to fetch attendance for $targetDate: $e');
+          return [];
+        }
+      },
+    );
 
-    for (int i = 0; i < daysToFetch; i++) {
-      DateTime targetDate = today.subtract(Duration(days: i));
-      try {
-        // Fetch attendance for a single day
-        List<AttendanceData> dailyAttendance =
-        await ApiService().fetchAttendanceData(widget.token, targetDate);
+    List<List<AttendanceData>> results = await Future.wait(fetchFutures);
 
-        // Filter the fetched data for status == "pending" and add only unique records
-        dailyAttendance
-            .where((attendance) => attendance.status == 'pending')
-            .forEach((attendance) => uniqueAttendance.add(attendance));
-      } catch (e) {
-        // Optionally handle errors for individual days
-        print('Failed to fetch attendance for $targetDate: $e');
-      }
+    // Combine all fetched lists and filter unique pending attendances
+    Set<AttendanceData> uniqueAttendance = results
+        .expand((dailyList) => dailyList)
+        .where((attendance) => attendance.status == 'pending')
+        .toSet();
+
+    if (uniqueAttendance.isNotEmpty) {
+      setState(() {
+        _pendingAttendance.addAll(uniqueAttendance.toList());
+        _isLoadingMore = false;
+        _hasMoreData = uniqueAttendance.length == daysToFetch; // More data available if all days returned data
+      });
+    } else {
+      setState(() {
+        _isLoadingMore = false;
+        _hasMoreData = false; // No more data to load
+      });
     }
+  }
 
-    return uniqueAttendance.toList(); // Convert set to list before returning
+  Future<void> _loadMoreData() async {
+    if (_hasMoreData) {
+      await _fetchAttendance(_incrementDays, isInitialLoad: false);
+    }
   }
 
   @override
@@ -51,25 +91,19 @@ class _PendingAttendanceScreenState extends State<PendingAttendanceScreen> {
         context: context,
         showBackButton: true,
       ),
-      body: FutureBuilder<List<AttendanceData>>(
-        future: _fetchAllAttendance(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No pending attendance requests.'));
-          }
-
-          List<AttendanceData> pendingAttendance = snapshot.data!;
-
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
+      body: Column(
+        children: [
+          Expanded(
             child: ListView.builder(
-              itemCount: pendingAttendance.length,
+              itemCount: _pendingAttendance.length + (_hasMoreData ? 1 : 0), // Add 1 for loading indicator
               itemBuilder: (context, index) {
-                AttendanceData attendance = pendingAttendance[index];
+                if (index == _pendingAttendance.length && _hasMoreData) {
+                  // Display a loading indicator at the bottom
+                  _loadMoreData();
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                AttendanceData attendance = _pendingAttendance[index];
 
                 return Card(
                   shape: RoundedRectangleBorder(
@@ -95,7 +129,7 @@ class _PendingAttendanceScreenState extends State<PendingAttendanceScreen> {
                           'Status: ${attendance.status}',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.black, // Amber color for status text
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -117,8 +151,13 @@ class _PendingAttendanceScreenState extends State<PendingAttendanceScreen> {
                 );
               },
             ),
-          );
-        },
+          ),
+          if (_isLoadingMore)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+        ],
       ),
     );
   }
