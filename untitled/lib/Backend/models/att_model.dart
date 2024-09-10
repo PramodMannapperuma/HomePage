@@ -30,4 +30,14 @@ class AttendanceData {
       status: json['status'],
     );
   }
+  // Override == and hashCode for uniqueness based on `date`
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is AttendanceData && other.date == date;
+  }
+
+  @override
+  int get hashCode => date.hashCode;
 }
