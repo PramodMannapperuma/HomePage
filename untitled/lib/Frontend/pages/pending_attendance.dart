@@ -15,6 +15,7 @@ class PendingAttendanceScreen extends StatefulWidget {
 }
 
 class _PendingAttendanceScreenState extends State<PendingAttendanceScreen> {
+
   Future<List<AttendanceData>> _fetchAllAttendance() async {
     Set<AttendanceData> uniqueAttendance = {}; // Use a set to ensure uniqueness
     DateTime today = DateTime.now();
@@ -24,7 +25,8 @@ class _PendingAttendanceScreenState extends State<PendingAttendanceScreen> {
       DateTime targetDate = today.subtract(Duration(days: i));
       try {
         // Fetch attendance for a single day
-        List<AttendanceData> dailyAttendance = await ApiService().fetchAttendanceData(widget.token, targetDate);
+        List<AttendanceData> dailyAttendance =
+        await ApiService().fetchAttendanceData(widget.token, targetDate);
 
         // Filter the fetched data for status == "pending" and add only unique records
         dailyAttendance
@@ -42,13 +44,12 @@ class _PendingAttendanceScreenState extends State<PendingAttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Replace AppBar with the customAppBar
       appBar: customAppBar(
-        title: 'Pending Attendance', // Set the title of the app bar
-        showActions: true, // Shows any actions if necessary
-        showLeading: true, // Shows the leading menu button
-        context: context, // Pass the context for navigation, etc.
-        showBackButton: true, // Show back button instead of menu icon
+        title: 'Pending Attendance details',
+        showActions: true,
+        showLeading: true,
+        context: context,
+        showBackButton: true,
       ),
       body: FutureBuilder<List<AttendanceData>>(
         future: _fetchAllAttendance(),
@@ -83,20 +84,31 @@ class _PendingAttendanceScreenState extends State<PendingAttendanceScreen> {
                       children: [
                         Text(
                           'Attendance Date: ${attendance.date}',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff4d2880),
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Status: ${attendance.status}',
-                          style: TextStyle(fontSize: 16, color: Colors.blueGrey),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black, // Amber color for status text
+                          ),
                         ),
                         const SizedBox(height: 4),
-                        if (attendance.comment != null && attendance.comment!.isNotEmpty)
+                        if (attendance.comment != null &&
+                            attendance.comment!.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
                               'Comment: ${attendance.comment}',
-                              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                       ],

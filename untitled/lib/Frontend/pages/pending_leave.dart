@@ -14,8 +14,10 @@ class LeaveDetailsScreen extends StatefulWidget {
 
 class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
   Future<List<LeaveData>> _fetchLeaveData() async {
-    DateTime today = DateTime.now(); // You can change this to fetch for any specific range or all data
-    List<LeaveData> allLeaveData = await ApiService().fetchLeaveData(widget.token, today);
+    DateTime today = DateTime
+        .now(); // You can change this to fetch for any specific range or all data
+    List<LeaveData> allLeaveData =
+        await ApiService().fetchLeaveData(widget.token, today);
 
     // Filter the list to only include records where status == 'leave'
     return allLeaveData.where((leave) => leave.status == 'leave').toList();
@@ -26,7 +28,7 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
     return Scaffold(
       // Reuse the customAppBar
       appBar: customAppBar(
-        title: 'Leave Details',
+        title: 'Pending leave details',
         showActions: true,
         showLeading: true,
         context: context,
@@ -65,19 +67,24 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
                       children: [
                         Text(
                           'Leave Date: ${leave.date}',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Color(0xff4d2880),
+                              fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Status: ${leave.status}',
-                          style: TextStyle(fontSize: 16, color: Colors.blueGrey),
+                          style:
+                              TextStyle(fontSize: 16, color: Colors.black),
                         ),
                         if (leave.comment != null && leave.comment!.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
                               'Comment: ${leave.comment}',
-                              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.black),
                             ),
                           ),
                       ],
