@@ -368,7 +368,7 @@ class ApiService {
   // Fetch leave requests for a specific employee
   Future<List<LeaveApproval>> fetchLeaveRequests(String employeeId, String token) async {
     final response = await http.get(
-      Uri.parse('$_baseUrl/approvals/leave?length=10&start=0&employeeId=$employeeId'),
+      Uri.parse('$_baseUrl/approvals/leave?length=30&start=0&employeeId=$employeeId'),
       headers: _headers(token),
     ).timeout(Duration(seconds: 60));
 
@@ -385,7 +385,7 @@ class ApiService {
   // Fetch attendance records for a specific employee
   Future<List<AttApproval>> fetchAttendanceRecords(String employeeId, String token) async {
     final response = await http.get(
-      Uri.parse('$_baseUrl/approvals/attendance?length=10&start=0&employeeId=$employeeId'),
+      Uri.parse('$_baseUrl/approvals/attendance?length=30&start=0&employeeId=$employeeId'),
       headers: _headers(token),
     ).timeout(Duration(seconds: 60));
 
@@ -402,7 +402,7 @@ class ApiService {
   static Future<List<CoverUpDetail>> getCoverUpDetails(String token, int employeeId) async {
     try {
       final response = await http.get(
-        Uri.parse('$_baseUrl/approvals/coverup?length=10&start=0&employeeId=$employeeId'),
+        Uri.parse('$_baseUrl/approvals/coverup?length=30&start=0&employeeId=$employeeId'),
         headers: _headers(token),
       ).timeout(Duration(seconds: 60));
 
