@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:untitled/Backend/APIs/Apis.dart';
 import '../../Backend/models/att_model.dart';
 import '../app_bar.dart'; // Import the custom app bar
-import '../styles/sidebar.dart'; // Import sidebar for drawer if needed
 
 class PendingAttendanceScreen extends StatefulWidget {
   final String token;
