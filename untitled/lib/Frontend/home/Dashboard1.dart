@@ -42,9 +42,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
               'assets/images/hrislogo2.png',
               height: 40.0,
             ),
-            SizedBox(
-              width: 8.0,
-            ),
+            SizedBox(width: 8.0),
           ],
         ),
         centerTitle: true,
@@ -139,7 +137,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
                             return CircleAvatar(
                               radius: 45,
                               backgroundImage:
-                                  AssetImage('assets/images/profile.png'),
+                              AssetImage('assets/images/profile.png'),
                             );
                           } else if (snapshot.hasData) {
                             return CircleAvatar(
@@ -150,7 +148,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
                             return CircleAvatar(
                               radius: 45,
                               backgroundImage:
-                                  AssetImage('assets/images/profile.png'),
+                              AssetImage('assets/images/profile.png'),
                             );
                           }
                         },
@@ -332,7 +330,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
                             _buildAttendanceItem(
                                 'Complete', complete, Colors.green),
                             _buildAttendanceItem(
-                                'Incomplete', incomplete, Colors.orange),
+                                'Incomplete', incomplete, Colors.amber),
                             _buildAttendanceItem(
                                 'Pending', pending, Colors.blue),
                             _buildAttendanceItem(
@@ -373,9 +371,9 @@ class _DashMainScreenState extends State<DashMainScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _buildLeaveItem('Taken', leaveTaken),
-                            _buildLeaveItem('Pending', leavePending),
-                            _buildLeaveItem('Rejected', leaveRejected),
+                            _buildLeaveItem('Taken', leaveTaken, Colors.green),
+                            _buildLeaveItem('Pending', leavePending, Colors.amber),
+                            _buildLeaveItem('Rejected', leaveRejected, Colors.red),
                           ],
                         ),
                       ],
@@ -414,7 +412,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
     );
   }
 
-  Widget _buildLeaveItem(String title, String value) {
+  Widget _buildLeaveItem(String title, String value, Color color) {
     return Column(
       children: [
         Text(
@@ -422,7 +420,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.blue,
+            color: color,
           ),
         ),
         SizedBox(height: 5),

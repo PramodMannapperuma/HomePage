@@ -75,16 +75,15 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
                         const SizedBox(height: 8),
                         Text(
                           'Status: ${leave.status}',
-                          style:
-                              TextStyle(fontSize: 16, color: Colors.black),
+                          style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                         if (leave.comment != null && leave.comment!.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
                               'Comment: ${leave.comment}',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.black),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
                             ),
                           ),
                       ],
