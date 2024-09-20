@@ -1082,7 +1082,7 @@ class _LeavePageState extends State<Leave> {
   static const Color attendanceColor = Colors.green;
   static const Color holidayColor = Colors.black;
   static const Color leaveColor = Colors.purple;
-  static const Color coverupColor =  Colors.brown;
+  static const Color coverupColor = Colors.brown;
 
   final Map<String, Color> statusColorMap = {
     'incomplete': incompleteColor,
@@ -1133,7 +1133,7 @@ class _LeavePageState extends State<Leave> {
   Future<void> _loadLeaveData(DateTime selectedDate) async {
     try {
       final List<LeaveData> data =
-      await apiService.fetchLeaveData(widget.token, selectedDate);
+          await apiService.fetchLeaveData(widget.token, selectedDate);
       setState(() {
         leaveDataMap[selectedDate] = data;
         _leaveStatus.clear();
@@ -1197,7 +1197,7 @@ class _LeavePageState extends State<Leave> {
   Future<void> _fetchLeaveData(DateTime selectedDate) async {
     try {
       final List<LeaveData> data =
-      await apiService.fetchLeaveData(widget.token, selectedDate);
+          await apiService.fetchLeaveData(widget.token, selectedDate);
       setState(() {
         leaveDataMap[selectedDate] = data;
         _leaveStatus.clear();
@@ -1237,18 +1237,19 @@ class _LeavePageState extends State<Leave> {
   }
 
   Future<void> _submitLeave(
-      BuildContext context,
-      String token,
-      String selectedDay,
-      String selectedLeaveType,
-      String selectedTypeOfDay,
-      String comment,
-      String coverUp,
-      List<String> removeDays,
-      VoidCallback refreshDataCallback,
-      ) async {
+    BuildContext context,
+    String token,
+    String selectedDay,
+    String selectedLeaveType,
+    String selectedTypeOfDay,
+    String comment,
+    String coverUp,
+    List<String> removeDays,
+    VoidCallback refreshDataCallback,
+  ) async {
     // Find the selected LeaveType object by matching the text
-    final leaveType = leaveTypes?.firstWhere((type) => type.text == selectedLeaveType);
+    final leaveType =
+        leaveTypes?.firstWhere((type) => type.text == selectedLeaveType);
 
     if (leaveType == null) {
       // Handle error when leave type is not found
@@ -1265,7 +1266,7 @@ class _LeavePageState extends State<Leave> {
       {
         'date': selectedDay,
         'data': {
-          'leave_id': leaveType.value,  // Use the dynamic leave_id value
+          'leave_id': leaveType.value, // Use the dynamic leave_id value
           'cat': selectedTypeOfDay,
           'comment': comment,
           'coverup': coverUp,
@@ -1333,10 +1334,10 @@ class _LeavePageState extends State<Leave> {
   }
 
   Future<void> _submitLeaveRemoval(
-      String token,
-      List<String> removeDays,
-      VoidCallback refreshDataCallback,
-      ) async {
+    String token,
+    List<String> removeDays,
+    VoidCallback refreshDataCallback,
+  ) async {
     final uri = Uri.parse('${ApiService.baseUrl}/leave');
     final request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = '*/*'
@@ -1431,31 +1432,31 @@ class _LeavePageState extends State<Leave> {
                     isLoading
                         ? CircularProgressIndicator()
                         : DropdownButtonFormField<String>(
-                      value: _selectedLeaveType,
-                      decoration: InputDecoration(
-                        labelText: "Leave Type",
-                      ),
-                      items: leaveTypes?.map((LeaveType leaveType) {
-                        return DropdownMenuItem<String>(
-                          value: leaveType.text,
-                          child: Text(leaveType.text),
-                        );
-                      }).toList() ??
-                          [],
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedLeaveType = newValue;
-                          if (newValue != "Medical") {
-                            _attachmentPath = null;
-                          }
-                        });
-                      },
-                    ),
+                            value: _selectedLeaveType,
+                            decoration: InputDecoration(
+                              labelText: "Leave Type",
+                            ),
+                            items: leaveTypes?.map((LeaveType leaveType) {
+                                  return DropdownMenuItem<String>(
+                                    value: leaveType.text,
+                                    child: Text(leaveType.text),
+                                  );
+                                }).toList() ??
+                                [],
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedLeaveType = newValue;
+                                if (newValue != "Medical") {
+                                  _attachmentPath = null;
+                                }
+                              });
+                            },
+                          ),
                     if (_selectedLeaveType != null && leaveTypes != null) ...[
                       if (leaveTypes!
-                          .firstWhere(
-                              (type) => type.text == _selectedLeaveType)
-                          .additionalData['coverup'] ==
+                              .firstWhere(
+                                  (type) => type.text == _selectedLeaveType)
+                              .additionalData['coverup'] ==
                           'yes')
                         DropdownButtonFormField<String>(
                           value: _selectedCoverUp,
@@ -1463,11 +1464,11 @@ class _LeavePageState extends State<Leave> {
                             labelText: "Cover up",
                           ),
                           items: coverUps?.map((CoverUp coverUp) {
-                            return DropdownMenuItem<String>(
-                              value: coverUp.id,
-                              child: Text(coverUp.name),
-                            );
-                          }).toList() ??
+                                return DropdownMenuItem<String>(
+                                  value: coverUp.id,
+                                  child: Text(coverUp.name),
+                                );
+                              }).toList() ??
                               [],
                           onChanged: (String? newValue) {
                             setState(() {
@@ -1476,9 +1477,9 @@ class _LeavePageState extends State<Leave> {
                           },
                         ),
                       if (leaveTypes!
-                          .firstWhere(
-                              (type) => type.text == _selectedLeaveType)
-                          .additionalData['attachment'] ==
+                              .firstWhere(
+                                  (type) => type.text == _selectedLeaveType)
+                              .additionalData['attachment'] ==
                           'yes')
                         Column(
                           children: [
@@ -1492,7 +1493,7 @@ class _LeavePageState extends State<Leave> {
                                 ),
                               ),
                               controller:
-                              TextEditingController(text: _attachmentPath),
+                                  TextEditingController(text: _attachmentPath),
                             ),
                             if (_attachmentPath != null)
                               Text(
@@ -1551,7 +1552,7 @@ class _LeavePageState extends State<Leave> {
                           ),
                           onPressed: () async {
                             String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(_selectedDay!);
+                                DateFormat('yyyy-MM-dd').format(_selectedDay!);
                             if (_selectedLeaveType != null &&
                                 _selectedTimeOfDay != null &&
                                 _commentController.text.isNotEmpty &&
@@ -1620,79 +1621,79 @@ class _LeavePageState extends State<Leave> {
     return Scaffold(
       appBar: widget.isFromSidebar
           ? customAppBar(
-        title: 'Leave',
-        showActions: true,
-        showLeading: true,
-        context: context,
-        showBackButton: true,
-      )
+              title: 'Leave',
+              showActions: true,
+              showLeading: true,
+              context: context,
+              showBackButton: true,
+            )
           : AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/hrislogo2.png',
-              height: isPortrait ? 40.0 : 30.0,
-            ),
-            SizedBox(width: 8.0),
-          ],
-        ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(35.0),
-          child: Column(
-            children: [
-              Padding(
-                padding:
-                EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                child: Text(
-                  "Leave",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/hrislogo2.png',
+                    height: isPortrait ? 40.0 : 30.0,
                   ),
+                  SizedBox(width: 8.0),
+                ],
+              ),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(35.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                      child: Text(
+                        "Leave",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.black,
+                      thickness: 0.2,
+                    ),
+                  ],
                 ),
               ),
-              Divider(
-                color: Colors.black,
-                thickness: 0.2,
+              centerTitle: true,
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.dark,
               ),
-            ],
-          ),
-        ),
-        centerTitle: true,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-        ),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return Padding(
-              padding: EdgeInsets.all(screenWidth * 0.02),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.menu_outlined,
-                  color: AppColors.background,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return Padding(
+                    padding: EdgeInsets.all(screenWidth * 0.02),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.menu_outlined,
+                        color: AppColors.background,
+                      ),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                    ),
+                  );
                 },
               ),
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.person,
-              color: AppColors.background,
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.person,
+                    color: AppColors.background,
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/profile',
+                        arguments: widget.token);
+                  },
+                ),
+              ],
             ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/profile',
-                  arguments: widget.token);
-            },
-          ),
-        ],
-      ),
       drawer: CustomSidebar(token: widget.token),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4d2880),
@@ -1747,7 +1748,7 @@ class _LeavePageState extends State<Leave> {
                 calendarBuilders: CalendarBuilders(
                   defaultBuilder: (context, day, focusedDay) {
                     final status =
-                    _leaveStatus[DateTime(day.year, day.month, day.day)];
+                        _leaveStatus[DateTime(day.year, day.month, day.day)];
                     final color = _getStatusColor(status);
 
                     return Container(
@@ -1756,7 +1757,6 @@ class _LeavePageState extends State<Leave> {
                       decoration: BoxDecoration(
                         color: color,
                         shape: BoxShape.circle,
-
                       ),
                       child: Text(
                         '${day.day}',
@@ -1825,8 +1825,8 @@ class _LeavePageState extends State<Leave> {
                     } else {
                       final data = snapshot.data!;
                       final selectedDateData = data.firstWhere(
-                            (element) =>
-                        element.date ==
+                        (element) =>
+                            element.date ==
                             _selectedDay?.toString().split(" ")[0],
                         orElse: () => LeaveData(
                           amdIn: 'N/A',
@@ -1852,7 +1852,7 @@ class _LeavePageState extends State<Leave> {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'Date: ${selectedDateData.date}',
@@ -1876,7 +1876,7 @@ class _LeavePageState extends State<Leave> {
                                 Text(
                                   'Comment: ${selectedDateData.comment ?? 'N/A'}',
                                   style:
-                                  TextStyle(fontSize: screenWidth * 0.04),
+                                      TextStyle(fontSize: screenWidth * 0.04),
                                 ),
                                 if (selectedDateData.status == 'leave')
                                   Align(
@@ -1916,27 +1916,27 @@ class _LeavePageState extends State<Leave> {
                             isLoading
                                 ? Center(child: CircularProgressIndicator())
                                 : leaveBalanceData != null &&
-                                leaveBalanceData!.isNotEmpty
-                                ? Card(
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.circular(8),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                    screenWidth * 0.02),
-                                child: Center(
-                                  child: _buildLeaveTable(),
-                                ),
-                              ),
-                            )
-                                : Center(
-                              child: Text(
-                                'No leave balance data available.',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ),
+                                        leaveBalanceData!.isNotEmpty
+                                    ? Card(
+                                        elevation: 4,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(
+                                              screenWidth * 0.02),
+                                          child: Center(
+                                            child: _buildLeaveTable(),
+                                          ),
+                                        ),
+                                      )
+                                    : Center(
+                                        child: Text(
+                                          'No leave balance data available.',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ),
                           ],
                         ),
                       ),

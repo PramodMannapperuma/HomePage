@@ -32,7 +32,7 @@ class _RequestsState extends State<Requests> {
         showLeading: true,
         context: context,
         showBackButton: true,
-        showBellIcon: widget.isFromAppbar, // Show the bell icon only on this page
+        showBellIcon: true, // Show the bell icon only on this page
         token: widget.token, // Pass the token to the AppBar
       ),
       drawer: widget.isFromSidebar ? CustomSidebar(token: widget.token) : null,

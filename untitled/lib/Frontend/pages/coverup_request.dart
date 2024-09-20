@@ -10,7 +10,12 @@ class CoverupRequestScreen extends StatefulWidget {
   final bool isFromSidebar;
   final bool isFromAppbar;
 
-  const CoverupRequestScreen({Key? key, required this.token, required this.isFromSidebar, required this.isFromAppbar}) : super(key: key);
+  const CoverupRequestScreen(
+      {Key? key,
+      required this.token,
+      required this.isFromSidebar,
+      required this.isFromAppbar})
+      : super(key: key);
 
   @override
   _CoverupRequestScreenState createState() => _CoverupRequestScreenState();
@@ -28,7 +33,8 @@ class _CoverupRequestScreenState extends State<CoverupRequestScreen> {
 
   Future<void> _fetchData() async {
     try {
-      final fetchedCoverUps = await ApiService.getCoverUpDetails(widget.token, 2); // Example employeeId
+      final fetchedCoverUps = await ApiService.getCoverUpDetails(
+          widget.token, 2); // Example employeeId
       setState(() {
         coverUps = fetchedCoverUps;
         isLoading = false;
@@ -50,22 +56,22 @@ class _CoverupRequestScreenState extends State<CoverupRequestScreen> {
         showLeading: true,
         context: context,
         showBackButton: widget.isFromSidebar,
-        token: widget.token,  // Passing token to AppBar
+        token: widget.token, // Passing token to AppBar
       ),
       drawer: widget.isFromSidebar ? CustomSidebar(token: widget.token) : null,
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: ListView(
-          children: [
-            SectionHeader(title: 'Pending Cover-Up Approvals'),
-            coverUps.isEmpty
-                ? Center(child: Text('No cover-up approvals found'))
-                : CoverUpList(coverUps: coverUps, token: widget.token),
-          ],
-        ),
-      ),
+              padding: const EdgeInsets.all(10.0),
+              child: ListView(
+                children: [
+                  SectionHeader(title: 'Pending Cover-Up Approvals'),
+                  coverUps.isEmpty
+                      ? Center(child: Text('No cover-up approvals found'))
+                      : CoverUpList(coverUps: coverUps, token: widget.token),
+                ],
+              ),
+            ),
     );
   }
 }
@@ -98,7 +104,8 @@ class CoverUpList extends StatelessWidget {
   final List<CoverUpDetail> coverUps;
   final String token;
 
-  const CoverUpList({Key? key, required this.coverUps, required this.token}) : super(key: key);
+  const CoverUpList({Key? key, required this.coverUps, required this.token})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -122,10 +129,14 @@ class CoverUpList extends StatelessWidget {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Leave Type: ${coverUps[index].leaveType}', style: TextStyle(fontSize: 15.0)),
-                Text('Time: ${coverUps[index].time}', style: TextStyle(fontSize: 15.0)),
-                Text('Reason: ${coverUps[index].reason}', style: TextStyle(fontSize: 15.0)),
-                Text('Covered By: ${coverUps[index].extra}', style: TextStyle(fontSize: 15.0)),
+                Text('Leave Type: ${coverUps[index].leaveType}',
+                    style: TextStyle(fontSize: 15.0)),
+                Text('Time: ${coverUps[index].time}',
+                    style: TextStyle(fontSize: 15.0)),
+                Text('Reason: ${coverUps[index].reason}',
+                    style: TextStyle(fontSize: 15.0)),
+                Text('Covered By: ${coverUps[index].extra}',
+                    style: TextStyle(fontSize: 15.0)),
               ],
             ),
             trailing: CoverActionButton(
@@ -143,9 +154,11 @@ class CoverActionButton extends StatelessWidget {
   final String token;
   final int id;
 
-  const CoverActionButton({Key? key, required this.token, required this.id}) : super(key: key);
+  const CoverActionButton({Key? key, required this.token, required this.id})
+      : super(key: key);
 
-  Future<void> _showSuccessDialog(BuildContext context, String message, String action) async {
+  Future<void> _showSuccessDialog(
+      BuildContext context, String message, String action) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -163,7 +176,8 @@ class CoverActionButton extends StatelessWidget {
           content: Text(message),
           actions: <Widget>[
             TextButton(
-              child: Text('OK', style: TextStyle(color: Theme.of(context).primaryColor)),
+              child: Text('OK',
+                  style: TextStyle(color: Theme.of(context).primaryColor)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -189,17 +203,17 @@ class CoverActionButton extends StatelessWidget {
               title: Text('Add Comment'),
               content: isLoading
                   ? Center(
-                child: SpinKitCircle(
-                  color: Theme.of(context).primaryColor,
-                  size: 50.0,
-                ),
-              )
+                      child: SpinKitCircle(
+                        color: Theme.of(context).primaryColor,
+                        size: 50.0,
+                      ),
+                    )
                   : TextField(
-                controller: commentController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your comment',
-                ),
-              ),
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your comment',
+                      ),
+                    ),
               actions: <Widget>[
                 TextButton(
                   child: Text(
@@ -224,29 +238,31 @@ class CoverActionButton extends StatelessWidget {
                   onPressed: isLoading
                       ? null
                       : () async {
-                    setState(() {
-                      isLoading = true;
-                    });
+                          setState(() {
+                            isLoading = true;
+                          });
 
-                    try {
-                      await ApiService().approveCoverUp(
-                        token,
-                        [id],
-                        action,
-                        commentController.text,
-                      );
-                      setState(() {
-                        isLoading = false;
-                      });
-                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
-                      await _showSuccessDialog(context, 'Cover-up $action successfully!', action);
-                    } catch (e) {
-                      setState(() {
-                        isLoading = false;
-                        message = 'Failed to submit. Please try again.';
-                      });
-                    }
-                  },
+                          try {
+                            await ApiService().approveCoverUp(
+                              token,
+                              [id],
+                              action,
+                              commentController.text,
+                            );
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.of(dialogContext)
+                                .pop(); // Dismiss the dialog
+                            await _showSuccessDialog(context,
+                                'Cover-up $action successfully!', action);
+                          } catch (e) {
+                            setState(() {
+                              isLoading = false;
+                              message = 'Failed to submit. Please try again.';
+                            });
+                          }
+                        },
                 ),
               ],
             );

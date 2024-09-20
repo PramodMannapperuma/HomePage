@@ -137,7 +137,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
                             return CircleAvatar(
                               radius: 45,
                               backgroundImage:
-                              AssetImage('assets/images/profile.png'),
+                                  AssetImage('assets/images/profile.png'),
                             );
                           } else if (snapshot.hasData) {
                             return CircleAvatar(
@@ -148,7 +148,7 @@ class _DashMainScreenState extends State<DashMainScreen> {
                             return CircleAvatar(
                               radius: 45,
                               backgroundImage:
-                              AssetImage('assets/images/profile.png'),
+                                  AssetImage('assets/images/profile.png'),
                             );
                           }
                         },
@@ -372,8 +372,10 @@ class _DashMainScreenState extends State<DashMainScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _buildLeaveItem('Taken', leaveTaken, Colors.green),
-                            _buildLeaveItem('Pending', leavePending, Colors.amber),
-                            _buildLeaveItem('Rejected', leaveRejected, Colors.red),
+                            _buildLeaveItem(
+                                'Pending', leavePending, Colors.amber),
+                            _buildLeaveItem(
+                                'Rejected', leaveRejected, Colors.red),
                           ],
                         ),
                       ],
