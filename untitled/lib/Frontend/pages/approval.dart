@@ -552,7 +552,9 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
   void _filterSubordinates() {
     setState(() {
       filteredSubordinates = subordinates
-          .where((subordinate) => subordinate.name.toLowerCase().contains(searchController.text.toLowerCase()))
+          .where((subordinate) => subordinate.name
+              .toLowerCase()
+              .contains(searchController.text.toLowerCase()))
           .toList();
     });
   }
@@ -588,45 +590,47 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
             child: isLoading
                 ? Center(child: CircularProgressIndicator())
                 : filteredSubordinates.isEmpty
-                ? Center(child: Text('No employees found'))
-                : ListView.builder(
-              itemCount: filteredSubordinates.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  title: Text(
-                    filteredSubordinates[index].name,
-                    style: TextStyle(
-                      fontSize: 17.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: Text(
-                    filteredSubordinates[index].designation,
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.grey[600],
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EmployeeDetailsScreen(
-                          employeeName: filteredSubordinates[index].name,
-                          employeeId: filteredSubordinates[index].id,
-                          token: widget.token,
-                        ),
+                    ? Center(child: Text('No employees found'))
+                    : ListView.builder(
+                        itemCount: filteredSubordinates.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 10.0),
+                            title: Text(
+                              filteredSubordinates[index].name,
+                              style: TextStyle(
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              filteredSubordinates[index].designation,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            trailing: Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.grey[600],
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EmployeeDetailsScreen(
+                                    employeeName:
+                                        filteredSubordinates[index].name,
+                                    employeeId: filteredSubordinates[index].id,
+                                    token: widget.token,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
-                    );
-                  },
-                );
-              },
-            ),
           ),
         ],
       ),
@@ -666,7 +670,8 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
 
   Future<void> _fetchLeaveRequests() async {
     try {
-      final response = await ApiService().fetchLeaveRequests(widget.employeeId, widget.token);
+      final response = await ApiService()
+          .fetchLeaveRequests(widget.employeeId, widget.token);
       setState(() {
         leaveRequests = response;
         isLoading = false;
@@ -681,7 +686,8 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
 
   Future<void> _fetchAttendanceRecords() async {
     try {
-      final response = await ApiService().fetchAttendanceRecords(widget.employeeId, widget.token);
+      final response = await ApiService()
+          .fetchAttendanceRecords(widget.employeeId, widget.token);
       setState(() {
         attendanceRecords = response;
         isLoading = false;
@@ -696,7 +702,8 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
 
   Future<void> _fetchCoverUpDetails() async {
     try {
-      final response = await ApiService.getCoverUpDetails(widget.token, int.parse(widget.employeeId));
+      final response = await ApiService.getCoverUpDetails(
+          widget.token, int.parse(widget.employeeId));
       setState(() {
         coverUpDetails = response;
         isLoading = false;
@@ -722,24 +729,28 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: ListView(
-          children: [
-            SectionHeader(title: 'Attendance Details'),
-            attendanceRecords.isEmpty
-                ? Center(child: Text('No attendance records found'))
-                : AttendanceDetailsTab(attendanceRecords: attendanceRecords, token: widget.token),
-            SectionHeader(title: 'Leave Request Details'),
-            leaveRequests.isEmpty
-                ? Center(child: Text('No leave requests found'))
-                : LeaveRequestsTab(leaveRequests: leaveRequests, token: widget.token),
-            SectionHeader(title: 'Cover-Up Request Details'),
-            coverUpDetails.isEmpty
-                ? Center(child: Text('No cover-up requests found'))
-                : CoverUpRequestTab(coverUpDetails: coverUpDetails, token: widget.token),
-          ],
-        ),
-      ),
+              padding: const EdgeInsets.all(10.0),
+              child: ListView(
+                children: [
+                  SectionHeader(title: 'Attendance Details'),
+                  attendanceRecords.isEmpty
+                      ? Center(child: Text('No attendance records found'))
+                      : AttendanceDetailsTab(
+                          attendanceRecords: attendanceRecords,
+                          token: widget.token),
+                  SectionHeader(title: 'Leave Request Details'),
+                  leaveRequests.isEmpty
+                      ? Center(child: Text('No leave requests found'))
+                      : LeaveRequestsTab(
+                          leaveRequests: leaveRequests, token: widget.token),
+                  SectionHeader(title: 'Cover-Up Request Details'),
+                  coverUpDetails.isEmpty
+                      ? Center(child: Text('No cover-up requests found'))
+                      : CoverUpRequestTab(
+                          coverUpDetails: coverUpDetails, token: widget.token),
+                ],
+              ),
+            ),
     );
   }
 }
@@ -772,7 +783,9 @@ class AttendanceDetailsTab extends StatelessWidget {
   final List<AttApproval> attendanceRecords;
   final String token;
 
-  const AttendanceDetailsTab({Key? key, required this.attendanceRecords, required this.token}) : super(key: key);
+  const AttendanceDetailsTab(
+      {Key? key, required this.attendanceRecords, required this.token})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -829,7 +842,9 @@ class LeaveRequestsTab extends StatelessWidget {
   final List<LeaveApproval> leaveRequests;
   final String token;
 
-  const LeaveRequestsTab({Key? key, required this.leaveRequests, required this.token}) : super(key: key);
+  const LeaveRequestsTab(
+      {Key? key, required this.leaveRequests, required this.token})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -857,7 +872,8 @@ class LeaveRequestsTab extends StatelessWidget {
                   'Date: ${leaveRequests[index].date}',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                 ),
-                Text('Leave Type: ${leaveRequests[index].leaveType}', style: TextStyle(fontSize: 15.0)),
+                Text('Leave Type: ${leaveRequests[index].leaveType}',
+                    style: TextStyle(fontSize: 15.0)),
                 Text(
                   'Reason: ${leaveRequests[index].reason}',
                   style: TextStyle(fontSize: 15.0),
@@ -883,7 +899,9 @@ class CoverUpRequestTab extends StatelessWidget {
   final List<CoverUpDetail> coverUpDetails;
   final String token;
 
-  const CoverUpRequestTab({Key? key, required this.coverUpDetails, required this.token}) : super(key: key);
+  const CoverUpRequestTab(
+      {Key? key, required this.coverUpDetails, required this.token})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -938,9 +956,11 @@ class AttActionButton extends StatelessWidget {
   final String token;
   final int id;
 
-  const AttActionButton({Key? key, required this.token, required this.id}) : super(key: key);
+  const AttActionButton({Key? key, required this.token, required this.id})
+      : super(key: key);
 
-  Future<void> _showSuccessDialog(BuildContext context, String message, String action) async {
+  Future<void> _showSuccessDialog(
+      BuildContext context, String message, String action) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -958,7 +978,8 @@ class AttActionButton extends StatelessWidget {
           content: Text(message),
           actions: <Widget>[
             TextButton(
-              child: Text('OK', style: TextStyle(color: Theme.of(context).primaryColor)),
+              child: Text('OK',
+                  style: TextStyle(color: Theme.of(context).primaryColor)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -984,17 +1005,17 @@ class AttActionButton extends StatelessWidget {
               title: Text('Add Comment'),
               content: isLoading
                   ? Center(
-                child: SpinKitCircle(
-                  color: Theme.of(context).primaryColor,
-                  size: 50.0,
-                ),
-              )
+                      child: SpinKitCircle(
+                        color: Theme.of(context).primaryColor,
+                        size: 50.0,
+                      ),
+                    )
                   : TextField(
-                controller: commentController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your comment',
-                ),
-              ),
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your comment',
+                      ),
+                    ),
               actions: <Widget>[
                 TextButton(
                   child: Text(
@@ -1019,29 +1040,31 @@ class AttActionButton extends StatelessWidget {
                   onPressed: isLoading
                       ? null
                       : () async {
-                    setState(() {
-                      isLoading = true;
-                    });
+                          setState(() {
+                            isLoading = true;
+                          });
 
-                    try {
-                      await ApiService().approveAttendance(
-                        token,
-                        [id],
-                        action,
-                        commentController.text,
-                      );
-                      setState(() {
-                        isLoading = false;
-                      });
-                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
-                      await _showSuccessDialog(context, 'Attendance $action successfully!', action);
-                    } catch (e) {
-                      setState(() {
-                        isLoading = false;
-                        message = 'Failed to submit. Please try again.';
-                      });
-                    }
-                  },
+                          try {
+                            await ApiService().approveAttendance(
+                              token,
+                              [id],
+                              action,
+                              commentController.text,
+                            );
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.of(dialogContext)
+                                .pop(); // Dismiss the dialog
+                            await _showSuccessDialog(context,
+                                'Attendance $action successfully!', action);
+                          } catch (e) {
+                            setState(() {
+                              isLoading = false;
+                              message = 'Failed to submit. Please try again.';
+                            });
+                          }
+                        },
                 ),
               ],
             );
@@ -1094,9 +1117,11 @@ class LeaveActionButton extends StatelessWidget {
   final String token;
   final int id;
 
-  const LeaveActionButton({Key? key, required this.token, required this.id}) : super(key: key);
+  const LeaveActionButton({Key? key, required this.token, required this.id})
+      : super(key: key);
 
-  Future<void> _showSuccessDialog(BuildContext context, String message, String action) async {
+  Future<void> _showSuccessDialog(
+      BuildContext context, String message, String action) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -1114,7 +1139,8 @@ class LeaveActionButton extends StatelessWidget {
           content: Text(message),
           actions: <Widget>[
             TextButton(
-              child: Text('OK', style: TextStyle(color: Theme.of(context).primaryColor)),
+              child: Text('OK',
+                  style: TextStyle(color: Theme.of(context).primaryColor)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -1140,17 +1166,17 @@ class LeaveActionButton extends StatelessWidget {
               title: Text('Add Comment'),
               content: isLoading
                   ? Center(
-                child: SpinKitCircle(
-                  color: Theme.of(context).primaryColor,
-                  size: 50.0,
-                ),
-              )
+                      child: SpinKitCircle(
+                        color: Theme.of(context).primaryColor,
+                        size: 50.0,
+                      ),
+                    )
                   : TextField(
-                controller: commentController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your comment',
-                ),
-              ),
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your comment',
+                      ),
+                    ),
               actions: <Widget>[
                 TextButton(
                   child: Text(
@@ -1175,29 +1201,31 @@ class LeaveActionButton extends StatelessWidget {
                   onPressed: isLoading
                       ? null
                       : () async {
-                    setState(() {
-                      isLoading = true;
-                    });
+                          setState(() {
+                            isLoading = true;
+                          });
 
-                    try {
-                      await ApiService().approveLeave(
-                        token,
-                        [id],
-                        action,
-                        commentController.text,
-                      );
-                      setState(() {
-                        isLoading = false;
-                      });
-                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
-                      await _showSuccessDialog(context, 'Leave $action successfully!', action);
-                    } catch (e) {
-                      setState(() {
-                        isLoading = false;
-                        message = 'Failed to submit. Please try again.';
-                      });
-                    }
-                  },
+                          try {
+                            await ApiService().approveLeave(
+                              token,
+                              [id],
+                              action,
+                              commentController.text,
+                            );
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.of(dialogContext)
+                                .pop(); // Dismiss the dialog
+                            await _showSuccessDialog(
+                                context, 'Leave $action successfully!', action);
+                          } catch (e) {
+                            setState(() {
+                              isLoading = false;
+                              message = 'Failed to submit. Please try again.';
+                            });
+                          }
+                        },
                 ),
               ],
             );
@@ -1206,8 +1234,6 @@ class LeaveActionButton extends StatelessWidget {
       },
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -1252,9 +1278,11 @@ class CoverActionButton extends StatelessWidget {
   final String token;
   final int id;
 
-  const CoverActionButton({Key? key, required this.token, required this.id}) : super(key: key);
+  const CoverActionButton({Key? key, required this.token, required this.id})
+      : super(key: key);
 
-  Future<void> _showSuccessDialog(BuildContext context, String message, String action) async {
+  Future<void> _showSuccessDialog(
+      BuildContext context, String message, String action) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -1272,7 +1300,8 @@ class CoverActionButton extends StatelessWidget {
           content: Text(message),
           actions: <Widget>[
             TextButton(
-              child: Text('OK', style: TextStyle(color: Theme.of(context).primaryColor)),
+              child: Text('OK',
+                  style: TextStyle(color: Theme.of(context).primaryColor)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -1298,17 +1327,17 @@ class CoverActionButton extends StatelessWidget {
               title: Text('Add Comment'),
               content: isLoading
                   ? Center(
-                child: SpinKitCircle(
-                  color: Theme.of(context).primaryColor,
-                  size: 50.0,
-                ),
-              )
+                      child: SpinKitCircle(
+                        color: Theme.of(context).primaryColor,
+                        size: 50.0,
+                      ),
+                    )
                   : TextField(
-                controller: commentController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your comment',
-                ),
-              ),
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your comment',
+                      ),
+                    ),
               actions: <Widget>[
                 TextButton(
                   child: Text(
@@ -1333,29 +1362,31 @@ class CoverActionButton extends StatelessWidget {
                   onPressed: isLoading
                       ? null
                       : () async {
-                    setState(() {
-                      isLoading = true;
-                    });
+                          setState(() {
+                            isLoading = true;
+                          });
 
-                    try {
-                      await ApiService().approveCoverUp(
-                        token,
-                        [id],
-                        action,
-                        commentController.text,
-                      );
-                      setState(() {
-                        isLoading = false;
-                      });
-                      Navigator.of(dialogContext).pop(); // Dismiss the dialog
-                      await _showSuccessDialog(context, 'Cover-up $action successfully!', action);
-                    } catch (e) {
-                      setState(() {
-                        isLoading = false;
-                        message = 'Failed to submit. Please try again.';
-                      });
-                    }
-                  },
+                          try {
+                            await ApiService().approveCoverUp(
+                              token,
+                              [id],
+                              action,
+                              commentController.text,
+                            );
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.of(dialogContext)
+                                .pop(); // Dismiss the dialog
+                            await _showSuccessDialog(context,
+                                'Cover-up $action successfully!', action);
+                          } catch (e) {
+                            setState(() {
+                              isLoading = false;
+                              message = 'Failed to submit. Please try again.';
+                            });
+                          }
+                        },
                 ),
               ],
             );
