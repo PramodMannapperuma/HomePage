@@ -42,8 +42,8 @@ class _LoginState extends State<Login> {
               Image.asset(
                 'assets/images/test-bg.png',
                 height: screenHeight * 0.4, // Adjust image height
-                width: screenWidth * 0.9,
-                fit: BoxFit.fill,
+                width: screenWidth * 0.8,
+                fit: BoxFit.contain
               ),
               LoginForm(
                 textFieldHeight: textFieldHeight,
