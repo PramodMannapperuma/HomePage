@@ -12,9 +12,9 @@ class CoverupRequestScreen extends StatefulWidget {
 
   const CoverupRequestScreen(
       {Key? key,
-      required this.token,
-      required this.isFromSidebar,
-      required this.isFromAppbar})
+        required this.token,
+        required this.isFromSidebar,
+        required this.isFromAppbar})
       : super(key: key);
 
   @override
@@ -32,6 +32,9 @@ class _CoverupRequestScreenState extends State<CoverupRequestScreen> {
   }
 
   Future<void> _fetchData() async {
+    setState(() {
+      isLoading = true; // Show loader while fetching data
+    });
     try {
       final fetchedCoverUps = await ApiService.getCoverUpDetails(
           widget.token, 2); // Example employeeId
@@ -45,6 +48,11 @@ class _CoverupRequestScreenState extends State<CoverupRequestScreen> {
       });
       print('Error fetching data: $e');
     }
+  }
+
+  // This method refreshes the page after accepting or rejecting a cover-up
+  Future<void> _refreshPage() async {
+    await _fetchData();
   }
 
   @override
@@ -63,16 +71,20 @@ class _CoverupRequestScreenState extends State<CoverupRequestScreen> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ListView(
-                children: [
-                  SectionHeader(title: 'Pending Cover-Up Approvals'),
-                  coverUps.isEmpty
-                      ? Center(child: Text('No cover-up approvals found'))
-                      : CoverUpList(coverUps: coverUps, token: widget.token),
-                ],
-              ),
+        padding: const EdgeInsets.all(10.0),
+        child: ListView(
+          children: [
+            SectionHeader(title: 'Pending Cover-Up Approvals'),
+            coverUps.isEmpty
+                ? Center(child: Text('No cover-up approvals found'))
+                : CoverUpList(
+              coverUps: coverUps,
+              token: widget.token,
+              onActionCompleted: _refreshPage, // Trigger refresh
             ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -104,8 +116,13 @@ class SectionHeader extends StatelessWidget {
 class CoverUpList extends StatelessWidget {
   final List<CoverUpDetail> coverUps;
   final String token;
+  final Future<void> Function() onActionCompleted; // Added refresh function
 
-  const CoverUpList({Key? key, required this.coverUps, required this.token})
+  const CoverUpList(
+      {Key? key,
+        required this.coverUps,
+        required this.token,
+        required this.onActionCompleted})
       : super(key: key);
 
   @override
@@ -143,6 +160,7 @@ class CoverUpList extends StatelessWidget {
             trailing: CoverActionButton(
               token: token,
               id: coverUps[index].id,
+              onActionCompleted: onActionCompleted, // Trigger refresh
             ),
           ),
         );
@@ -154,8 +172,10 @@ class CoverUpList extends StatelessWidget {
 class CoverActionButton extends StatelessWidget {
   final String token;
   final int id;
+  final Future<void> Function() onActionCompleted; // Added refresh function
 
-  const CoverActionButton({Key? key, required this.token, required this.id})
+  const CoverActionButton(
+      {Key? key, required this.token, required this.id, required this.onActionCompleted})
       : super(key: key);
 
   Future<void> _showSuccessDialog(
@@ -192,7 +212,6 @@ class CoverActionButton extends StatelessWidget {
   Future<void> _showCommentDialog(BuildContext context, String action) async {
     TextEditingController commentController = TextEditingController();
     bool isLoading = false;
-    String? message;
 
     return showDialog<void>(
       context: context,
@@ -202,19 +221,23 @@ class CoverActionButton extends StatelessWidget {
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
               title: Text('Add Comment'),
-              content: isLoading
-                  ? Center(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: commentController,
+                    decoration: InputDecoration(hintText: 'Enter your comment'),
+                  ),
+                  if (isLoading)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
                       child: SpinKitCircle(
                         color: Theme.of(context).primaryColor,
                         size: 50.0,
                       ),
-                    )
-                  : TextField(
-                      controller: commentController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter your comment',
-                      ),
                     ),
+                ],
+              ),
               actions: <Widget>[
                 TextButton(
                   child: Text(
@@ -239,31 +262,31 @@ class CoverActionButton extends StatelessWidget {
                   onPressed: isLoading
                       ? null
                       : () async {
-                          setState(() {
-                            isLoading = true;
-                          });
+                    setState(() {
+                      isLoading = true; // Show loading icon
+                    });
 
-                          try {
-                            await ApiService().approveCoverUp(
-                              token,
-                              [id],
-                              action,
-                              commentController.text,
-                            );
-                            setState(() {
-                              isLoading = false;
-                            });
-                            Navigator.of(dialogContext)
-                                .pop(); // Dismiss the dialog
-                            await _showSuccessDialog(context,
-                                'Cover-up $action successfully!', action);
-                          } catch (e) {
-                            setState(() {
-                              isLoading = false;
-                              message = 'Failed to submit. Please try again.';
-                            });
-                          }
-                        },
+                    try {
+                      await ApiService().approveCoverUp(
+                        token,
+                        [id],
+                        action,
+                        commentController.text,
+                      );
+                      setState(() {
+                        isLoading = false;
+                      });
+                      Navigator.of(dialogContext)
+                          .pop(); // Dismiss the dialog
+                      await _showSuccessDialog(context,
+                          'Cover-up $action successfully!', action);
+                      onActionCompleted(); // Trigger page refresh
+                    } catch (e) {
+                      setState(() {
+                        isLoading = false; // Stop loading if failed
+                      });
+                    }
+                  },
                 ),
               ],
             );
