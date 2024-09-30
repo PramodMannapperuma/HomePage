@@ -8,6 +8,7 @@ class Requests extends StatefulWidget {
   final bool isFromSidebar;
   final bool isFromAppbar;
 
+
   const Requests({Key? key, required this.token, required this.isFromSidebar, required this.isFromAppbar}) : super(key: key);
 
   @override
@@ -22,9 +23,18 @@ class _RequestsState extends State<Requests> {
   DateTime _date = DateTime.now();
   String _status = 'Pending';
   bool _isApproved = false; // Indicates if the request is approved
+  @override
+  void initState() {
+    super.initState();
+    // Print to check if the token is passed
+    print('Token passed to Requests screen: ${widget.token}');
+    print('Is from Sidebar: ${widget.isFromSidebar}');
+    print('Is from Appbar: ${widget.isFromAppbar}');
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('Building Requests screen with token: ${widget.token}');
     return Scaffold(
       appBar: customAppBar(
         title: 'Requests',

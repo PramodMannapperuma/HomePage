@@ -50,7 +50,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 token: args ?? '',
               ));
     case '/requests':
-      return MaterialPageRoute(builder: (context) => Requests(token: '', isFromSidebar: true, isFromAppbar: true,));
+      return MaterialPageRoute(builder: (context) => Requests(token: args ?? '', isFromSidebar: true, isFromAppbar: true,));
     case '/celebrations':
       return MaterialPageRoute(builder: (context) => Celebrations());
     case '/personalInfo':
