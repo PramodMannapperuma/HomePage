@@ -506,7 +506,6 @@ class _AttendanceState extends State<Attendance> {
                   final status =
                       _attendanceStatus[DateTime(day.year, day.month, day.day)];
                   final color = _getStatusColor(status);
-
                   return Container(
                     margin: const EdgeInsets.all(6.0),
                     alignment: Alignment.center,

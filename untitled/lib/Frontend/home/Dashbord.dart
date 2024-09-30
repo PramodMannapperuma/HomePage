@@ -827,7 +827,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   color: AppColors.background,
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/news_screen',
+                  Navigator.pushNamed(context, '/coverupRequest',
                       arguments: widget.token);
                 },
               ),

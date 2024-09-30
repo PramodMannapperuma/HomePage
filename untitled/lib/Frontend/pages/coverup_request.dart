@@ -56,6 +56,7 @@ class _CoverupRequestScreenState extends State<CoverupRequestScreen> {
         showLeading: true,
         context: context,
         showBackButton: widget.isFromSidebar,
+        showBellIcon: widget.isFromSidebar,
         token: widget.token, // Passing token to AppBar
       ),
       drawer: widget.isFromSidebar ? CustomSidebar(token: widget.token) : null,
