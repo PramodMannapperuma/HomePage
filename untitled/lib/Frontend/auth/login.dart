@@ -28,7 +28,7 @@ class _LoginState extends State<Login> {
       appBar: customAppBar(
         title: '',
         showActions: false,
-        showLeading: false, // This will hide the back arrow
+        showLeading: false,
         context: context,
       ),
       body: SingleChildScrollView(
@@ -225,7 +225,15 @@ class _LoginFormState extends State<LoginForm> {
           child: TextField(
             controller: _usernameController,
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
+              labelText: 'Enter your username',
+              labelStyle: TextStyle(color: Colors.grey),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Color(0xff4d2880), width: 2.0),
+              ),
+              prefixIcon: Icon(Icons.person, color: Colors.grey),
             ),
           ),
         ),
@@ -241,10 +249,19 @@ class _LoginFormState extends State<LoginForm> {
             controller: _passwordController,
             obscureText: _obscureText,
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
+              labelText: 'Enter your password',
+              labelStyle: TextStyle(color: Colors.grey),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Color(0xff4d2880), width: 2.0),
+              ),
+              prefixIcon: Icon(Icons.lock, color: Colors.grey),
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscureText ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.grey,
                 ),
                 onPressed: () {
                   setState(() {
@@ -284,21 +301,22 @@ class _LoginFormState extends State<LoginForm> {
           ),
           child: _isLoading
               ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                )
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          )
               : Text(
-                  'Login',
-                  style: TextStyle(
-                      fontSize: widget.fontSize * 1.2, color: Colors.white),
-                ),
+            'Login',
+            style: TextStyle(
+                fontSize: widget.fontSize * 1.2, color: Colors.white),
+          ),
         ),
         SizedBox(height: 25),
         Divider(thickness: 2),
         Center(
-            child: Text(
-          ' © 2023 - Accelution',
-          style: TextStyle(fontSize: 16, color: Colors.black87),
-        )),
+          child: Text(
+            ' © 2023 - Accelution',
+            style: TextStyle(fontSize: 16, color: Colors.black87),
+          ),
+        ),
       ],
     );
   }
@@ -328,8 +346,8 @@ AppBar customAppBar({
         ),
       ],
     ),
-    centerTitle: true, // Center the title (or logo) in the app bar
-    automaticallyImplyLeading: showLeading, // Controls the back arrow visibility
+    centerTitle: true,
+    automaticallyImplyLeading: showLeading,
     actions: showActions
         ? [/* your actions here */]
         : null,
