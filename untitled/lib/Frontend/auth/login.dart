@@ -280,7 +280,7 @@ class _LoginFormState extends State<LoginForm> {
           },
           child: Text(
             'Forgot Password?',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.right,
             style: TextStyle(
               color: Colors.blue,
               fontSize: widget.fontSize,
