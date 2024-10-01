@@ -1124,9 +1124,15 @@ class _LeavePageState extends State<Leave> {
     _fetchLeaveBalance();
     _fetchLeaveTypes();
     _fetchCoverUps();
+
+    // Initialize the futureLeaveData with an empty Future to prevent LateInitializationError
+    futureLeaveData = Future.value([]);
+
     _selectedDay = _focusedDay;
-    futureLeaveData = apiService.fetchLeaveData(widget.token, _focusedDay);
-    _loadLeaveData(_focusedDay); // Ensure data is fetched on init
+
+    // Fetch leave data for the current month on init
+    _loadLeaveData(_focusedDay);
+
     _selectedEvents = ValueNotifier([]);
   }
 
@@ -1134,6 +1140,7 @@ class _LeavePageState extends State<Leave> {
     try {
       final List<LeaveData> data =
           await apiService.fetchLeaveData(widget.token, selectedDate);
+
       setState(() {
         leaveDataMap[selectedDate] = data;
         _leaveStatus.clear();
@@ -1143,6 +1150,9 @@ class _LeavePageState extends State<Leave> {
             _leaveStatus[date] = leave.status ?? 'N/A';
           }
         }
+
+        // Update futureLeaveData to ensure it reflects the latest data
+        futureLeaveData = apiService.fetchLeaveData(widget.token, _focusedDay);
       });
     } catch (e) {
       print('Error loading leave data: $e');

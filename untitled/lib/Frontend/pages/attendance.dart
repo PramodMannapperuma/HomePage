@@ -60,25 +60,34 @@ class _AttendanceState extends State<Attendance> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    futureAttendanceData =
-        apiService.fetchAttendanceData(widget.token, _focusedDay);
+
+    // Initialize the futureAttendanceData with an empty Future
+    futureAttendanceData = Future.value([]);
+
+    // Fetch attendance data for the current month when the screen loads
     _loadAttendanceData(_focusedDay);
+
     _selectedEvents = ValueNotifier([]);
   }
 
   Future<void> _loadAttendanceData(DateTime date) async {
     try {
       final List<AttendanceData> data =
-          await apiService.fetchAttendanceData(widget.token, date);
+      await apiService.fetchAttendanceData(widget.token, date);
+
+      // Update state and trigger UI rebuild
       setState(() {
         _attendanceStatus.clear();
         for (var attendance in data) {
           if (attendance.date != null) {
-            final DateTime date = DateTime.parse(attendance.date!);
-            _attendanceStatus[DateTime(date.year, date.month, date.day)] =
+            final DateTime attendanceDate = DateTime.parse(attendance.date!);
+            _attendanceStatus[DateTime(attendanceDate.year, attendanceDate.month, attendanceDate.day)] =
                 attendance.status ?? 'incomplete';
           }
         }
+
+        // Now we assign the actual fetched data to the futureAttendanceData variable
+        futureAttendanceData = apiService.fetchAttendanceData(widget.token, _focusedDay);
       });
     } catch (e) {
       print('Error loading attendance data: $e');
@@ -99,8 +108,9 @@ class _AttendanceState extends State<Attendance> {
         _selectedDay = selectedDate;
         _focusedDay = focusedDay;
         _selectedEvents.value = _getEventsForDay(selectedDate);
-        futureAttendanceData =
-            apiService.fetchAttendanceData(widget.token, selectedDate);
+
+        // Fetch attendance data for the selected day
+        futureAttendanceData = apiService.fetchAttendanceData(widget.token, selectedDate);
       });
     }
   }
@@ -156,8 +166,7 @@ class _AttendanceState extends State<Attendance> {
         await _loadAttendanceData(_focusedDay);
         setState(() {
           _selectedEvents.value = _getEventsForDay(_selectedDay!);
-          futureAttendanceData =
-              apiService.fetchAttendanceData(widget.token, _focusedDay);
+          futureAttendanceData = apiService.fetchAttendanceData(widget.token, _focusedDay);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -179,7 +188,7 @@ class _AttendanceState extends State<Attendance> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content:
-              Text('The connection has timed out. Please try again later.'),
+          Text('The connection has timed out. Please try again later.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -239,7 +248,7 @@ class _AttendanceState extends State<Attendance> {
       builder: (BuildContext context) {
         return Padding(
           padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -378,79 +387,79 @@ class _AttendanceState extends State<Attendance> {
     return Scaffold(
       appBar: widget.isFromSidebar
           ? customAppBar(
-              title: 'Attendance',
-              showActions: true,
-              showLeading: true,
-              context: context,
-              showBackButton: true,
-            )
+        title: 'Attendance',
+        showActions: true,
+        showLeading: true,
+        context: context,
+        showBackButton: true,
+      )
           : AppBar(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/hrislogo2.png',
-                    height: isPortrait ? 40.0 : 30.0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/hrislogo2.png',
+              height: isPortrait ? 40.0 : 30.0,
+            ),
+            SizedBox(width: 8.0),
+          ],
+        ),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(35.0),
+          child: Column(
+            children: [
+              Padding(
+                padding:
+                EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                child: Text(
+                  "Attendance",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  SizedBox(width: 8.0),
-                ],
-              ),
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(35.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                      child: Text(
-                        "Attendance",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      color: Colors.black,
-                      thickness: 0.2,
-                    ),
-                  ],
                 ),
               ),
-              centerTitle: true,
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
+              Divider(
+                color: Colors.black,
+                thickness: 0.2,
               ),
-              leading: Builder(
-                builder: (BuildContext context) {
-                  return Padding(
-                    padding: EdgeInsets.all(screenWidth * 0.02),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.menu_outlined,
-                        color: AppColors.background,
-                      ),
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                    ),
-                  );
+            ],
+          ),
+        ),
+        centerTitle: true,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return Padding(
+              padding: EdgeInsets.all(screenWidth * 0.02),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.menu_outlined,
+                  color: AppColors.background,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
                 },
               ),
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.person,
-                    color: AppColors.background,
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/profile',
-                        arguments: widget.token);
-                  },
-                ),
-              ],
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.person,
+              color: AppColors.background,
             ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile',
+                  arguments: widget.token);
+            },
+          ),
+        ],
+      ),
       drawer: CustomSidebar(token: widget.token),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4d2880),
@@ -504,8 +513,9 @@ class _AttendanceState extends State<Attendance> {
               calendarBuilders: CalendarBuilders(
                 defaultBuilder: (context, day, focusedDay) {
                   final status =
-                      _attendanceStatus[DateTime(day.year, day.month, day.day)];
+                  _attendanceStatus[DateTime(day.year, day.month, day.day)];
                   final color = _getStatusColor(status);
+
                   return Container(
                     margin: const EdgeInsets.all(6.0),
                     alignment: Alignment.center,
@@ -529,8 +539,7 @@ class _AttendanceState extends State<Attendance> {
               },
               onPageChanged: (focusedDay) {
                 _focusedDay = focusedDay;
-                _loadAttendanceData(
-                    focusedDay); // Reload data when page changes
+                _loadAttendanceData(focusedDay); // Reload data when page changes
               },
             ),
           ),
@@ -552,8 +561,8 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                    (element) =>
-                        element.date == _selectedDay?.toString().split(" ")[0],
+                        (element) =>
+                    element.date == _selectedDay?.toString().split(" ")[0],
                     orElse: () => AttendanceData(
                       amdIn: 'N/A',
                       recIn: 'N/A',
@@ -583,7 +592,7 @@ class _AttendanceState extends State<Attendance> {
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Date: ${selectedDateData.date}',
@@ -600,17 +609,17 @@ class _AttendanceState extends State<Attendance> {
                                       color: _getStatusColor(
                                           selectedDateData.status),
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                               Divider(thickness: 1),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'AMD In: ${selectedDateData.amdIn ?? 'N/A'}',
@@ -627,7 +636,7 @@ class _AttendanceState extends State<Attendance> {
                                   ),
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Rec In: ${selectedDateData.recIn ?? 'N/A'}',
@@ -669,6 +678,5 @@ class Event {
   final String startTime;
   final String leaveTime;
   final String comment;
-
   Event(this.startTime, this.leaveTime, this.comment);
 }
