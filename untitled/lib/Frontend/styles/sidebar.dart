@@ -339,8 +339,11 @@ class CustomSidebar extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        Requests(token: token, isFromSidebar: true, isFromAppbar: true,),
+                    builder: (context) => Requests(
+                      token: token,
+                      isFromSidebar: true,
+                      isFromAppbar: true,
+                    ),
                   ),
                 );
               },
@@ -381,8 +384,7 @@ class CustomSidebar extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ApprovalScreen(token: token),
+                    builder: (context) => ApprovalScreen(token: token),
                   ),
                 );
               },

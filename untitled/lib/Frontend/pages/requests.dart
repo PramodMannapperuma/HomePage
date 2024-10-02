@@ -8,8 +8,12 @@ class Requests extends StatefulWidget {
   final bool isFromSidebar;
   final bool isFromAppbar;
 
-
-  const Requests({Key? key, required this.token, required this.isFromSidebar, required this.isFromAppbar}) : super(key: key);
+  const Requests(
+      {Key? key,
+      required this.token,
+      required this.isFromSidebar,
+      required this.isFromAppbar})
+      : super(key: key);
 
   @override
   State<Requests> createState() => _RequestsState();
@@ -17,7 +21,8 @@ class Requests extends StatefulWidget {
 
 class _RequestsState extends State<Requests> {
   final _formKey = GlobalKey<FormState>();
-  String _requestType = 'Salary Confirmation'; // Default to the first item in the list
+  String _requestType =
+      'Salary Confirmation'; // Default to the first item in the list
   String _name = '';
   String _employeeId = '';
   DateTime _date = DateTime.now();
@@ -109,7 +114,8 @@ class _RequestsState extends State<Requests> {
               SizedBox(height: 16),
               ListTile(
                 title: Text('Date: ${_date.toString().split(' ')[0]}'),
-                trailing: Icon(Icons.calendar_month, color: AppColors.background),
+                trailing:
+                    Icon(Icons.calendar_month, color: AppColors.background),
                 onTap: () async {
                   final DateTime? picked = await showDatePicker(
                     context: context,
@@ -158,7 +164,8 @@ class _RequestsState extends State<Requests> {
                 SizedBox(height: 16),
                 Divider(),
                 ListTile(
-                  leading: Icon(Icons.download_rounded, color: AppColors.background),
+                  leading:
+                      Icon(Icons.download_rounded, color: AppColors.background),
                   title: Text('Download Approval Letter'),
                   subtitle: Text('Tap to download the letter'),
                   onTap: () {
