@@ -716,6 +716,11 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
     }
   }
 
+  // This method refreshes the page after accepting or rejecting a cover-up
+  Future<void> _refreshPage() async {
+    await _fetchAttendanceRecords();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -737,17 +742,20 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                       ? Center(child: Text('No attendance records found'))
                       : AttendanceDetailsTab(
                           attendanceRecords: attendanceRecords,
-                          token: widget.token),
+                          token: widget.token,
+                    onActionCompleted: _refreshPage), // Trigger refresh
                   SectionHeader(title: 'Leave Request Details'),
                   leaveRequests.isEmpty
                       ? Center(child: Text('No leave requests found'))
                       : LeaveRequestsTab(
-                          leaveRequests: leaveRequests, token: widget.token),
+                          leaveRequests: leaveRequests, token: widget.token,
+                      onActionCompleted: _refreshPage),
                   SectionHeader(title: 'Cover-Up Request Details'),
                   coverUpDetails.isEmpty
                       ? Center(child: Text('No cover-up requests found'))
                       : CoverUpRequestTab(
-                          coverUpDetails: coverUpDetails, token: widget.token),
+                          coverUpDetails: coverUpDetails, token: widget.token,
+                      onActionCompleted: _refreshPage),
                 ],
               ),
             ),
@@ -782,9 +790,10 @@ class SectionHeader extends StatelessWidget {
 class AttendanceDetailsTab extends StatelessWidget {
   final List<AttApproval> attendanceRecords;
   final String token;
+  final Future<void> Function() onActionCompleted; // Added refresh function
 
   const AttendanceDetailsTab(
-      {Key? key, required this.attendanceRecords, required this.token})
+      {Key? key, required this.attendanceRecords, required this.token, required this.onActionCompleted})
       : super(key: key);
 
   @override
@@ -830,6 +839,7 @@ class AttendanceDetailsTab extends StatelessWidget {
             trailing: AttActionButton(
               token: token,
               id: attendanceRecords[index].id,
+              onActionCompleted: onActionCompleted,
             ),
           ),
         );
@@ -841,9 +851,10 @@ class AttendanceDetailsTab extends StatelessWidget {
 class LeaveRequestsTab extends StatelessWidget {
   final List<LeaveApproval> leaveRequests;
   final String token;
+  final Future<void> Function() onActionCompleted; // Added refresh function
 
   const LeaveRequestsTab(
-      {Key? key, required this.leaveRequests, required this.token})
+      {Key? key, required this.leaveRequests, required this.token, required this.onActionCompleted})
       : super(key: key);
 
   @override
@@ -887,6 +898,7 @@ class LeaveRequestsTab extends StatelessWidget {
             trailing: LeaveActionButton(
               token: token,
               id: leaveRequests[index].id,
+              onActionCompleted: onActionCompleted,
             ),
           ),
         );
@@ -898,9 +910,10 @@ class LeaveRequestsTab extends StatelessWidget {
 class CoverUpRequestTab extends StatelessWidget {
   final List<CoverUpDetail> coverUpDetails;
   final String token;
+  final Future<void> Function() onActionCompleted; // Added refresh function
 
   const CoverUpRequestTab(
-      {Key? key, required this.coverUpDetails, required this.token})
+      {Key? key, required this.coverUpDetails, required this.token, required this.onActionCompleted})
       : super(key: key);
 
   @override
@@ -944,6 +957,7 @@ class CoverUpRequestTab extends StatelessWidget {
             trailing: CoverActionButton(
               token: token,
               id: coverUpDetails[index].id,
+              onActionCompleted: onActionCompleted,
             ),
           ),
         );
@@ -955,8 +969,9 @@ class CoverUpRequestTab extends StatelessWidget {
 class AttActionButton extends StatelessWidget {
   final String token;
   final int id;
+  final Future<void> Function() onActionCompleted; // Added refresh function
 
-  const AttActionButton({Key? key, required this.token, required this.id})
+  const AttActionButton({Key? key, required this.token, required this.id, required this.onActionCompleted})
       : super(key: key);
 
   Future<void> _showSuccessDialog(
@@ -993,7 +1008,6 @@ class AttActionButton extends StatelessWidget {
   Future<void> _showCommentDialog(BuildContext context, String action) async {
     TextEditingController commentController = TextEditingController();
     bool isLoading = false;
-    String? message;
 
     return showDialog<void>(
       context: context,
@@ -1003,19 +1017,23 @@ class AttActionButton extends StatelessWidget {
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
               title: Text('Add Comment'),
-              content: isLoading
-                  ? Center(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: commentController,
+                    decoration: InputDecoration(hintText: 'Enter your comment'),
+                  ),
+                  if (isLoading)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
                       child: SpinKitCircle(
                         color: Theme.of(context).primaryColor,
                         size: 50.0,
                       ),
-                    )
-                  : TextField(
-                      controller: commentController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter your comment',
-                      ),
                     ),
+                ],
+              ),
               actions: <Widget>[
                 TextButton(
                   child: Text(
@@ -1058,10 +1076,10 @@ class AttActionButton extends StatelessWidget {
                                 .pop(); // Dismiss the dialog
                             await _showSuccessDialog(context,
                                 'Attendance $action successfully!', action);
+                            onActionCompleted(); // Trigger page refresh
                           } catch (e) {
                             setState(() {
                               isLoading = false;
-                              message = 'Failed to submit. Please try again.';
                             });
                           }
                         },
@@ -1116,8 +1134,9 @@ class AttActionButton extends StatelessWidget {
 class LeaveActionButton extends StatelessWidget {
   final String token;
   final int id;
+  final Future<void> Function() onActionCompleted; // Added refresh function
 
-  const LeaveActionButton({Key? key, required this.token, required this.id})
+  const LeaveActionButton({Key? key, required this.token, required this.id, required this.onActionCompleted})
       : super(key: key);
 
   Future<void> _showSuccessDialog(
@@ -1154,7 +1173,6 @@ class LeaveActionButton extends StatelessWidget {
   Future<void> _showCommentDialog(BuildContext context, String action) async {
     TextEditingController commentController = TextEditingController();
     bool isLoading = false;
-    String? message;
 
     return showDialog<void>(
       context: context,
@@ -1164,19 +1182,23 @@ class LeaveActionButton extends StatelessWidget {
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
               title: Text('Add Comment'),
-              content: isLoading
-                  ? Center(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: commentController,
+                    decoration: InputDecoration(hintText: 'Enter your comment'),
+                  ),
+                  if (isLoading)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
                       child: SpinKitCircle(
                         color: Theme.of(context).primaryColor,
                         size: 50.0,
                       ),
-                    )
-                  : TextField(
-                      controller: commentController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter your comment',
-                      ),
                     ),
+                ],
+              ),
               actions: <Widget>[
                 TextButton(
                   child: Text(
@@ -1219,10 +1241,10 @@ class LeaveActionButton extends StatelessWidget {
                                 .pop(); // Dismiss the dialog
                             await _showSuccessDialog(
                                 context, 'Leave $action successfully!', action);
+                                onActionCompleted(); // Trigger page refresh
                           } catch (e) {
                             setState(() {
                               isLoading = false;
-                              message = 'Failed to submit. Please try again.';
                             });
                           }
                         },
@@ -1277,8 +1299,9 @@ class LeaveActionButton extends StatelessWidget {
 class CoverActionButton extends StatelessWidget {
   final String token;
   final int id;
+  final Future<void> Function() onActionCompleted; // Added refresh function
 
-  const CoverActionButton({Key? key, required this.token, required this.id})
+  const CoverActionButton({Key? key, required this.token, required this.id, required this.onActionCompleted})
       : super(key: key);
 
   Future<void> _showSuccessDialog(
@@ -1315,7 +1338,6 @@ class CoverActionButton extends StatelessWidget {
   Future<void> _showCommentDialog(BuildContext context, String action) async {
     TextEditingController commentController = TextEditingController();
     bool isLoading = false;
-    String? message;
 
     return showDialog<void>(
       context: context,
@@ -1325,19 +1347,23 @@ class CoverActionButton extends StatelessWidget {
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
               title: Text('Add Comment'),
-              content: isLoading
-                  ? Center(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: commentController,
+                    decoration: InputDecoration(hintText: 'Enter your comment'),
+                  ),
+                  if (isLoading)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
                       child: SpinKitCircle(
                         color: Theme.of(context).primaryColor,
                         size: 50.0,
                       ),
-                    )
-                  : TextField(
-                      controller: commentController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter your comment',
-                      ),
                     ),
+                ],
+              ),
               actions: <Widget>[
                 TextButton(
                   child: Text(
@@ -1380,10 +1406,10 @@ class CoverActionButton extends StatelessWidget {
                                 .pop(); // Dismiss the dialog
                             await _showSuccessDialog(context,
                                 'Cover-up $action successfully!', action);
+                                 onActionCompleted(); // Trigger page refresh
                           } catch (e) {
                             setState(() {
                               isLoading = false;
-                              message = 'Failed to submit. Please try again.';
                             });
                           }
                         },
