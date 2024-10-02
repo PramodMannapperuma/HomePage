@@ -22,18 +22,17 @@ class ApiService {
   static String get baseUrl => _baseUrl;
 
   static Map<String, String> _headers(String token) => {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer $token',
-  };
-
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
 
   static Future<Map<String, dynamic>> getProfile(String token) async {
     try {
       final response = await http
           .get(
-        Uri.parse('$_baseUrl/profile'),
-        headers: _headers(token),
-      )
+            Uri.parse('$_baseUrl/profile'),
+            headers: _headers(token),
+          )
           .timeout(Duration(seconds: 60)); // Adjust timeout as needed
 
       _logResponse(response);
@@ -78,9 +77,9 @@ class ApiService {
   Future<DashboardData> fetchDashboardData(String token) async {
     final response = await http
         .get(
-      Uri.parse('$_baseUrl/dashboard'),
-      headers: _headers(token),
-    )
+          Uri.parse('$_baseUrl/dashboard'),
+          headers: _headers(token),
+        )
         .timeout(Duration(seconds: 60));
 
     _logResponse(response);
@@ -96,14 +95,15 @@ class ApiService {
           'Failed to load dashboard data: ${response.reasonPhrase}');
     }
   }
+
   // New method to fetch team members' details
   static Future<List<TeamMember>> fetchTeamMembers(String token) async {
     try {
       final response = await http
           .get(
-        Uri.parse('$_baseUrl/team'),
-        headers: _headers(token),
-      )
+            Uri.parse('$_baseUrl/team'),
+            headers: _headers(token),
+          )
           .timeout(Duration(seconds: 60));
 
       _logResponse(response);
@@ -112,7 +112,8 @@ class ApiService {
         List<dynamic> data = json.decode(response.body);
         return data.map((item) => TeamMember.fromJson(item)).toList();
       } else {
-        throw Exception('Failed to load team members: ${response.statusCode} - ${response.reasonPhrase}');
+        throw Exception(
+            'Failed to load team members: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
       throw Exception('An error occurred while fetching team members: $e');
@@ -124,9 +125,9 @@ class ApiService {
     final formattedDate = _formatDate(selectedDate);
     final response = await http
         .get(
-      Uri.parse('$_baseUrl/attendance/$formattedDate'),
-      headers: _headers(token),
-    )
+          Uri.parse('$_baseUrl/attendance/$formattedDate'),
+          headers: _headers(token),
+        )
         .timeout(Duration(seconds: 60));
 
     _logResponse(response);
@@ -143,13 +144,14 @@ class ApiService {
     }
   }
 
-  Future<List<LeaveData>> fetchLeaveData(String token, DateTime selectedDate) async {
+  Future<List<LeaveData>> fetchLeaveData(
+      String token, DateTime selectedDate) async {
     final formattedDate = _formatDate(selectedDate);
     final response = await http
         .get(
-      Uri.parse('$_baseUrl/leave/$formattedDate'),
-      headers: _headers(token),
-    )
+          Uri.parse('$_baseUrl/leave/$formattedDate'),
+          headers: _headers(token),
+        )
         .timeout(Duration(seconds: 60));
 
     _logResponse(response);
@@ -180,9 +182,9 @@ class ApiService {
   Future<List<LeaveBalanceData>> fetchLeaveBalance(String token) async {
     final response = await http
         .get(
-      Uri.parse('$_baseUrl/leavebalance'),
-      headers: _headers(token),
-    )
+          Uri.parse('$_baseUrl/leavebalance'),
+          headers: _headers(token),
+        )
         .timeout(Duration(seconds: 60));
 
     _logResponse(response);
@@ -194,9 +196,11 @@ class ApiService {
         List<dynamic> dataList;
 
         if (data is String) {
-          dataList = jsonDecode(data) as List<dynamic>; // Decode if data is a string
+          dataList =
+              jsonDecode(data) as List<dynamic>; // Decode if data is a string
         } else if (data is List) {
-          dataList = data as List<dynamic>; // Use directly if data is already a list
+          dataList =
+              data as List<dynamic>; // Use directly if data is already a list
         } else {
           throw Exception('Unexpected data format');
         }
@@ -286,7 +290,8 @@ class ApiService {
     if (response.statusCode == 200) {
       // Parse the JSON response into a list of policies.
       List<dynamic> body = jsonDecode(response.body);
-      List<Policy> policies = body.map((dynamic item) => Policy.fromJson(item)).toList();
+      List<Policy> policies =
+          body.map((dynamic item) => Policy.fromJson(item)).toList();
       return policies;
     } else {
       // If the server did not return a 200 OK response, throw an exception.
@@ -313,7 +318,8 @@ class ApiService {
         await pdfFile.writeAsBytes(response.bodyBytes);
         return filePath;
       } else {
-        throw Exception('Failed to download PDF. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to download PDF. Status code: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Error fetching PDF: $e');
@@ -322,10 +328,12 @@ class ApiService {
 
   Future<List<Subordinate>> fetchSubordinates(String token) async {
     try {
-      final response = await http.get(
-        Uri.parse('$_baseUrl/team/subordinates'),
-        headers: _headers(token),
-      ).timeout(Duration(seconds: 60));
+      final response = await http
+          .get(
+            Uri.parse('$_baseUrl/team/subordinates'),
+            headers: _headers(token),
+          )
+          .timeout(Duration(seconds: 60));
 
       _logResponse(response);
 
@@ -336,16 +344,15 @@ class ApiService {
         // Map the dynamic list to a list of Subordinate objects
         return data.map((item) => Subordinate.fromJson(item)).toList();
       } else {
-        throw Exception('Failed to load subordinates: ${response.statusCode} - ${response.reasonPhrase}');
+        throw Exception(
+            'Failed to load subordinates: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
       throw Exception('An error occurred while fetching subordinates: $e');
     }
   }
 
-
   static Future<List<ApprovalItem>> fetchPendingApprovals(String token) async {
-
     try {
       final response = await http.get(
         Uri.parse('$_baseUrl/approvals/pending?length=10&start=0'),
@@ -358,7 +365,8 @@ class ApiService {
         List<dynamic> data = json.decode(response.body);
         return data.map((item) => ApprovalItem.fromJson(item)).toList();
       } else {
-        throw Exception('Failed to load pending approvals: ${response.statusCode} - ${response.reasonPhrase}');
+        throw Exception(
+            'Failed to load pending approvals: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
       throw Exception('An error occurred while fetching pending approvals: $e');
@@ -366,11 +374,15 @@ class ApiService {
   }
 
   // Fetch leave requests for a specific employee
-  Future<List<LeaveApproval>> fetchLeaveRequests(String employeeId, String token) async {
-    final response = await http.get(
-      Uri.parse('$_baseUrl/approvals/leave?length=30&start=0&employeeId=$employeeId'),
-      headers: _headers(token),
-    ).timeout(Duration(seconds: 60));
+  Future<List<LeaveApproval>> fetchLeaveRequests(
+      String employeeId, String token) async {
+    final response = await http
+        .get(
+          Uri.parse(
+              '$_baseUrl/approvals/leave?length=30&start=0&employeeId=$employeeId'),
+          headers: _headers(token),
+        )
+        .timeout(Duration(seconds: 60));
 
     _logResponse(response);
 
@@ -383,13 +395,18 @@ class ApiService {
   }
 
   // Fetch attendance records for a specific employee
-  Future<List<AttApproval>> fetchAttendanceRecords(String employeeId, String token) async {
-    final response = await http.get(
-      Uri.parse('$_baseUrl/approvals/attendance?length=30&start=0&employeeId=$employeeId'),
-      headers: _headers(token),
-    ).timeout(Duration(seconds: 60));
+  Future<List<AttApproval>> fetchAttendanceRecords(
+      String employeeId, String token) async {
+    final response = await http
+        .get(
+          Uri.parse(
+              '$_baseUrl/approvals/attendance?length=30&start=0&employeeId=$employeeId'),
+          headers: _headers(token),
+        )
+        .timeout(Duration(seconds: 60));
 
     _logResponse(response);
+
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
@@ -399,12 +416,16 @@ class ApiService {
     }
   }
 
-  static Future<List<CoverUpDetail>> getCoverUpDetails(String token, int employeeId) async {
+  static Future<List<CoverUpDetail>> getCoverUpDetails(
+      String token, int employeeId) async {
     try {
-      final response = await http.get(
-        Uri.parse('$_baseUrl/approvals/coverup?length=30&start=0&employeeId=$employeeId'),
-        headers: _headers(token),
-      ).timeout(Duration(seconds: 60));
+      final response = await http
+          .get(
+            Uri.parse(
+                '$_baseUrl/approvals/coverup?length=30&start=0&employeeId=$employeeId'),
+            headers: _headers(token),
+          )
+          .timeout(Duration(seconds: 60));
 
       _logResponse(response);
 
@@ -412,98 +433,108 @@ class ApiService {
         List<dynamic> data = json.decode(response.body);
         return data.map((item) => CoverUpDetail.fromJson(item)).toList();
       } else {
-        throw Exception('Failed to load cover-up details: ${response.statusCode} - ${response.reasonPhrase}');
+        throw Exception(
+            'Failed to load cover-up details: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
       throw Exception('An error occurred while fetching cover-up details: $e');
     }
   }
 
- Future<void> approveAttendance(String token, List<int> ids, String action, String comment) async {
-  final String url = '$_baseUrl/approvals/approve-attendance';
+  Future<void> approveAttendance(
+      String token, List<int> ids, String action, String comment) async {
+    final String url = '$_baseUrl/approvals/approve-attendance';
 
-  // Convert the list of IDs to a URL-encoded string format
-  final String data = jsonEncode(ids);
+    // Convert the list of IDs to a URL-encoded string format
+    final String data = jsonEncode(ids);
 
-  // Build the complete URL with query parameters
-  final Uri uri = Uri.parse('$url?data=$data&action=$action&comment=$comment');
+    // Build the complete URL with query parameters
+    final Uri uri =
+        Uri.parse('$url?data=$data&action=$action&comment=$comment');
 
-  try {
-    final response = await http.post(
-      uri,
-      headers: _headers(token),
-    );
+    try {
+      final response = await http.post(
+        uri,
+        headers: _headers(token),
+      );
 
-    if (response.statusCode == 200) {
-      print('Attendance successfully approved.');
-    } else {
-      print('Failed to approve attendance: ${response.statusCode} - ${response.reasonPhrase}');
-      print('Response body: ${response.body}');
-      throw Exception('Failed to approve attendance: ${response.statusCode} - ${response.reasonPhrase}');
+      if (response.statusCode == 200) {
+        print('Attendance successfully approved.');
+      } else {
+        print(
+            'Failed to approve attendance: ${response.statusCode} - ${response.reasonPhrase}');
+        print('Response body: ${response.body}');
+        throw Exception(
+            'Failed to approve attendance: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('An error occurred while approving attendance: $e');
+      throw Exception('An error occurred while approving attendance: $e');
     }
-  } catch (e) {
-    print('An error occurred while approving attendance: $e');
-    throw Exception('An error occurred while approving attendance: $e');
+  }
+
+  Future<void> approveLeave(
+      String token, List<int> ids, String action, String comment) async {
+    final String url = '$_baseUrl/approvals/approve-leave';
+
+    // Convert the list of IDs to a URL-encoded string format
+    final String data = jsonEncode(ids);
+
+    // Build the complete URL with query parameters
+    final Uri uri =
+        Uri.parse('$url?data=$data&action=$action&comment=$comment');
+
+    try {
+      final response = await http.post(
+        uri,
+        headers: _headers(token),
+      );
+
+      if (response.statusCode == 200) {
+        print('Leave successfully approved.');
+      } else {
+        print(
+            'Failed to approve leave: ${response.statusCode} - ${response.reasonPhrase}');
+        throw Exception(
+            'Failed to approve leave: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('An error occurred while approving leave: $e');
+      throw Exception('An error occurred while approving leave: $e');
+    }
+  }
+
+  Future<void> approveCoverUp(
+      String token, List<int> ids, String action, String comment) async {
+    final String url = '$_baseUrl/approvals/approve-coverup';
+
+    // Convert the list of ids to a string and URL encode it
+    final String encodedIds = json.encode(ids);
+
+    // Construct the full URL with query parameters
+    final String fullUrl =
+        '$url?data=$encodedIds&action=$action&comment=${Uri.encodeComponent(comment)}';
+
+    try {
+      final response = await http.post(
+        Uri.parse(fullUrl),
+        headers: _headers(token),
+      );
+
+      if (response.statusCode == 200) {
+        print('Cover-up successfully approved.');
+      } else {
+        // Log the full response for better debugging
+        print(
+            'Failed to approve cover-up: ${response.statusCode} - ${response.reasonPhrase}');
+        print('Response body: ${response.body}');
+        throw Exception(
+            'Failed to approve cover-up: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      // Log the error
+      print('An error occurred while approving cover-up: $e');
+      throw Exception('An error occurred while approving cover-up: $e');
+    }
   }
 }
-
-
-Future<void> approveLeave(String token, List<int> ids, String action, String comment) async {
-  final String url = '$_baseUrl/approvals/approve-leave';
-
-  // Convert the list of IDs to a URL-encoded string format
-  final String data = jsonEncode(ids);
-
-  // Build the complete URL with query parameters
-  final Uri uri = Uri.parse('$url?data=$data&action=$action&comment=$comment');
-
-  try {
-    final response = await http.post(
-      uri,
-      headers: _headers(token),
-    );
-
-    if (response.statusCode == 200) {
-      print('Leave successfully approved.');
-    } else {
-      print('Failed to approve leave: ${response.statusCode} - ${response.reasonPhrase}');
-      throw Exception('Failed to approve leave: ${response.statusCode} - ${response.reasonPhrase}');
-    }
-  } catch (e) {
-    print('An error occurred while approving leave: $e');
-    throw Exception('An error occurred while approving leave: $e');
-  }
-}
-
-Future<void> approveCoverUp(String token, List<int> ids, String action, String comment) async {
-  final String url = '$_baseUrl/approvals/approve-coverup';
-  
-  // Convert the list of ids to a string and URL encode it
-  final String encodedIds = json.encode(ids);
-  
-  // Construct the full URL with query parameters
-  final String fullUrl = '$url?data=$encodedIds&action=$action&comment=${Uri.encodeComponent(comment)}';
-
-  try {
-    final response = await http.post(
-      Uri.parse(fullUrl),
-      headers: _headers(token),
-    );
-
-    if (response.statusCode == 200) {
-      print('Cover-up successfully approved.');
-    } else {
-      // Log the full response for better debugging
-      print('Failed to approve cover-up: ${response.statusCode} - ${response.reasonPhrase}');
-      print('Response body: ${response.body}');
-      throw Exception('Failed to approve cover-up: ${response.statusCode} - ${response.reasonPhrase}');
-    }
-  } catch (e) {
-    // Log the error
-    print('An error occurred while approving cover-up: $e');
-    throw Exception('An error occurred while approving cover-up: $e');
-  }
-}
-
-}
-

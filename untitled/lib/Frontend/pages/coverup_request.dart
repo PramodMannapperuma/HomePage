@@ -12,9 +12,9 @@ class CoverupRequestScreen extends StatefulWidget {
 
   const CoverupRequestScreen(
       {Key? key,
-        required this.token,
-        required this.isFromSidebar,
-        required this.isFromAppbar})
+      required this.token,
+      required this.isFromSidebar,
+      required this.isFromAppbar})
       : super(key: key);
 
   @override
@@ -29,6 +29,10 @@ class _CoverupRequestScreenState extends State<CoverupRequestScreen> {
   void initState() {
     super.initState();
     _fetchData();
+    // Print to check if the token is passed
+    print('Token passed to Coverup Requests screen: ${widget.token}');
+    print('Is from Sidebar: ${widget.isFromSidebar}');
+    print('Is from Appbar: ${widget.isFromAppbar}');
   }
 
   Future<void> _fetchData() async {
@@ -71,20 +75,20 @@ class _CoverupRequestScreenState extends State<CoverupRequestScreen> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: ListView(
-          children: [
-            SectionHeader(title: 'Pending Cover-Up Approvals'),
-            coverUps.isEmpty
-                ? Center(child: Text('No cover-up approvals found'))
-                : CoverUpList(
-              coverUps: coverUps,
-              token: widget.token,
-              onActionCompleted: _refreshPage, // Trigger refresh
+              padding: const EdgeInsets.all(10.0),
+              child: ListView(
+                children: [
+                  SectionHeader(title: 'Pending Cover-Up Approvals'),
+                  coverUps.isEmpty
+                      ? Center(child: Text('No cover-up approvals found'))
+                      : CoverUpList(
+                          coverUps: coverUps,
+                          token: widget.token,
+                          onActionCompleted: _refreshPage, // Trigger refresh
+                        ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -120,9 +124,9 @@ class CoverUpList extends StatelessWidget {
 
   const CoverUpList(
       {Key? key,
-        required this.coverUps,
-        required this.token,
-        required this.onActionCompleted})
+      required this.coverUps,
+      required this.token,
+      required this.onActionCompleted})
       : super(key: key);
 
   @override
@@ -175,7 +179,10 @@ class CoverActionButton extends StatelessWidget {
   final Future<void> Function() onActionCompleted; // Added refresh function
 
   const CoverActionButton(
-      {Key? key, required this.token, required this.id, required this.onActionCompleted})
+      {Key? key,
+      required this.token,
+      required this.id,
+      required this.onActionCompleted})
       : super(key: key);
 
   Future<void> _showSuccessDialog(
@@ -262,31 +269,31 @@ class CoverActionButton extends StatelessWidget {
                   onPressed: isLoading
                       ? null
                       : () async {
-                    setState(() {
-                      isLoading = true; // Show loading icon
-                    });
+                          setState(() {
+                            isLoading = true; // Show loading icon
+                          });
 
-                    try {
-                      await ApiService().approveCoverUp(
-                        token,
-                        [id],
-                        action,
-                        commentController.text,
-                      );
-                      setState(() {
-                        isLoading = false;
-                      });
-                      Navigator.of(dialogContext)
-                          .pop(); // Dismiss the dialog
-                      await _showSuccessDialog(context,
-                          'Cover-up $action successfully!', action);
-                      onActionCompleted(); // Trigger page refresh
-                    } catch (e) {
-                      setState(() {
-                        isLoading = false; // Stop loading if failed
-                      });
-                    }
-                  },
+                          try {
+                            await ApiService().approveCoverUp(
+                              token,
+                              [id],
+                              action,
+                              commentController.text,
+                            );
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.of(dialogContext)
+                                .pop(); // Dismiss the dialog
+                            await _showSuccessDialog(context,
+                                'Cover-up $action successfully!', action);
+                            onActionCompleted(); // Trigger page refresh
+                          } catch (e) {
+                            setState(() {
+                              isLoading = false; // Stop loading if failed
+                            });
+                          }
+                        },
                 ),
               ],
             );

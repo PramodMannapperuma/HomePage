@@ -33,12 +33,17 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/home':
       return MaterialPageRoute(builder: (context) => MyHomePage(token: args));
     case '/dashbord':
-      return MaterialPageRoute(builder: (context) => MainScreen(token: args ?? ''));
+      return MaterialPageRoute(
+          builder: (context) => MainScreen(token: args ?? ''));
     case '/attendance':
       return MaterialPageRoute(
           builder: (context) => Attendance(token: args ?? ''));
     case '/leave':
-      return MaterialPageRoute(builder: (context) => Leave(token: args ?? '', isFromSidebar: true,));
+      return MaterialPageRoute(
+          builder: (context) => Leave(
+                token: args ?? '',
+                isFromSidebar: true,
+              ));
     case '/geolocation':
       return MaterialPageRoute(
           builder: (context) => GeoLocation(token: args ?? ''));
@@ -50,7 +55,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 token: args ?? '',
               ));
     case '/requests':
-      return MaterialPageRoute(builder: (context) => Requests(token: args ?? '', isFromSidebar: true, isFromAppbar: true,));
+      return MaterialPageRoute(
+          builder: (context) => Requests(
+                token: args ?? '',
+                isFromSidebar: true,
+                isFromAppbar: true,
+              ));
     case '/celebrations':
       return MaterialPageRoute(builder: (context) => Celebrations());
     case '/personalInfo':
@@ -74,11 +84,20 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/taskList':
       return MaterialPageRoute(builder: (context) => TaskListScreen());
     case '/coverupRequest':
-      return MaterialPageRoute(builder: (context) => CoverupRequestScreen(token: args ?? '', isFromSidebar: true,isFromAppbar: true,));
+      return MaterialPageRoute(
+          builder: (context) => CoverupRequestScreen(
+                token: args ?? '',
+                isFromSidebar: true,
+                isFromAppbar: true,
+              ));
     case '/employeeScreen':
       return MaterialPageRoute(builder: (context) => EmployeeGridScreen());
     case '/employee':
-      return MaterialPageRoute(builder: (context) => EmployeeScreen(token: args ?? '', isFromSidebar: true,));
+      return MaterialPageRoute(
+          builder: (context) => EmployeeScreen(
+                token: args ?? '',
+                isFromSidebar: true,
+              ));
     case '/approval':
       return MaterialPageRoute(
           builder: (context) => ApprovalScreen(
