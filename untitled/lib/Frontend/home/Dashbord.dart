@@ -978,8 +978,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         token: widget.token,
                       ),
                       CategoryCard(
-                        title: 'Approval Task',
-                        icon: Icons.approval,
+                        title: 'Approval',
+                        icon: Icons.file_copy_outlined,
                         route: '/approval',
                         token: widget.token,
                       ),
