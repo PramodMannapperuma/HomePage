@@ -378,7 +378,7 @@ class CustomSidebar extends StatelessWidget {
                 color: Color.fromRGBO(77, 40, 128, 0.5),
                 size: 35,
               ),
-              title: Text('Approval Tasks'),
+              title: Text('Approval'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(

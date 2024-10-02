@@ -716,9 +716,11 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
     }
   }
 
-  // This method refreshes the page after accepting or rejecting a cover-up
+  // This method refreshes the page after accepting or rejecting a attendance, leave or a coverup
   Future<void> _refreshPage() async {
     await _fetchAttendanceRecords();
+    await _fetchCoverUpDetails();
+    await _fetchLeaveRequests();
   }
 
   @override
