@@ -1153,7 +1153,7 @@ class _LeavePageState extends State<Leave> {
       });
       return data;
     } catch (e) {
-      print('Error loading attendance data: $e');
+      print('Error loading Leave data: $e');
       return [];
     }
   }
