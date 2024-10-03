@@ -59,10 +59,14 @@ class _AttendanceState extends State<Attendance> {
   @override
   void initState() {
     super.initState();
-    _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier([]);
-    // Load data for the whole month on page load
+
+    // Initialize the futureLeaveData with an empty Future to prevent LateInitializationError
     futureAttendanceData = _loadMonthlyAttendanceData(_focusedDay);
+
+    _selectedDay = _focusedDay;
+
+    // Fetch leave data for the current month on init
+    _selectedEvents = ValueNotifier([]);
   }
 
   Future<List<AttendanceData>> _loadMonthlyAttendanceData(
@@ -71,7 +75,7 @@ class _AttendanceState extends State<Attendance> {
 
     try {
       final List<AttendanceData> data =
-          await apiService.fetchAttendanceData(widget.token, startOfMonth);
+      await apiService.fetchAttendanceData(widget.token, startOfMonth);
       setState(() {
         _attendanceStatus.clear();
         for (var attendance in data) {
@@ -94,7 +98,6 @@ class _AttendanceState extends State<Attendance> {
     _startTimeController.dispose();
     _leaveTimeController.dispose();
     _commentController.dispose();
-    _selectedEvents.dispose();
     super.dispose();
   }
 
@@ -104,8 +107,9 @@ class _AttendanceState extends State<Attendance> {
         _selectedDay = selectedDate;
         _focusedDay = focusedDay;
         _selectedEvents.value = _getEventsForDay(selectedDate);
-        futureAttendanceData =
-            apiService.fetchAttendanceData(widget.token, selectedDate);
+
+        // Fetch attendance data for the selected day
+        futureAttendanceData = apiService.fetchAttendanceData(widget.token, selectedDate);
       });
     }
   }
@@ -161,7 +165,7 @@ class _AttendanceState extends State<Attendance> {
         await _loadMonthlyAttendanceData(_focusedDay);
         setState(() {
           _selectedEvents.value = _getEventsForDay(_selectedDay!);
-          futureAttendanceData = _loadMonthlyAttendanceData(_focusedDay);
+          futureAttendanceData = apiService.fetchAttendanceData(widget.token, _focusedDay);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -183,7 +187,7 @@ class _AttendanceState extends State<Attendance> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content:
-              Text('The connection has timed out. Please try again later.'),
+          Text('The connection has timed out. Please try again later.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -197,7 +201,7 @@ class _AttendanceState extends State<Attendance> {
     }
   }
 
-  Future<void> _showAddAttendanceBottomSheet (BuildContext context, VoidCallback refreshDataCallback) async {
+  Future<void> _showAddAttendanceBottomSheet(BuildContext context) async {
     if (_selectedDay != null && _selectedDay!.isAfter(today)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -243,7 +247,7 @@ class _AttendanceState extends State<Attendance> {
       builder: (BuildContext context) {
         return Padding(
           padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -379,94 +383,87 @@ class _AttendanceState extends State<Attendance> {
     final bool isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
-    void _refreshData() {
-      setState(() {
-        futureAttendanceData = apiService.fetchAttendanceData(widget.token, _focusedDay);
-        _loadMonthlyAttendanceData(_focusedDay); // Refresh the data
-      });
-    }
-
     return Scaffold(
       appBar: widget.isFromSidebar
           ? customAppBar(
-              title: 'Attendance',
-              showActions: true,
-              showLeading: true,
-              context: context,
-              showBackButton: true,
-            )
+        title: 'Attendance',
+        showActions: true,
+        showLeading: true,
+        context: context,
+        showBackButton: true,
+      )
           : AppBar(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/hrislogo2.png',
-                    height: isPortrait ? 40.0 : 30.0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/hrislogo2.png',
+              height: isPortrait ? 40.0 : 30.0,
+            ),
+            SizedBox(width: 8.0),
+          ],
+        ),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(35.0),
+          child: Column(
+            children: [
+              Padding(
+                padding:
+                EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                child: Text(
+                  "Attendance",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  SizedBox(width: 8.0),
-                ],
-              ),
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(35.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                      child: Text(
-                        "Attendance",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      color: Colors.black,
-                      thickness: 0.2,
-                    ),
-                  ],
                 ),
               ),
-              centerTitle: true,
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
+              Divider(
+                color: Colors.black,
+                thickness: 0.2,
               ),
-              leading: Builder(
-                builder: (BuildContext context) {
-                  return Padding(
-                    padding: EdgeInsets.all(screenWidth * 0.02),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.menu_outlined,
-                        color: AppColors.background,
-                      ),
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                    ),
-                  );
+            ],
+          ),
+        ),
+        centerTitle: true,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return Padding(
+              padding: EdgeInsets.all(screenWidth * 0.02),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.menu_outlined,
+                  color: AppColors.background,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
                 },
               ),
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.person,
-                    color: AppColors.background,
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/profile',
-                        arguments: widget.token);
-                  },
-                ),
-              ],
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.person,
+              color: AppColors.background,
             ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile',
+                  arguments: widget.token);
+            },
+          ),
+        ],
+      ),
       drawer: CustomSidebar(token: widget.token),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4d2880),
         onPressed: () {
-          _showAddAttendanceBottomSheet(context, _refreshData);
+          _showAddAttendanceBottomSheet(context);
         },
         child: Icon(
           Icons.add,
@@ -476,85 +473,79 @@ class _AttendanceState extends State<Attendance> {
       body: Column(
         children: [
           Container(
-            child: FutureBuilder<List<AttendanceData>>(
-              future: futureAttendanceData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No data available'));
+            child: TableCalendar(
+              rowHeight: 40,
+              headerStyle: HeaderStyle(
+                titleCentered: true,
+                formatButtonVisible: true,
+                formatButtonShowsNext: false,
+                formatButtonDecoration: BoxDecoration(
+                  color: Color(0xff4d2880),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                formatButtonTextStyle: TextStyle(
+                  color: Colors.white,
+                ),
+                titleTextStyle: TextStyle(
+                  fontSize: screenWidth * 0.05,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff4d2880),
+                ),
+                leftChevronIcon: Icon(
+                  Icons.chevron_left,
+                  color: Color(0xff4d2880),
+                ),
+                rightChevronIcon: Icon(
+                  Icons.chevron_right,
+                  color: Color(0xff4d2880),
+                ),
+              ),
+              focusedDay: _focusedDay,
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              onDaySelected: _onDaySelected,
+              availableGestures: AvailableGestures.all,
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+              firstDay: DateTime.utc(2023, 01, 01),
+              lastDay: DateTime.utc(3030, 12, 31),
+              calendarFormat: _calendarFormat,
+              eventLoader: _getEventsForDay,
+              calendarBuilders: CalendarBuilders(
+                defaultBuilder: (context, day, focusedDay) {
+                  final status =
+                  _attendanceStatus[DateTime(day.year, day.month, day.day)];
+                  final color = _getStatusColor(status);
+
+                  return Container(
+                    margin: const EdgeInsets.all(6.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      '${day.day}',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                },
+              ),
+              onFormatChanged: (format) {
+                if (_calendarFormat != format) {
+                  setState(() {
+                    _calendarFormat = format;
+                  });
                 }
-
-                return TableCalendar(
-                  rowHeight: 40,
-                  headerStyle: HeaderStyle(
-                    titleCentered: true,
-                    formatButtonVisible: true,
-                    formatButtonShowsNext: false,
-                    formatButtonDecoration: BoxDecoration(
-                      color: Color(0xff4d2880),
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    formatButtonTextStyle: TextStyle(color: Colors.white),
-                    titleTextStyle: TextStyle(
-                      fontSize: screenWidth * 0.05,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff4d2880),
-                    ),
-                    leftChevronIcon:
-                        Icon(Icons.chevron_left, color: Color(0xff4d2880)),
-                    rightChevronIcon:
-                        Icon(Icons.chevron_right, color: Color(0xff4d2880)),
-                  ),
-                  focusedDay: _focusedDay,
-                  startingDayOfWeek: StartingDayOfWeek.monday,
-                  onDaySelected: _onDaySelected,
-                  availableGestures: AvailableGestures.all,
-                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                  firstDay: DateTime.utc(2023, 01, 01),
-                  lastDay: DateTime.utc(3030, 12, 31),
-                  calendarFormat: _calendarFormat,
-                  eventLoader: _getEventsForDay,
-                  calendarBuilders: CalendarBuilders(
-                    defaultBuilder: (context, day, focusedDay) {
-                      final status = _attendanceStatus[
-                          DateTime(day.year, day.month, day.day)];
-                      final color = _getStatusColor(status);
-
-                      return Container(
-                        margin: const EdgeInsets.all(6.0),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: color,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Text(
-                          '${day.day}',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    },
-                  ),
-                  onFormatChanged: (format) {
-                    if (_calendarFormat != format) {
-                      setState(() {
-                        _calendarFormat = format;
-                      });
-                    }
-                  },
-                  onPageChanged: (focusedDay) {
-                    _focusedDay = focusedDay;
-                    futureAttendanceData = _loadMonthlyAttendanceData(
-                        focusedDay); // Reload data when page changes
-                  },
-                );
+              },
+              onPageChanged: (focusedDay) {
+                _focusedDay = focusedDay;
+                _loadMonthlyAttendanceData(focusedDay); // Reload data when page changes
               },
             ),
           ),
           SizedBox(height: 10.0),
-          Divider(thickness: 1),
+          Divider(
+            thickness: 1,
+          ),
           SizedBox(height: 8.0),
           Expanded(
             child: FutureBuilder<List<AttendanceData>>(
@@ -569,8 +560,8 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                    (element) =>
-                        element.date == _selectedDay?.toString().split(" ")[0],
+                        (element) =>
+                    element.date == _selectedDay?.toString().split(" ")[0],
                     orElse: () => AttendanceData(
                       amdIn: 'N/A',
                       recIn: 'N/A',
@@ -600,7 +591,7 @@ class _AttendanceState extends State<Attendance> {
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Date: ${selectedDateData.date}',
@@ -623,11 +614,11 @@ class _AttendanceState extends State<Attendance> {
                               Divider(thickness: 1),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'AMD In: ${selectedDateData.amdIn ?? 'N/A'}',
@@ -644,7 +635,7 @@ class _AttendanceState extends State<Attendance> {
                                   ),
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Rec In: ${selectedDateData.recIn ?? 'N/A'}',
