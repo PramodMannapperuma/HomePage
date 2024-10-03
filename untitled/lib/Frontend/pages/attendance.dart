@@ -197,7 +197,7 @@ class _AttendanceState extends State<Attendance> {
     }
   }
 
-  Future<void> _showAddAttendanceBottomSheet(BuildContext context) async {
+  Future<void> _showAddAttendanceBottomSheet (BuildContext context, VoidCallback refreshDataCallback) async {
     if (_selectedDay != null && _selectedDay!.isAfter(today)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -379,6 +379,13 @@ class _AttendanceState extends State<Attendance> {
     final bool isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
+    void _refreshData() {
+      setState(() {
+        futureAttendanceData = apiService.fetchAttendanceData(widget.token, _focusedDay);
+        _loadMonthlyAttendanceData(_focusedDay); // Refresh the data
+      });
+    }
+
     return Scaffold(
       appBar: widget.isFromSidebar
           ? customAppBar(
@@ -459,7 +466,7 @@ class _AttendanceState extends State<Attendance> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4d2880),
         onPressed: () {
-          _showAddAttendanceBottomSheet(context);
+          _showAddAttendanceBottomSheet(context, _refreshData);
         },
         child: Icon(
           Icons.add,
