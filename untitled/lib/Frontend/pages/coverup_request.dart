@@ -37,7 +37,7 @@ class _CoverupRequestScreenState extends State<CoverupRequestScreen> {
 
   Future<void> _fetchData() async {
     setState(() {
-      isLoading = true; // Show loader while fetching data
+      isLoading = true;
     });
     try {
       final fetchedCoverUps = await ApiService.getCoverUpDetails(
@@ -54,7 +54,6 @@ class _CoverupRequestScreenState extends State<CoverupRequestScreen> {
     }
   }
 
-  // This method refreshes the page after accepting or rejecting a cover-up
   Future<void> _refreshPage() async {
     await _fetchData();
   }
@@ -69,22 +68,26 @@ class _CoverupRequestScreenState extends State<CoverupRequestScreen> {
         context: context,
         showBackButton: widget.isFromSidebar,
         showBellIcon: widget.isFromSidebar,
-        token: widget.token, // Passing token to AppBar
+        token: widget.token,
       ),
       drawer: widget.isFromSidebar ? CustomSidebar(token: widget.token) : null,
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
           : Padding(
               padding: const EdgeInsets.all(10.0),
               child: ListView(
                 children: [
                   SectionHeader(title: 'Pending Cover-Up Approvals'),
                   coverUps.isEmpty
-                      ? Center(child: Text('No cover-up approvals found'))
+                      ? Center(
+                          child: Text('No cover-up approvals found'),
+                        )
                       : CoverUpList(
                           coverUps: coverUps,
                           token: widget.token,
-                          onActionCompleted: _refreshPage, // Trigger refresh
+                          onActionCompleted: _refreshPage,
                         ),
                 ],
               ),
@@ -176,7 +179,7 @@ class CoverUpList extends StatelessWidget {
 class CoverActionButton extends StatelessWidget {
   final String token;
   final int id;
-  final Future<void> Function() onActionCompleted; // Added refresh function
+  final Future<void> Function() onActionCompleted;
 
   const CoverActionButton(
       {Key? key,
@@ -204,8 +207,10 @@ class CoverActionButton extends StatelessWidget {
           content: Text(message),
           actions: <Widget>[
             TextButton(
-              child: Text('OK',
-                  style: TextStyle(color: Theme.of(context).primaryColor)),
+              child: Text(
+                'OK',
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
