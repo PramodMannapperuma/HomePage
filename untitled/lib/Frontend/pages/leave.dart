@@ -1126,36 +1126,35 @@ class _LeavePageState extends State<Leave> {
     _fetchCoverUps();
 
     // Initialize the futureLeaveData with an empty Future to prevent LateInitializationError
-    futureLeaveData = Future.value([]);
+    futureLeaveData = _loadMonthlyLeaveData(_focusedDay);
 
     _selectedDay = _focusedDay;
 
     // Fetch leave data for the current month on init
-    _loadLeaveData(_focusedDay);
-
     _selectedEvents = ValueNotifier([]);
   }
 
-  Future<void> _loadLeaveData(DateTime selectedDate) async {
+  Future<List<LeaveData>> _loadMonthlyLeaveData(
+      DateTime focusedDay) async {
+    DateTime startOfMonth = DateTime(focusedDay.year, focusedDay.month, 1);
+
     try {
       final List<LeaveData> data =
-          await apiService.fetchLeaveData(widget.token, selectedDate);
-
+      await apiService.fetchLeaveData(widget.token, startOfMonth);
       setState(() {
-        leaveDataMap[selectedDate] = data;
         _leaveStatus.clear();
-        for (var leave in data) {
-          if (leave.date != null) {
-            final DateTime date = DateTime.parse(leave.date!);
-            _leaveStatus[date] = leave.status ?? 'N/A';
+        for (var attendance in data) {
+          if (attendance.date != null) {
+            final DateTime date = DateTime.parse(attendance.date!);
+            _leaveStatus[DateTime(date.year, date.month, date.day)] =
+                attendance.status ?? 'incomplete';
           }
         }
-
-        // Update futureLeaveData to ensure it reflects the latest data
-        futureLeaveData = apiService.fetchLeaveData(widget.token, _focusedDay);
       });
+      return data;
     } catch (e) {
-      print('Error loading leave data: $e');
+      print('Error loading Leave data: $e');
+      return [];
     }
   }
 
@@ -1305,10 +1304,11 @@ class _LeavePageState extends State<Leave> {
             duration: Duration(seconds: 2),
           ),
         );
-        await _fetchLeaveData(_selectedDay!); // Refresh the data immediately
+        // Fetch updated attendance data and refresh UI
+        await _loadMonthlyLeaveData(_focusedDay);
         setState(() {
-          _leaveStatus[DateTime.parse(selectedDay)] = 'pending';
           _selectedEvents.value = _getEventsForDay(_selectedDay!);
+          futureLeaveData= _loadMonthlyLeaveData(_focusedDay);
         });
         refreshDataCallback(); // Refresh the parent state
       } else {
@@ -1624,7 +1624,7 @@ class _LeavePageState extends State<Leave> {
     void _refreshData() {
       setState(() {
         futureLeaveData = apiService.fetchLeaveData(widget.token, _focusedDay);
-        _loadLeaveData(_focusedDay); // Refresh the data
+        _loadMonthlyLeaveData(_focusedDay); // Refresh the data
       });
     }
 
@@ -1810,8 +1810,8 @@ class _LeavePageState extends State<Leave> {
                 },
                 onPageChanged: (focusedDay) {
                   _focusedDay = focusedDay;
-                  _loadLeaveData(
-                      focusedDay); // Ensure data is fetched on page change
+                  futureLeaveData = _loadMonthlyLeaveData(
+                      focusedDay); // Reload data when page changes/ Ensure data is fetched on page change
                 },
               ),
             ),

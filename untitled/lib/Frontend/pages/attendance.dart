@@ -59,38 +59,37 @@ class _AttendanceState extends State<Attendance> {
   @override
   void initState() {
     super.initState();
+
+    // Initialize the futureLeaveData with an empty Future to prevent LateInitializationError
+    futureAttendanceData = _loadMonthlyAttendanceData(_focusedDay);
+
     _selectedDay = _focusedDay;
 
-    // Initialize the futureAttendanceData with an empty Future
-    futureAttendanceData = Future.value([]);
-
-    // Fetch attendance data for the current month when the screen loads
-    _loadAttendanceData(_focusedDay);
-
+    // Fetch leave data for the current month on init
     _selectedEvents = ValueNotifier([]);
   }
 
-  Future<void> _loadAttendanceData(DateTime date) async {
+  Future<List<AttendanceData>> _loadMonthlyAttendanceData(
+      DateTime focusedDay) async {
+    DateTime startOfMonth = DateTime(focusedDay.year, focusedDay.month, 1);
+
     try {
       final List<AttendanceData> data =
-      await apiService.fetchAttendanceData(widget.token, date);
-
-      // Update state and trigger UI rebuild
+      await apiService.fetchAttendanceData(widget.token, startOfMonth);
       setState(() {
         _attendanceStatus.clear();
         for (var attendance in data) {
           if (attendance.date != null) {
-            final DateTime attendanceDate = DateTime.parse(attendance.date!);
-            _attendanceStatus[DateTime(attendanceDate.year, attendanceDate.month, attendanceDate.day)] =
+            final DateTime date = DateTime.parse(attendance.date!);
+            _attendanceStatus[DateTime(date.year, date.month, date.day)] =
                 attendance.status ?? 'incomplete';
           }
         }
-
-        // Now we assign the actual fetched data to the futureAttendanceData variable
-        futureAttendanceData = apiService.fetchAttendanceData(widget.token, _focusedDay);
       });
+      return data;
     } catch (e) {
       print('Error loading attendance data: $e');
+      return [];
     }
   }
 
@@ -163,7 +162,7 @@ class _AttendanceState extends State<Attendance> {
         );
 
         // Fetch updated attendance data and refresh UI
-        await _loadAttendanceData(_focusedDay);
+        await _loadMonthlyAttendanceData(_focusedDay);
         setState(() {
           _selectedEvents.value = _getEventsForDay(_selectedDay!);
           futureAttendanceData = apiService.fetchAttendanceData(widget.token, _focusedDay);
@@ -539,7 +538,7 @@ class _AttendanceState extends State<Attendance> {
               },
               onPageChanged: (focusedDay) {
                 _focusedDay = focusedDay;
-                _loadAttendanceData(focusedDay); // Reload data when page changes
+                _loadMonthlyAttendanceData(focusedDay); // Reload data when page changes
               },
             ),
           ),
