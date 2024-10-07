@@ -432,6 +432,7 @@ class _AttendanceState extends State<Attendance> {
 //       },
 //     );
 //   }
+
   // Add this method to show the dialog with the required information
   Future<void> _showAttendanceAmendmentInfo(BuildContext context) async {
     await showDialog(
@@ -542,7 +543,6 @@ class _AttendanceState extends State<Attendance> {
                   ],
                 ),
               ),
-              Divider(
               centerTitle: true,
               systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,
