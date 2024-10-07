@@ -676,7 +676,7 @@ class _AttendanceState extends State<Attendance> {
               if (_showTooltip)
                 Positioned(
                   top: 0,
-                  left: 205,
+                  left: 165,
                   child: Stack(
                     alignment: Alignment.topLeft,
                     children: [
@@ -691,7 +691,7 @@ class _AttendanceState extends State<Attendance> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Click the ',
+                              'Click ',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.black,
@@ -700,7 +700,7 @@ class _AttendanceState extends State<Attendance> {
                             Icon(Icons.info_outline,
                                 size: 20, color: Colors.black),
                             Text(
-                              ' for more info',
+                              ' for color representatives',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.black,
@@ -711,11 +711,11 @@ class _AttendanceState extends State<Attendance> {
                       ),
                       Positioned(
                         top: -11,
-                        left: -5,
+                        right: 0,
                         child: CircleAvatar(
                           radius: 15,
                           child: IconButton(
-                            icon: Icon(Icons.close, size: 20, color: Colors.black),
+                            icon: Icon(Icons.close, size: 18, color: Colors.black),
                             onPressed: () {
                               _hideTooltipMessage();
                             },
