@@ -676,7 +676,7 @@ class _AttendanceState extends State<Attendance> {
               if (_showTooltip)
                 Positioned(
                   top: 0,
-                  left: 165,
+                  left: 210,
                   child: Stack(
                     alignment: Alignment.topLeft,
                     children: [
@@ -700,7 +700,7 @@ class _AttendanceState extends State<Attendance> {
                             Icon(Icons.info_outline,
                                 size: 20, color: Colors.black),
                             Text(
-                              ' for color representatives',
+                              ' for instructions',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.black,
