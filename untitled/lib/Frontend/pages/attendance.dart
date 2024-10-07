@@ -46,6 +46,8 @@ class _AttendanceState extends State<Attendance> {
   DateTime? _selectedDay;
   DateTime today = DateTime.now();
   final Map<DateTime, String> _attendanceStatus = {};
+  bool _showTooltip =
+      true; // For controlling the initial display of the message
 
   TextEditingController _startTimeController = TextEditingController();
   TextEditingController _leaveTimeController = TextEditingController();
@@ -75,7 +77,7 @@ class _AttendanceState extends State<Attendance> {
 
     try {
       final List<AttendanceData> data =
-      await apiService.fetchAttendanceData(widget.token, startOfMonth);
+          await apiService.fetchAttendanceData(widget.token, startOfMonth);
       setState(() {
         _attendanceStatus.clear();
         for (var attendance in data) {
@@ -109,9 +111,18 @@ class _AttendanceState extends State<Attendance> {
         _selectedEvents.value = _getEventsForDay(selectedDate);
 
         // Fetch attendance data for the selected day
-        futureAttendanceData = apiService.fetchAttendanceData(widget.token, selectedDate);
+        futureAttendanceData =
+            apiService.fetchAttendanceData(widget.token, selectedDate);
       });
     }
+  }
+  
+
+  // Function to hide the tooltip
+  void _hideTooltipMessage() {
+    setState(() {
+      _showTooltip = false; // Hide the message
+    });
   }
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -165,7 +176,8 @@ class _AttendanceState extends State<Attendance> {
         await _loadMonthlyAttendanceData(_focusedDay);
         setState(() {
           _selectedEvents.value = _getEventsForDay(_selectedDay!);
-          futureAttendanceData = apiService.fetchAttendanceData(widget.token, _focusedDay);
+          futureAttendanceData =
+              apiService.fetchAttendanceData(widget.token, _focusedDay);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -187,7 +199,7 @@ class _AttendanceState extends State<Attendance> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content:
-          Text('The connection has timed out. Please try again later.'),
+              Text('The connection has timed out. Please try again later.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -247,7 +259,7 @@ class _AttendanceState extends State<Attendance> {
       builder: (BuildContext context) {
         return Padding(
           padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -372,6 +384,112 @@ class _AttendanceState extends State<Attendance> {
     );
   }
 
+// // Function to display the tooltip-style message
+//   void _showTooltipMessage(BuildContext context) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return Dialog(
+//           shape: RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(12),
+//           ),
+//           backgroundColor: Colors.transparent,
+//           child: Stack(
+//             alignment: Alignment.topLeft,
+//             children: [
+//               Container(
+//                 margin: EdgeInsets.only(top: 30),
+//                 padding: EdgeInsets.all(20),
+//                 decoration: BoxDecoration(
+//                   color: Colors.purple[100],
+//                   borderRadius: BorderRadius.circular(10),
+//                 ),
+//                 child: Text(
+//                   'Navigate info icon to see the colors representative of status.',
+//                   style: TextStyle(
+//                     fontSize: 16,
+//                     color: Colors.black,
+//                   ),
+//                 ),
+//               ),
+//               Positioned(
+//                 top: 0,
+//                 left: 10,
+//                 child: CircleAvatar(
+//                   backgroundColor: Colors.purple,
+//                   radius: 20,
+//                   child: IconButton(
+//                     icon: Icon(Icons.close, color: Colors.white),
+//                     onPressed: () {
+//                       Navigator.of(context).pop();
+//                     },
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
+
+  // Add this method to show the dialog with the required information
+  Future<void> _showAttendanceAmendmentInfo(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("How to amend Attendance?"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text("Select any day or range of days to make amendments."),
+                SizedBox(height: 10),
+                Text(
+                    "The colors below represent the status of each attendance:"),
+                SizedBox(height: 10),
+                _buildLegendItem("Incomplete", incompleteColor),
+                _buildLegendItem("Amendment", amendmentColor),
+                _buildLegendItem("Pending", pendingColor),
+                _buildLegendItem("Rejected", rejectedColor),
+                _buildLegendItem("Attendance", attendanceColor),
+                _buildLegendItem("Holiday", holidayColor),
+                _buildLegendItem("Leave", leaveColor),
+                SizedBox(height: 20),
+                Text("***Make sure to save after any changes!"),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildLegendItem(String label, Color color) {
+    return Row(
+      children: [
+        Container(
+          width: 16,
+          height: 16,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+        ),
+        SizedBox(width: 8),
+        Text(label),
+      ],
+    );
+  }
+
   Color _getStatusColor(String? status) {
     return statusColorMap[status] ?? Colors.grey;
   }
@@ -386,79 +504,87 @@ class _AttendanceState extends State<Attendance> {
     return Scaffold(
       appBar: widget.isFromSidebar
           ? customAppBar(
-        title: 'Attendance',
-        showActions: true,
-        showLeading: true,
-        context: context,
-        showBackButton: true,
-      )
+              title: 'Attendance',
+              showActions: true,
+              showLeading: true,
+              context: context,
+              showBackButton: true,
+            )
           : AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/hrislogo2.png',
-              height: isPortrait ? 40.0 : 30.0,
-            ),
-            SizedBox(width: 8.0),
-          ],
-        ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(35.0),
-          child: Column(
-            children: [
-              Padding(
-                padding:
-                EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                child: Text(
-                  "Attendance",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/hrislogo2.png',
+                    height: isPortrait ? 40.0 : 30.0,
                   ),
+                  SizedBox(width: 8.0),
+                ],
+              ),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(35.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                      child: Text(
+                        "Attendance",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.black,
+                      thickness: 0.2,
+                    ),
+                  ],
                 ),
               ),
-              Divider(
-                color: Colors.black,
-                thickness: 0.2,
+              centerTitle: true,
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.dark,
               ),
-            ],
-          ),
-        ),
-        centerTitle: true,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-        ),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return Padding(
-              padding: EdgeInsets.all(screenWidth * 0.02),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.menu_outlined,
-                  color: AppColors.background,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return Padding(
+                    padding: EdgeInsets.all(screenWidth * 0.02),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.menu_outlined,
+                        color: AppColors.background,
+                      ),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                    ),
+                  );
                 },
               ),
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.person,
-              color: AppColors.background,
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.person,
+                    color: AppColors.background,
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/profile',
+                        arguments: widget.token);
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.info_outline),
+                  color: Color(0xff4d2880),
+                  onPressed: () {
+                    _hideTooltipMessage();
+                    _showAttendanceAmendmentInfo(context);
+                  },
+                ),
+              ],
             ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/profile',
-                  arguments: widget.token);
-            },
-          ),
-        ],
-      ),
       drawer: CustomSidebar(token: widget.token),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff4d2880),
@@ -472,80 +598,137 @@ class _AttendanceState extends State<Attendance> {
       ),
       body: Column(
         children: [
-          Container(
-            child: TableCalendar(
-              rowHeight: 40,
-              headerStyle: HeaderStyle(
-                titleCentered: true,
-                formatButtonVisible: true,
-                formatButtonShowsNext: false,
-                formatButtonDecoration: BoxDecoration(
-                  color: Color(0xff4d2880),
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                formatButtonTextStyle: TextStyle(
-                  color: Colors.white,
-                ),
-                titleTextStyle: TextStyle(
-                  fontSize: screenWidth * 0.05,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff4d2880),
-                ),
-                leftChevronIcon: Icon(
-                  Icons.chevron_left,
-                  color: Color(0xff4d2880),
-                ),
-                rightChevronIcon: Icon(
-                  Icons.chevron_right,
-                  color: Color(0xff4d2880),
-                ),
-              ),
-              focusedDay: _focusedDay,
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              onDaySelected: _onDaySelected,
-              availableGestures: AvailableGestures.all,
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-              firstDay: DateTime.utc(2023, 01, 01),
-              lastDay: DateTime.utc(3030, 12, 31),
-              calendarFormat: _calendarFormat,
-              eventLoader: _getEventsForDay,
-              calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, day, focusedDay) {
-                  final status =
-                  _attendanceStatus[DateTime(day.year, day.month, day.day)];
-                  final color = _getStatusColor(status);
+          Stack(
+            children: [
+              // Main content like TableCalendar
+              Container(
+                child: TableCalendar(
+                  rowHeight: 40,
+                  headerStyle: HeaderStyle(
+                    titleCentered: true,
+                    formatButtonVisible: true,
+                    formatButtonShowsNext: false,
+                    formatButtonDecoration: BoxDecoration(
+                      color: Color(0xff4d2880),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    formatButtonTextStyle: TextStyle(
+                      color: Colors.white,
+                    ),
+                    titleTextStyle: TextStyle(
+                      fontSize: screenWidth * 0.05,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff4d2880),
+                    ),
+                    leftChevronIcon: Icon(
+                      Icons.chevron_left,
+                      color: Color(0xff4d2880),
+                    ),
+                    rightChevronIcon: Icon(
+                      Icons.chevron_right,
+                      color: Color(0xff4d2880),
+                    ),
+                  ),
+                  focusedDay: _focusedDay,
+                  startingDayOfWeek: StartingDayOfWeek.monday,
+                  onDaySelected: _onDaySelected,
+                  availableGestures: AvailableGestures.all,
+                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                  firstDay: DateTime.utc(2023, 01, 01),
+                  lastDay: DateTime.utc(3030, 12, 31),
+                  calendarFormat: _calendarFormat,
+                  eventLoader: _getEventsForDay,
+                  calendarBuilders: CalendarBuilders(
+                    defaultBuilder: (context, day, focusedDay) {
+                      final status = _attendanceStatus[
+                          DateTime(day.year, day.month, day.day)];
+                      final color = _getStatusColor(status);
 
-                  return Container(
-                    margin: const EdgeInsets.all(6.0),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Text(
-                      '${day.day}',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  );
-                },
+                      return Container(
+                        margin: const EdgeInsets.all(6.0),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          '${day.day}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
+                    },
+                  ),
+                  onFormatChanged: (format) {
+                    if (_calendarFormat != format) {
+                      setState(() {
+                        _calendarFormat = format;
+                      });
+                    }
+                  },
+                  onPageChanged: (focusedDay) {
+                    _focusedDay = focusedDay;
+                    _loadMonthlyAttendanceData(
+                        focusedDay); // Reload data when page changes
+                  },
+                ),
               ),
-              onFormatChanged: (format) {
-                if (_calendarFormat != format) {
-                  setState(() {
-                    _calendarFormat = format;
-                  });
-                }
-              },
-              onPageChanged: (focusedDay) {
-                _focusedDay = focusedDay;
-                _loadMonthlyAttendanceData(focusedDay); // Reload data when page changes
-              },
-            ),
+              // Tooltip message display
+              if (_showTooltip)
+                Positioned(
+                  top: 0,
+                  left: 165,
+                  child: Stack(
+                    alignment: Alignment.topLeft,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          color: Colors.purple[100],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Click ',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Icon(Icons.info_outline,
+                                size: 20, color: Colors.black),
+                            Text(
+                              ' for color representatives',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        top: -11,
+                        right: 0,
+                        child: CircleAvatar(
+                          radius: 15,
+                          child: IconButton(
+                            icon: Icon(Icons.close, size: 18, color: Colors.black),
+                            onPressed: () {
+                              _hideTooltipMessage();
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
           ),
           SizedBox(height: 10.0),
-          Divider(
-            thickness: 1,
-          ),
+          Divider(thickness: 1),
           SizedBox(height: 8.0),
           Expanded(
             child: FutureBuilder<List<AttendanceData>>(
@@ -560,8 +743,8 @@ class _AttendanceState extends State<Attendance> {
                 } else {
                   final data = snapshot.data!;
                   final selectedDateData = data.firstWhere(
-                        (element) =>
-                    element.date == _selectedDay?.toString().split(" ")[0],
+                    (element) =>
+                        element.date == _selectedDay?.toString().split(" ")[0],
                     orElse: () => AttendanceData(
                       amdIn: 'N/A',
                       recIn: 'N/A',
@@ -591,7 +774,7 @@ class _AttendanceState extends State<Attendance> {
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Date: ${selectedDateData.date}',
@@ -614,11 +797,11 @@ class _AttendanceState extends State<Attendance> {
                               Divider(thickness: 1),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'AMD In: ${selectedDateData.amdIn ?? 'N/A'}',
@@ -635,7 +818,7 @@ class _AttendanceState extends State<Attendance> {
                                   ),
                                   Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Rec In: ${selectedDateData.recIn ?? 'N/A'}',
