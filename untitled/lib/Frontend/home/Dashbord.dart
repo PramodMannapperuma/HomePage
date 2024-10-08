@@ -942,13 +942,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final mediaQuery = MediaQuery.of(context);
+        final screenHeight = mediaQuery.size.height;
+        final screenWidth = mediaQuery.size.width;
+        final dialogWidth = screenWidth * 0.85;
+        final dialogHeight = screenHeight * 0.5; // 50% of screen height
+
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
           elevation: 16,
           child: Container(
-            padding: EdgeInsets.all(16),
+            width: dialogWidth,
+            height: dialogHeight,
+            padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -959,7 +967,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Text(
                       'Employee Birthdays 🎉',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: screenWidth * 0.05, // Responsive font size
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -972,25 +980,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
                 Divider(),
-                ...birthdayList.map((birthday) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      radius: 25,
-                      backgroundImage: AssetImage('assets/images/profile.png'),
-                    ),
-                    title: Text(birthday['name']!),
-                    subtitle: Text('Birthday: ${birthday['birthday']}'),
-                    onTap: () {
-                      // Close the popup first, then navigate to the Celebrations page
-                      Navigator.of(context).pop(); // Close the popup
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => Celebrations(),
+                Expanded(
+                  child: ListView(
+                    children: birthdayList.map((birthday) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          radius: screenWidth * 0.08, // Responsive avatar size
+                          backgroundImage:
+                              AssetImage('assets/images/profile.png'),
                         ),
+                        title: Text(
+                          birthday['name']!,
+                          style: TextStyle(
+                              fontSize:
+                                  screenWidth * 0.045), // Responsive text size
+                        ),
+                        subtitle: Text(
+                          'Birthday: ${birthday['birthday']}',
+                          style: TextStyle(
+                              fontSize: screenWidth *
+                                  0.035), // Responsive subtitle size
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => Celebrations(),
+                            ),
+                          );
+                        },
                       );
-                    },
-                  );
-                }).toList(),
+                    }).toList(),
+                  ),
+                ),
               ],
             ),
           ),
@@ -998,6 +1020,66 @@ class _DashboardScreenState extends State<DashboardScreen> {
       },
     );
   }
+  // void _showBirthdayPopup(List<Map<String, String>> birthdayList) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Dialog(
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(15),
+  //         ),
+  //         elevation: 16,
+  //         child: Container(
+  //           padding: EdgeInsets.all(16),
+  //           child: Column(
+  //             mainAxisSize: MainAxisSize.min,
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                 children: [
+  //                   Text(
+  //                     'Employee Birthdays 🎉',
+  //                     style: TextStyle(
+  //                       fontSize: 20,
+  //                       fontWeight: FontWeight.bold,
+  //                     ),
+  //                   ),
+  //                   IconButton(
+  //                     icon: Icon(Icons.close),
+  //                     onPressed: () {
+  //                       Navigator.of(context).pop();
+  //                     },
+  //                   ),
+  //                 ],
+  //               ),
+  //               Divider(),
+  //               ...birthdayList.map((birthday) {
+  //                 return ListTile(
+  //                   leading: CircleAvatar(
+  //                     radius: 25,
+  //                     backgroundImage: AssetImage('assets/images/profile.png'),
+  //                   ),
+  //                   title: Text(birthday['name']!),
+  //                   subtitle: Text('Birthday: ${birthday['birthday']}'),
+  //                   onTap: () {
+  //                     // Close the popup first, then navigate to the Celebrations page
+  //                     Navigator.of(context).pop(); // Close the popup
+  //                     Navigator.of(context).push(
+  //                       MaterialPageRoute(
+  //                         builder: (context) => Celebrations(),
+  //                       ),
+  //                     );
+  //                   },
+  //                 );
+  //               }).toList(),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
