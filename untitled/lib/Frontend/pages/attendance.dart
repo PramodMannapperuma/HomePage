@@ -46,8 +46,7 @@ class _AttendanceState extends State<Attendance> {
   DateTime? _selectedDay;
   DateTime today = DateTime.now();
   final Map<DateTime, String> _attendanceStatus = {};
-  bool _showTooltip =
-      true; // For controlling the initial display of the message
+  bool _showTooltip = true; // For controlling the initial display of the message
 
   TextEditingController _startTimeController = TextEditingController();
   TextEditingController _leaveTimeController = TextEditingController();
@@ -55,7 +54,6 @@ class _AttendanceState extends State<Attendance> {
 
   late final ValueNotifier<List<Event>> _selectedEvents;
   late Future<List<AttendanceData>> futureAttendanceData;
-
   final ApiService apiService = ApiService();
 
   @override
@@ -116,7 +114,7 @@ class _AttendanceState extends State<Attendance> {
       });
     }
   }
-  
+
 
   // Function to hide the tooltip
   void _hideTooltipMessage() {
@@ -509,6 +507,7 @@ class _AttendanceState extends State<Attendance> {
               showLeading: true,
               context: context,
               showBackButton: true,
+        showInfoIcon: true,
             )
           : AppBar(
               title: Row(
