@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:untitled/Frontend/pages/coverup_request.dart';
 import 'package:untitled/Frontend/styles/app_colors.dart';
 
+
 AppBar customAppBar({
   required String title,
   required bool showActions,
@@ -10,8 +11,73 @@ AppBar customAppBar({
   required BuildContext context,
   bool showBackButton = false,
   bool showBellIcon = false, // New parameter to control bell icon visibility
+  bool showInfoIcon = false,
   String? token, // Added token parameter
 }) {
+  bool _showTooltip = true; // Assume this is managed by a stateful widget.
+
+  // Function to hide the tooltip
+  void _hideTooltipMessage() {
+    // Logic to hide the tooltip
+    _showTooltip = false; // Simulating setState in a stateless context
+  }
+
+  // Helper method for creating legend items
+  Widget _buildLegendItem(String label, Color color) {
+    return Row(
+      children: <Widget>[
+        Container(
+          width: 16,
+          height: 16,
+          color: color,
+        ),
+        SizedBox(width: 10),
+        Text(label),
+      ],
+    );
+  }
+
+
+  // Future dialog to show attendance amendment info
+  Future<void> _showAttendanceAmendmentInfo(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("How to amend Attendance?"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text("Select any day or range of days to make amendments."),
+                SizedBox(height: 10),
+                Text("The colors below represent the status of each attendance:"),
+                SizedBox(height: 10),
+                _buildLegendItem("Incomplete", Colors.grey),
+                _buildLegendItem("Amendment", Colors.blue),
+                _buildLegendItem("Pending",Colors.amber),
+                _buildLegendItem("Rejected", Colors.red),
+                _buildLegendItem("Attendance", Colors.green),
+                _buildLegendItem("Holiday", Colors.black),
+                _buildLegendItem("Leave",  Colors.purple),
+                SizedBox(height: 20),
+                Text("***Make sure to save after any changes!"),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   return AppBar(
     title: Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -90,6 +156,15 @@ AppBar customAppBar({
                 ),
               ),
             );
+          },
+        ),
+      if (showInfoIcon)
+        IconButton(
+          icon: Icon(Icons.info_outline),
+          color: Color(0xff4d2880),
+          onPressed: () {
+            _hideTooltipMessage(); // Hide tooltip when info is clicked
+            _showAttendanceAmendmentInfo(context); // Show the info dialog
           },
         ),
       if (showActions)
