@@ -37,7 +37,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           builder: (context) => MainScreen(token: args ?? ''));
     case '/attendance':
       return MaterialPageRoute(
-          builder: (context) => Attendance(token: args ?? ''));
+          builder: (context) => Attendance(token: args ?? '', isFromSidebar: true));
     case '/leave':
       return MaterialPageRoute(
           builder: (context) => Leave(
