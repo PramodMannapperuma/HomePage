@@ -393,7 +393,7 @@ class ApiService {
   }
 
   // Fetch leave requests for a specific employee
-  Future<List<LeaveApproval>> fetchLeaveRequests(
+  static Future<List<LeaveApproval>> fetchLeaveRequests(
       String employeeId, String token) async {
     final response = await http
         .get(
@@ -414,7 +414,7 @@ class ApiService {
   }
 
   // Fetch attendance records for a specific employee
-  Future<List<AttApproval>> fetchAttendanceRecords(
+  static Future<List<AttApproval>> fetchAttendanceRecords(
       String employeeId, String token) async {
     final response = await http
         .get(
