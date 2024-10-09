@@ -100,7 +100,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
               ));
     case '/approval':
       return MaterialPageRoute(
-          builder: (context) => ApprovalScreen(
+          builder: (context) => ApprovalPendings(
                 token: args ?? '',
               ));
     case '/leavePolicy':
