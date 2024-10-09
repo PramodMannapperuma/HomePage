@@ -282,7 +282,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
 
   Future<Uint8List?> _fetchEmployeeProfilePicture(String employeeId) async {
     try {
-      return await ApiService.fetchemployeeprofilePicture(widget.token, employeeId);
+      return await ApiService.fetchEmployeeProfilePicture(widget.token, employeeId);
     } catch (e) {
       print('Failed to load employee profile picture for employee $employeeId: $e');
       return null;

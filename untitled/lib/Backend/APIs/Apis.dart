@@ -236,7 +236,7 @@ class ApiService {
     }
   }
 
-  static Future<Uint8List> fetchemployeeprofilePicture(String token, String employeeId) async {
+  static Future<Uint8List> fetchEmployeeProfilePicture(String token, String employeeId) async {
     final response = await http.get(
       Uri.parse('$baseUrl/employee/profile-picture/$employeeId'),  // Fix: added employeeId
       headers: {

@@ -986,10 +986,10 @@
 //     );
 //   }
 // }
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:typed_data'; // For Uint8List
 import 'package:untitled/Backend/models/att_approval.dart';
 import 'package:untitled/Backend/models/cover_up_detail.dart';
 import 'package:untitled/Backend/models/leave_approval.dart';
@@ -997,7 +997,6 @@ import '../../Backend/models/approval_items.dart';
 import '../../Backend/APIs/Apis.dart';
 import '../app_bar.dart';
 import '../styles/sidebar.dart';
-
 
 class ApprovalPendings extends StatefulWidget {
   final String token;
@@ -1015,6 +1014,16 @@ class _ApprovalPendingsState extends State<ApprovalPendings> {
   void initState() {
     super.initState();
     _pendingApprovals = ApiService.fetchPendingApprovals(widget.token);
+  }
+
+  // Function to fetch the employee's profile picture using the approval item ID (employeeId)
+  Future<Uint8List?> _fetchProfilePicture(String employeeId) async {
+    try {
+      return await ApiService.fetchEmployeeProfilePicture(widget.token, employeeId);
+    } catch (e) {
+      print('Failed to load profile picture: $e');
+      return null; // Return null if an error occurs
+    }
   }
 
   void _handleApprovalTap(ApprovalItem approval) {
@@ -1080,6 +1089,8 @@ class _ApprovalPendingsState extends State<ApprovalPendings> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: customAppBar(
         title: 'Approval Panel',
@@ -1088,9 +1099,7 @@ class _ApprovalPendingsState extends State<ApprovalPendings> {
         context: context,
         showBackButton: true,
       ),
-      drawer: CustomSidebar(
-        token: widget.token,
-      ),
+      drawer: CustomSidebar(token: widget.token),
       body: FutureBuilder<List<ApprovalItem>>(
         future: _pendingApprovals,
         builder: (context, snapshot) {
@@ -1107,40 +1116,66 @@ class _ApprovalPendingsState extends State<ApprovalPendings> {
             itemCount: approvals.length,
             itemBuilder: (context, index) {
               ApprovalItem approval = approvals[index];
-              return Card(
-                margin: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.all(8.0),
-                  leading: CircleAvatar(
-                    radius: 24,
-                    backgroundImage: AssetImage(
-                        'assets/images/profile.png'), // Placeholder image
-                  ),
-                  title: Text(
-                    approval.employee,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  subtitle: Text(approval.designation),
-                  trailing: Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 6.0, horizontal: 12.0),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      approval.item,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+
+              // Fetch the profile image where ApprovalItem ID equals employeeId
+              return FutureBuilder<Uint8List?>(
+                future: _fetchProfilePicture(approval.id.toString()),
+                builder: (context, imageSnapshot) {
+                  Widget profileImage;
+
+                  if (imageSnapshot.connectionState == ConnectionState.waiting) {
+                    profileImage = const CircleAvatar(
+                      radius: 24,
+                      backgroundImage: AssetImage('assets/images/profile.png'),
+                    );
+                  } else if (imageSnapshot.hasError || imageSnapshot.data == null) {
+                    profileImage = const CircleAvatar(
+                      radius: 24,
+                      backgroundImage: AssetImage('assets/images/profile.png'),
+                    ); // Placeholder image in case of error
+                  } else {
+                    profileImage = CircleAvatar(
+                      radius: 24,
+                      backgroundImage: MemoryImage(imageSnapshot.data!),
+                    );
+                  }
+
+                  return Card(
+                    margin: EdgeInsets.all(screenWidth * 0.03), // Responsive margin
+                    child: ListTile(
+                      contentPadding: EdgeInsets.all(screenWidth * 0.03), // Responsive padding
+                      leading: profileImage,
+                      title: Text(
+                        approval.employee,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: screenWidth * 0.045, // Responsive font size
+                        ),
+                        maxLines: 3, // Restrict to one line
+                        overflow: TextOverflow.ellipsis, // Add ellipsis if text overflows
                       ),
+                      subtitle: Text(approval.designation),
+                      trailing: Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: screenWidth * 0.018,
+                          horizontal: screenWidth * 0.03, // Responsive padding
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          approval.item,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      onTap: () => _handleApprovalTap(approval),
                     ),
-                  ),
-                  onTap: () => _handleApprovalTap(approval),
-                ),
+                  );
+                },
               );
             },
           );
@@ -1165,15 +1200,20 @@ class AttendanceDetailsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Attendance Records')),
       body: ListView.builder(
         itemCount: attendanceRecords.length,
         itemBuilder: (context, index) {
           return Card(
-            margin: const EdgeInsets.all(8.0),
+            margin: EdgeInsets.all(screenWidth * 0.02), // Responsive margin
             child: ListTile(
-              title: Text(attendanceRecords[index].id.toString()),
+              contentPadding: EdgeInsets.all(screenWidth * 0.03), // Responsive padding
+              title: Text(attendanceRecords[index].id.toString(),
+                style: TextStyle(fontSize: screenWidth * 0.045),
+              ),
               subtitle: Text(attendanceRecords[index].date),
               trailing: Text(attendanceRecords[index].amdIn),
             ),
@@ -1199,15 +1239,20 @@ class LeaveRequestsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Leave Requests')),
       body: ListView.builder(
         itemCount: leaveRequests.length,
         itemBuilder: (context, index) {
           return Card(
-            margin: const EdgeInsets.all(8.0),
+            margin: EdgeInsets.all(screenWidth * 0.02), // Responsive margin
             child: ListTile(
-              title: Text(leaveRequests[index].id.toString()),
+              contentPadding: EdgeInsets.all(screenWidth * 0.03), // Responsive padding
+              title: Text(leaveRequests[index].id.toString(),
+                style: TextStyle(fontSize: screenWidth * 0.045),
+              ),
               subtitle: Text(leaveRequests[index].leaveType),
               trailing: Text(leaveRequests[index].reason),
             ),
@@ -1233,15 +1278,20 @@ class CoverUpRequestTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Cover-Up Requests')),
       body: ListView.builder(
         itemCount: coverUpDetails.length,
         itemBuilder: (context, index) {
           return Card(
-            margin: const EdgeInsets.all(8.0),
+            margin: EdgeInsets.all(screenWidth * 0.02), // Responsive margin
             child: ListTile(
-              title: Text(coverUpDetails[index].id.toString()),
+              contentPadding: EdgeInsets.all(screenWidth * 0.03), // Responsive padding
+              title: Text(coverUpDetails[index].id.toString(),
+                style: TextStyle(fontSize: screenWidth * 0.045),
+              ),
               subtitle: Text(coverUpDetails[index].date),
               trailing: Text(coverUpDetails[index].leaveType),
             ),
@@ -1251,3 +1301,4 @@ class CoverUpRequestTab extends StatelessWidget {
     );
   }
 }
+
