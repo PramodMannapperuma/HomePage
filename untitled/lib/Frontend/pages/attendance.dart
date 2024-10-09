@@ -675,7 +675,7 @@ class _AttendanceState extends State<Attendance> {
               if (_showTooltip)
                 Positioned(
                   top: 0,
-                  left: 210,
+                  left: 185,
                   child: Stack(
                     alignment: Alignment.topLeft,
                     children: [
