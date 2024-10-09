@@ -943,10 +943,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       context: context,
       builder: (BuildContext context) {
         final mediaQuery = MediaQuery.of(context);
-        final screenHeight = mediaQuery.size.height;
         final screenWidth = mediaQuery.size.width;
-        final dialogWidth = screenWidth * 0.85;
-        final dialogHeight = screenHeight * 0.5; // 50% of screen height
 
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -954,72 +951,81 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           elevation: 16,
           child: Container(
-            width: dialogWidth,
-            height: dialogHeight,
+            constraints: BoxConstraints(
+              maxWidth: screenWidth * 0.9, // Maximum width 90% of screen width
+            ),
             padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Employee Birthdays 🎉',
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.05, // Responsive font size
-                        fontWeight: FontWeight.bold,
+            child: IntrinsicHeight(
+              // Adjusts height based on content
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Employee Birthdays 🎉',
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.05, // Responsive font size
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-                Divider(),
-                Expanded(
-                  child: ListView(
-                    children: birthdayList.map((birthday) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          radius: screenWidth * 0.08, // Responsive avatar size
-                          backgroundImage:
-                              AssetImage('assets/images/profile.png'),
-                        ),
-                        title: Text(
-                          birthday['name']!,
-                          style: TextStyle(
-                              fontSize:
-                                  screenWidth * 0.045), // Responsive text size
-                        ),
-                        subtitle: Text(
-                          'Birthday: ${birthday['birthday']}',
-                          style: TextStyle(
-                              fontSize: screenWidth *
-                                  0.035), // Responsive subtitle size
-                        ),
-                        onTap: () {
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
                           Navigator.of(context).pop();
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => Celebrations(),
-                            ),
-                          );
                         },
-                      );
-                    }).toList(),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  Divider(),
+                  // Use a ListView if there are many birthdays, otherwise Wrap in Column
+                  birthdayList.isNotEmpty
+                      ? Column(
+                          children: birthdayList.map((birthday) {
+                            return ListTile(
+                              leading: CircleAvatar(
+                                radius: screenWidth *
+                                    0.08, // Responsive avatar size
+                                backgroundImage:
+                                    AssetImage('assets/images/profile.png'),
+                              ),
+                              title: Text(
+                                birthday['name']!,
+                                style: TextStyle(
+                                    fontSize: screenWidth *
+                                        0.045), // Responsive text size
+                              ),
+                              subtitle: Text(
+                                'Birthday: ${birthday['birthday']}',
+                                style: TextStyle(
+                                    fontSize: screenWidth *
+                                        0.035), // Responsive subtitle size
+                              ),
+                              onTap: () {
+                                Navigator.of(context).pop(); // Close dialog
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => Celebrations(),
+                                  ),
+                                );
+                              },
+                            );
+                          }).toList(),
+                        )
+                      : Center(
+                          child: Text('No birthdays found'),
+                        ),
+                ],
+              ),
             ),
           ),
         );
       },
     );
   }
+
   // void _showBirthdayPopup(List<Map<String, String>> birthdayList) {
   //   showDialog(
   //     context: context,
