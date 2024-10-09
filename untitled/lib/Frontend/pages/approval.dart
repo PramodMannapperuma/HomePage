@@ -999,7 +999,6 @@ import '../app_bar.dart';
 import '../styles/sidebar.dart';
 
 
-// Main ApprovalPendings page
 class ApprovalPendings extends StatefulWidget {
   final String token;
 
