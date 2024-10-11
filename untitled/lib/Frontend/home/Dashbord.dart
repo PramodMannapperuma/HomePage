@@ -924,7 +924,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
 // Show birthday popup if there are birthdays in the current month
-  void _showBirthdayPopupIfNeeded() {
+//   void _showBirthdayPopupIfNeeded() {
+//     final currentMonth = DateFormat('MMMM').format(DateTime.now());
+//
+//     final filteredBirthdays = birthdays.where((birthday) {
+//       final birthdayMonth = birthday['birthday']!.split(' ')[0];
+//       return birthdayMonth == currentMonth;
+//     }).toList();
+//
+//     if (filteredBirthdays.isNotEmpty) {
+//       _showBirthdayPopup(filteredBirthdays);
+//     }
+//   }
+
+  // Show birthday popup if there are birthdays in the current month
+  Future<void> _showBirthdayPopupIfNeeded() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isPopupShown = prefs.getBool('birthdayPopupShown') ?? false;
+
+    if (isPopupShown) return;  // If popup was already shown, return early
+
     final currentMonth = DateFormat('MMMM').format(DateTime.now());
 
     final filteredBirthdays = birthdays.where((birthday) {
@@ -934,6 +953,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if (filteredBirthdays.isNotEmpty) {
       _showBirthdayPopup(filteredBirthdays);
+      await prefs.setBool('birthdayPopupShown', true);  // Mark the popup as shown
     }
   }
 
