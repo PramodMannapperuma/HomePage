@@ -978,6 +978,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       newsNotificationCount = newNotifications;
     });
   }
+  
 
 
   Future<void> clearSpecificKey() async {
