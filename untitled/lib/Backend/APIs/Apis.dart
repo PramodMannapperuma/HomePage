@@ -236,6 +236,25 @@ class ApiService {
     }
   }
 
+  static Future<Uint8List> fetchEmployeeProfilePicture(String token, String employeeId) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/employee/profile-picture/$employeeId'),  // Fix: added employeeId
+      headers: {
+        'Authorization': 'Bearer $token',  // Fix: correctly formatted token header
+      },
+    ).timeout(Duration(seconds: 60));
+
+    print('token: $token');
+
+    _logResponse(response);
+
+    if (response.statusCode == 200) {
+      return response.bodyBytes;  // Returns image data in bytes (Uint8List)
+    } else {
+      throw Exception('Failed to load profile picture. Status code: ${response.statusCode}');
+    }
+  }
+
   Future<List<LeaveType>> fetchLeaveTypes(String token) async {
     // Replace with your API endpoint
     final response = await http.get(
@@ -374,7 +393,7 @@ class ApiService {
   }
 
   // Fetch leave requests for a specific employee
-  Future<List<LeaveApproval>> fetchLeaveRequests(
+  static Future<List<LeaveApproval>> fetchLeaveRequests(
       String employeeId, String token) async {
     final response = await http
         .get(
@@ -395,7 +414,7 @@ class ApiService {
   }
 
   // Fetch attendance records for a specific employee
-  Future<List<AttApproval>> fetchAttendanceRecords(
+  static Future<List<AttApproval>> fetchAttendanceRecords(
       String employeeId, String token) async {
     final response = await http
         .get(

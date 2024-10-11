@@ -218,6 +218,8 @@ import 'package:flutter/services.dart';
 import 'package:untitled/Backend/APIs/Apis.dart';
 import 'package:untitled/Backend/models/team_member_model.dart';
 import 'dart:typed_data';
+import 'dart:convert';  // Added to decode JSON data
+import 'package:http/http.dart' as http;  // Added for http requests
 import '../styles/app_colors.dart';
 import '../styles/sidebar.dart';
 import '../app_bar.dart';
@@ -237,7 +239,8 @@ class EmployeeScreen extends StatefulWidget {
 class _EmployeeScreenState extends State<EmployeeScreen> {
   late Future<List<TeamMember>> _teamMembersFuture;
   TeamMember? _supervisor;
-  Uint8List? _profilePicture;
+  Uint8List? _supervisorProfilePicture;
+  Map<String, Uint8List?> _profilePictures = {};
 
   @override
   void initState() {
@@ -246,29 +249,42 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   }
 
   Future<List<TeamMember>> _fetchTeamMembers() async {
-    List<TeamMember> teamMembers =
-        await ApiService.fetchTeamMembers(widget.token);
+    List<TeamMember> teamMembers = await ApiService.fetchTeamMembers(widget.token);
 
     // Assuming the supervisor has a specific ID or flag in your data.
     _supervisor = teamMembers.firstWhere(
-      (member) => member.supervisor == 0, // Assuming 0 indicates the supervisor
+          (member) => member.supervisor == 0, // Assuming 0 indicates the supervisor
       orElse: () => teamMembers.first,
     );
 
     teamMembers.remove(_supervisor);
 
     // Fetch the profile picture for the supervisor
-    _profilePicture = await _fetchProfilePicture();
+    _supervisorProfilePicture = await _fetchSupervisorProfilePicture();
+
+    // Fetch the profile pictures for the team members
+    for (var member in teamMembers) {
+      _profilePictures[member.id.toString()] =
+      await _fetchEmployeeProfilePicture(member.id.toString());
+    }
 
     return teamMembers;
   }
 
-  Future<Uint8List?> _fetchProfilePicture() async {
+  Future<Uint8List?> _fetchSupervisorProfilePicture() async {
     try {
       return await ApiService.fetchProfilePicture(widget.token);
     } catch (e) {
-      // If fetching fails, return null so that the default image will be used
-      print('Failed to load profile picture: $e');
+      print('Failed to load supervisor profile picture: $e');
+      return null;
+    }
+  }
+
+  Future<Uint8List?> _fetchEmployeeProfilePicture(String employeeId) async {
+    try {
+      return await ApiService.fetchEmployeeProfilePicture(widget.token, employeeId);
+    } catch (e) {
+      print('Failed to load employee profile picture for employee $employeeId: $e');
       return null;
     }
   }
@@ -276,86 +292,85 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
     final bool isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       appBar: widget.isFromSidebar
           ? customAppBar(
-              title: 'My Team',
-              showActions: true,
-              showLeading: true,
-              context: context,
-              showBackButton: true,
-            )
+        title: 'My Team',
+        showActions: true,
+        showLeading: true,
+        context: context,
+        showBackButton: true,
+      )
           : AppBar(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/hrislogo2.png',
-                    height: isPortrait ? 40.0 : 30.0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/hrislogo2.png',
+              height: isPortrait ? 40.0 : 30.0,
+            ),
+            SizedBox(width: 8.0),
+          ],
+        ),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(35.0),
+          child: Column(
+            children: [
+              Padding(
+                padding:
+                EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                child: Text(
+                  "My Team",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  SizedBox(width: 8.0),
-                ],
-              ),
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(35.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                      child: Text(
-                        "My Team",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      color: Colors.black,
-                      thickness: 0.2,
-                    ),
-                  ],
                 ),
               ),
-              centerTitle: true,
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
+              Divider(
+                color: Colors.black,
+                thickness: 0.2,
               ),
-              leading: Builder(
-                builder: (BuildContext context) {
-                  return Padding(
-                    padding: EdgeInsets.all(screenWidth * 0.02),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.menu_outlined,
-                        color: AppColors.background,
-                      ),
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                    ),
-                  );
+            ],
+          ),
+        ),
+        centerTitle: true,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return Padding(
+              padding: EdgeInsets.all(screenWidth * 0.02),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.menu_outlined,
+                  color: AppColors.background,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
                 },
               ),
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.person,
-                    color: AppColors.background,
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/profile',
-                        arguments: widget.token);
-                  },
-                ),
-              ],
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.person,
+              color: AppColors.background,
             ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile',
+                  arguments: widget.token);
+            },
+          ),
+        ],
+      ),
       drawer: CustomSidebar(token: widget.token),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -372,21 +387,19 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               final teamMembers = snapshot.data!;
               return Column(
                 children: [
-                  // Supervisor in the first row
                   if (_supervisor != null)
                     Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _buildMemberCard(_supervisor!, _profilePicture,
-                                isSupervisor: true),
+                            _buildMemberCard(_supervisor!,
+                                _supervisorProfilePicture, isSupervisor: true),
                           ],
                         ),
                         SizedBox(height: 20),
                       ],
                     ),
-                  // Employees Grid Section with 2 members per row
                   Expanded(
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -399,7 +412,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       itemCount: teamMembers.length,
                       itemBuilder: (context, index) {
                         final member = teamMembers[index];
-                        return _buildMemberCard(member, null);
+                        return _buildMemberCard(
+                            member, _profilePictures[member.id.toString()]);
                       },
                     ),
                   ),
@@ -422,9 +436,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             CircleAvatar(
               radius: 40,
               backgroundImage: profilePicture != null
-                  ? MemoryImage(profilePicture) as ImageProvider<
-                      Object> // Corrected cast to ImageProvider<Object>
-                  : AssetImage('assets/images/profile.png'), // Default image
+                  ? MemoryImage(profilePicture) as ImageProvider<Object>?
+                  : const AssetImage('assets/images/profile.png'),
             ),
             Positioned(
               bottom: 0,
@@ -432,7 +445,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               top: 0,
               left: 0,
               child: CircularProgressIndicator(
-                value: isSupervisor ? 1.0 : 0.75, // Adjust value if available
+                value: isSupervisor ? 1.0 : 0.75,
                 backgroundColor: Colors.grey[300],
                 color: AppColors.background,
                 strokeWidth: 4,
