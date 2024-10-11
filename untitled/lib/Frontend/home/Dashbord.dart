@@ -697,6 +697,8 @@
 //   }
 // }
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -723,6 +725,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  int newsNotificationCount = 0;
   int _selectedIndex = 2; // Default to Dashboard screen
   late List<Widget> _widgetOptions;
   String? _lastLogin;
@@ -732,6 +735,9 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _saveCurrentLogin();
     _loadLastLogin();
+    Timer.periodic(Duration(seconds: 30), (Timer timer) {
+      fetchNotifications();
+    });
     print('Token in Main Screen: ${widget.token}');
     _widgetOptions = <Widget>[
       Attendance(token: widget.token),
@@ -740,6 +746,21 @@ class _MainScreenState extends State<MainScreen> {
       DashMainScreen(token: widget.token),
       EmployeeScreen(token: widget.token),
     ];
+  }
+
+  Future<void> fetchNotifications() async {
+    // Replace this with your API call logic
+    // Here, we'll simulate getting a count of new notifications.
+    final newNotifications = await getNewNotificationCount(widget.token);
+    setState(() {
+      newsNotificationCount = newNotifications;
+    });
+  }
+
+  Future<int> getNewNotificationCount(String token) async {
+    // Make your API call here to get the notification count
+    // For now, return a simulated notification count (e.g., 3).
+    return 3; // This should come from your API.
   }
 
   Future<void> _saveCurrentLogin() async {
@@ -870,6 +891,8 @@ class _FadeInTextState extends State<FadeInText>
     _opacityAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(_controller!);
     _controller!.forward();
+
+
   }
 
   @override
@@ -908,6 +931,8 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  int newsNotificationCount = 0;
+
   final List<Map<String, String>> birthdays = [
     {'name': 'Mark', 'birthday': 'August 3'},
     {'name': 'Sophia', 'birthday': 'September 12'},
@@ -918,6 +943,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
+
+    Timer.periodic(Duration(seconds: 300), (Timer timer) {
+      fetchNotifications();
+    });
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showBirthdayPopupIfNeeded();
     });
@@ -938,11 +968,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
 //   }
 
   // Show birthday popup if there are birthdays in the current month
+
+
+  Future<void> fetchNotifications() async {
+    // Replace this with your API call logic
+    // Here, we'll simulate getting a count of new notifications.
+    final newNotifications = await getNewNotificationCount(widget.token);
+    setState(() {
+      newsNotificationCount = newNotifications;
+    });
+  }
+
+
+  Future<void> clearSpecificKey() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('tooltipShown');  // Remove the 'tooltipShown' key
+    await prefs.remove('birthdayPopupShown');
+    print("ClearsPECIFICKEYPRESSED");
+  }
+
+  Future<int> getNewNotificationCount(String token) async {
+    // Make your API call here to get the notification count
+    // For now, return a simulated notification count (e.g., 3).
+    return 3; // This should come from your API.
+  }
+
   Future<void> _showBirthdayPopupIfNeeded() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isPopupShown = prefs.getBool('birthdayPopupShown') ?? false;
 
-    if (isPopupShown) return;  // If popup was already shown, return early
+    if (isPopupShown) return; // If popup was already shown, return early
 
     final currentMonth = DateFormat('MMMM').format(DateTime.now());
 
@@ -953,7 +1008,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if (filteredBirthdays.isNotEmpty) {
       _showBirthdayPopup(filteredBirthdays);
-      await prefs.setBool('birthdayPopupShown', true);  // Mark the popup as shown
+      await prefs.setBool(
+          'birthdayPopupShown', true); // Mark the popup as shown
     }
   }
 
@@ -1164,8 +1220,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   color: AppColors.background,
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/coverupRequest',
-                      arguments: widget.token);
+                  clearSpecificKey();
                 },
               ),
               IconButton(
@@ -1319,6 +1374,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         icon: Icons.file_copy_outlined,
                         route: '/approval',
                         token: widget.token,
+                        notificationCount: newsNotificationCount,
                       ),
                       CategoryCard(
                         title: 'My Team',
@@ -1413,40 +1469,90 @@ class CategoryCard extends StatelessWidget {
   final IconData icon;
   final String route;
   final String token;
+  final int notificationCount; // For showing the number of notifications
 
   const CategoryCard({
     required this.title,
     required this.icon,
     required this.route,
     required this.token,
+    this.notificationCount = 0, // Default is no notifications
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 10,
-      width: 10,
-      child: Card(
-        child: InkWell(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              route,
-              arguments: token,
-            );
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 25, color: AppColors.background),
-              SizedBox(height: 10),
-              Text(title, style: TextStyle(fontSize: 14)),
-            ],
+    // return SizedBox(
+    //   height: 10,
+    //   width: 10,
+    //   child: Card(
+    //     child: InkWell(
+    //       onTap: () {
+    //         Navigator.pushNamed(
+    //           context,
+    //           route,
+    //           arguments: token,
+    //         );
+    //       },
+    //       child: Column(
+    //         mainAxisAlignment: MainAxisAlignment.center,
+    //         children: [
+    //           Icon(icon, size: 25, color: AppColors.background),
+    //           SizedBox(height: 10),
+    //           Text(title, style: TextStyle(fontSize: 14)),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // );
+    return Stack(
+      children: [
+        SizedBox(
+          height: 130,
+          width: 130,
+          child: Card(
+            child: InkWell(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  route,
+                  arguments: token,
+                );
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon, size: 25, color: AppColors.background),
+                  SizedBox(height: 10),
+                  Text(title, style: TextStyle(fontSize: 14)),
+                ],
+              ),
+            ),
           ),
         ),
-      ),
+        if (notificationCount > 0)
+          Positioned(
+            top: 2,
+            right: 2,
+            child: Container(
+              padding: EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              child: Text(
+                '$notificationCount',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
+
 }
 
 class RecentLeaveRequestCard extends StatelessWidget {
