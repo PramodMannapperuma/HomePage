@@ -133,6 +133,7 @@ class _AttendanceState extends State<Attendance> {
   void _hideTooltipMessage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('tooltipShown', true);  // Set flag to true once shown
+    
     setState(() {
       _showTooltip = false; // Hide the message
     });
