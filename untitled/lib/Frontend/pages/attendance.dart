@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:untitled/Backend/APIs/Apis.dart';
 import '../../Backend/models/att_model.dart';
@@ -46,7 +47,7 @@ class _AttendanceState extends State<Attendance> {
   DateTime? _selectedDay;
   DateTime today = DateTime.now();
   final Map<DateTime, String> _attendanceStatus = {};
-  bool _showTooltip = true; // For controlling the initial display of the message
+  bool _showTooltip = false; // For controlling the initial display of the message
 
   TextEditingController _startTimeController = TextEditingController();
   TextEditingController _leaveTimeController = TextEditingController();
@@ -59,6 +60,7 @@ class _AttendanceState extends State<Attendance> {
   @override
   void initState() {
     super.initState();
+    _checkTooltipShown();
 
     // Initialize the futureLeaveData with an empty Future to prevent LateInitializationError
     futureAttendanceData = _loadMonthlyAttendanceData(_focusedDay);
@@ -67,6 +69,17 @@ class _AttendanceState extends State<Attendance> {
 
     // Fetch leave data for the current month on init
     _selectedEvents = ValueNotifier([]);
+  }
+
+  Future<void> _checkTooltipShown() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool tooltipShown = prefs.getBool('tooltipShown') ?? false;
+
+    if (!tooltipShown) {
+      setState(() {
+        _showTooltip = true;  // Show the tooltip if it hasn't been shown before
+      });
+    }
   }
 
   Future<List<AttendanceData>> _loadMonthlyAttendanceData(
@@ -117,7 +130,10 @@ class _AttendanceState extends State<Attendance> {
 
 
   // Function to hide the tooltip
-  void _hideTooltipMessage() {
+  void _hideTooltipMessage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('tooltipShown', true);  // Set flag to true once shown
+    
     setState(() {
       _showTooltip = false; // Hide the message
     });
@@ -709,12 +725,14 @@ class _AttendanceState extends State<Attendance> {
                         ),
                       ),
                       Positioned(
-                        top: -11,
-                        right: 0,
+                        top: 2,
+                        right: 2,
                         child: CircleAvatar(
-                          radius: 15,
+                          radius: 10,
+                          backgroundColor: Colors.grey[500],
                           child: IconButton(
-                            icon: Icon(Icons.close, size: 18, color: Colors.black),
+                            padding: EdgeInsets.zero,
+                            icon: Icon(Icons.close, size: 14, color: Colors.black,),
                             onPressed: () {
                               _hideTooltipMessage();
                             },
