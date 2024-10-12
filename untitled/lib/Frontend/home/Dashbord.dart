@@ -944,7 +944,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
 
-    Timer.periodic(Duration(seconds: 300), (Timer timer) {
+    Timer.periodic(Duration(seconds: 600), (Timer timer) {
       fetchNotifications();
     });
 
@@ -978,7 +978,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       newsNotificationCount = newNotifications;
     });
   }
-  
+
 
 
   Future<void> clearSpecificKey() async {
