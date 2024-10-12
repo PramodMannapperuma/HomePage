@@ -944,7 +944,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
 
-    Timer.periodic(Duration(seconds: 600), (Timer timer) {
+    Timer.periodic(Duration(seconds: 60), (Timer timer) {
       fetchNotifications();
     });
 
@@ -989,8 +989,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<int> getNewNotificationCount(String token) async {
-    // Make your API call here to get the notification count
-    // For now, return a simulated notification count (e.g., 3).
+
     return 3; // This should come from your API.
   }
 
