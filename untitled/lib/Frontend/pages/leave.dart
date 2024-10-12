@@ -1153,7 +1153,7 @@ class _LeavePageState extends State<Leave> {
 
     try {
       final List<LeaveData> data =
-          await apiService.fetchLeaveData(widget.token, startOfMonth);
+      await apiService.fetchLeaveData(widget.token, startOfMonth);
       setState(() {
         _leaveStatus.clear();
         for (var attendance in data) {
@@ -1228,7 +1228,7 @@ class _LeavePageState extends State<Leave> {
   Future<void> _fetchLeaveData(DateTime selectedDate) async {
     try {
       final List<LeaveData> data =
-          await apiService.fetchLeaveData(widget.token, selectedDate);
+      await apiService.fetchLeaveData(widget.token, selectedDate);
       setState(() {
         leaveDataMap[selectedDate] = data;
         _leaveStatus.clear();
@@ -1267,20 +1267,18 @@ class _LeavePageState extends State<Leave> {
     return [];
   }
 
-  Future<void> _submitLeave(
-    BuildContext context,
-    String token,
-    String selectedDay,
-    String selectedLeaveType,
-    String selectedTypeOfDay,
-    String comment,
-    String coverUp,
-    List<String> removeDays,
-    VoidCallback refreshDataCallback,
-  ) async {
+  Future<void> _submitLeave(BuildContext context,
+      String token,
+      String selectedDay,
+      String selectedLeaveType,
+      String selectedTypeOfDay,
+      String comment,
+      String coverUp,
+      List<String> removeDays,
+      VoidCallback refreshDataCallback,) async {
     // Find the selected LeaveType object by matching the text
     final leaveType =
-        leaveTypes?.firstWhere((type) => type.text == selectedLeaveType);
+    leaveTypes?.firstWhere((type) => type.text == selectedLeaveType);
 
     if (leaveType == null) {
       // Handle error when leave type is not found
@@ -1338,7 +1336,8 @@ class _LeavePageState extends State<Leave> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Failed to submit leave: ${response.statusCode} ${responseBody}'),
+                'Failed to submit leave: ${response
+                    .statusCode} ${responseBody}'),
             duration: Duration(seconds: 2),
           ),
         );
@@ -1365,11 +1364,9 @@ class _LeavePageState extends State<Leave> {
     }
   }
 
-  Future<void> _submitLeaveRemoval(
-    String token,
-    List<String> removeDays,
-    VoidCallback refreshDataCallback,
-  ) async {
+  Future<void> _submitLeaveRemoval(String token,
+      List<String> removeDays,
+      VoidCallback refreshDataCallback,) async {
     final uri = Uri.parse('${ApiService.baseUrl}/leave');
     final request = http.MultipartRequest('POST', uri)
       ..headers['Accept'] = '*/*'
@@ -1398,7 +1395,8 @@ class _LeavePageState extends State<Leave> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Failed to remove leave: ${response.statusCode} ${responseBody}'),
+                'Failed to remove leave: ${response
+                    .statusCode} ${responseBody}'),
             duration: Duration(seconds: 2),
           ),
         );
@@ -1423,8 +1421,8 @@ class _LeavePageState extends State<Leave> {
     });
   }
 
-  Future<void> _showAddLeaveBottomSheet(
-      BuildContext context, VoidCallback refreshDataCallback) async {
+  Future<void> _showAddLeaveBottomSheet(BuildContext context,
+      VoidCallback refreshDataCallback) async {
     if (_selectedDay != null && _selectedDay!.isBefore(today)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1442,11 +1440,20 @@ class _LeavePageState extends State<Leave> {
           builder: (BuildContext context, StateSetter setState) {
             return Padding(
               padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
+                  bottom: MediaQuery
+                      .of(context)
+                      .viewInsets
+                      .bottom),
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.05,
-                  vertical: MediaQuery.of(context).size.height * 0.02,
+                  horizontal: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.05,
+                  vertical: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.02,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -1464,31 +1471,31 @@ class _LeavePageState extends State<Leave> {
                     isLoading
                         ? CircularProgressIndicator()
                         : DropdownButtonFormField<String>(
-                            value: _selectedLeaveType,
-                            decoration: InputDecoration(
-                              labelText: "Leave Type",
-                            ),
-                            items: leaveTypes?.map((LeaveType leaveType) {
-                                  return DropdownMenuItem<String>(
-                                    value: leaveType.text,
-                                    child: Text(leaveType.text),
-                                  );
-                                }).toList() ??
-                                [],
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _selectedLeaveType = newValue;
-                                if (newValue != "Medical") {
-                                  _attachmentPath = null;
-                                }
-                              });
-                            },
-                          ),
+                      value: _selectedLeaveType,
+                      decoration: InputDecoration(
+                        labelText: "Leave Type",
+                      ),
+                      items: leaveTypes?.map((LeaveType leaveType) {
+                        return DropdownMenuItem<String>(
+                          value: leaveType.text,
+                          child: Text(leaveType.text),
+                        );
+                      }).toList() ??
+                          [],
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedLeaveType = newValue;
+                          if (newValue != "Medical") {
+                            _attachmentPath = null;
+                          }
+                        });
+                      },
+                    ),
                     if (_selectedLeaveType != null && leaveTypes != null) ...[
                       if (leaveTypes!
-                              .firstWhere(
-                                  (type) => type.text == _selectedLeaveType)
-                              .additionalData['coverup'] ==
+                          .firstWhere(
+                              (type) => type.text == _selectedLeaveType)
+                          .additionalData['coverup'] ==
                           'yes')
                         DropdownButtonFormField<String>(
                           value: _selectedCoverUp,
@@ -1496,11 +1503,11 @@ class _LeavePageState extends State<Leave> {
                             labelText: "Cover up",
                           ),
                           items: coverUps?.map((CoverUp coverUp) {
-                                return DropdownMenuItem<String>(
-                                  value: coverUp.id,
-                                  child: Text(coverUp.name),
-                                );
-                              }).toList() ??
+                            return DropdownMenuItem<String>(
+                              value: coverUp.id,
+                              child: Text(coverUp.name),
+                            );
+                          }).toList() ??
                               [],
                           onChanged: (String? newValue) {
                             setState(() {
@@ -1509,9 +1516,9 @@ class _LeavePageState extends State<Leave> {
                           },
                         ),
                       if (leaveTypes!
-                              .firstWhere(
-                                  (type) => type.text == _selectedLeaveType)
-                              .additionalData['attachment'] ==
+                          .firstWhere(
+                              (type) => type.text == _selectedLeaveType)
+                          .additionalData['attachment'] ==
                           'yes')
                         Column(
                           children: [
@@ -1525,11 +1532,12 @@ class _LeavePageState extends State<Leave> {
                                 ),
                               ),
                               controller:
-                                  TextEditingController(text: _attachmentPath),
+                              TextEditingController(text: _attachmentPath),
                             ),
                             if (_attachmentPath != null)
                               Text(
-                                  "Selected file: ${_attachmentPath!.split('/').last}"),
+                                  "Selected file: ${_attachmentPath!.split('/')
+                                      .last}"),
                           ],
                         ),
                     ],
@@ -1584,7 +1592,7 @@ class _LeavePageState extends State<Leave> {
                           ),
                           onPressed: () async {
                             String formattedDate =
-                                DateFormat('yyyy-MM-dd').format(_selectedDay!);
+                            DateFormat('yyyy-MM-dd').format(_selectedDay!);
                             if (_selectedLeaveType != null &&
                                 _selectedTimeOfDay != null &&
                                 _commentController.text.isNotEmpty &&
@@ -1693,466 +1701,480 @@ class _LeavePageState extends State<Leave> {
     return statusColorMap[status] ?? Colors.grey;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final bool isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    @override
+    Widget build(BuildContext context) {
+      final double screenWidth = MediaQuery
+          .of(context)
+          .size
+          .width;
+      final double screenHeight = MediaQuery
+          .of(context)
+          .size
+          .height;
+      final bool isPortrait =
+          MediaQuery
+              .of(context)
+              .orientation == Orientation.portrait;
 
-    void _refreshData() {
-      setState(() {
-        futureLeaveData = apiService.fetchLeaveData(widget.token, _focusedDay);
-        _loadMonthlyLeaveData(_focusedDay); // Refresh the data
-      });
-    }
+      void _refreshData() {
+        setState(() {
+          futureLeaveData =
+              apiService.fetchLeaveData(widget.token, _focusedDay);
+          _loadMonthlyLeaveData(_focusedDay); // Refresh the data
+        });
+      }
 
-    return Scaffold(
-      appBar: widget.isFromSidebar
-          ? customAppBar(
-              title: 'Leave',
-              showActions: true,
-              showLeading: true,
-              context: context,
-              showBackButton: true,
-              showInfoIcon: true,
-            )
-          : AppBar(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/hrislogo2.png',
-                    height: isPortrait ? 40.0 : 30.0,
+      return Scaffold(
+        appBar: widget.isFromSidebar
+            ? customAppBar(
+          title: 'Leave',
+          showActions: true,
+          showLeading: true,
+          context: context,
+          showBackButton: true,
+          showInfoIcon: true,
+        )
+            : AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/hrislogo2.png',
+                height: isPortrait ? 40.0 : 30.0,
+              ),
+              SizedBox(width: 8.0),
+            ],
+          ),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(35.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                  child: Text(
+                    "Leave",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  SizedBox(width: 8.0),
-                ],
-              ),
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(35.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                      child: Text(
-                        "Leave",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      color: Colors.black,
-                      thickness: 0.2,
-                    ),
-                  ],
                 ),
-              ),
-              centerTitle: true,
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
-              ),
-              leading: Builder(
-                builder: (BuildContext context) {
-                  return Padding(
-                    padding: EdgeInsets.all(screenWidth * 0.02),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.menu_outlined,
-                        color: AppColors.background,
-                      ),
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                    ),
-                  );
-                },
-              ),
-              actions: [
-                IconButton(
+                Divider(
+                  color: Colors.black,
+                  thickness: 0.2,
+                ),
+              ],
+            ),
+          ),
+          centerTitle: true,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+          ),
+          leading: Builder(
+            builder: (BuildContext context) {
+              return Padding(
+                padding: EdgeInsets.all(screenWidth * 0.02),
+                child: IconButton(
                   icon: const Icon(
-                    Icons.person,
+                    Icons.menu_outlined,
                     color: AppColors.background,
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/profile',
-                        arguments: widget.token);
+                    Scaffold.of(context).openDrawer();
                   },
                 ),
-                IconButton(
-                  icon: Icon(Icons.info_outline),
-                  color: Color(0xff4d2880),
-                  onPressed: () {
-                    _hideTooltipMessage();
-                    _showAttendanceAmendmentInfo(context);
-                  },
-                ),
-              ],
-            ),
-      drawer: CustomSidebar(token: widget.token),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xff4d2880),
-        onPressed: () {
-          _showAddLeaveBottomSheet(context, _refreshData);
-        },
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Tooltip message display before the calendar
-            if (_showTooltip)
-              Positioned(
-                top: 0,
-                left: 185,
-                child: Stack(
-                  alignment: Alignment.topLeft,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        color: Colors.purple[100],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Click ',
-                            style: TextStyle(fontSize: 14, color: Colors.black),
-                          ),
-                          Icon(Icons.info_outline,
-                              size: 20, color: Colors.black),
-                          Text(
-                            ' for instructions',
-                            style: TextStyle(fontSize: 14, color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Positioned(
-                      top: 2,
-                      right: 2,
-                      child: CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.grey[500],
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          icon:
-                              Icon(Icons.close, size: 14, color: Colors.black),
-                          onPressed: () {
-                            _hideTooltipMessage();
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              );
+            },
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.person,
+                color: AppColors.background,
               ),
-
-            // TableCalendar widget
-            Container(
-              child: TableCalendar(
-                rowHeight: 40,
-                headerStyle: HeaderStyle(
-                  titleCentered: true,
-                  formatButtonVisible: true,
-                  formatButtonShowsNext: false,
-                  formatButtonDecoration: BoxDecoration(
-                    color: Color(0xff4d2880),
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  formatButtonTextStyle: TextStyle(
-                    color: Colors.white,
-                  ),
-                  titleTextStyle: TextStyle(
-                    fontSize: screenWidth * 0.05,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff4d2880),
-                  ),
-                  leftChevronIcon: Icon(
-                    Icons.chevron_left,
-                    color: Color(0xff4d2880),
-                  ),
-                  rightChevronIcon: Icon(
-                    Icons.chevron_right,
-                    color: Color(0xff4d2880),
-                  ),
-                ),
-                focusedDay: _focusedDay,
-                startingDayOfWeek: StartingDayOfWeek.monday,
-                onDaySelected: _onDaySelected,
-                availableGestures: AvailableGestures.all,
-                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                firstDay: DateTime.utc(2023, 01, 01),
-                lastDay: DateTime.utc(3030, 12, 31),
-                calendarFormat: _calendarFormat,
-                eventLoader: _getEventsForDay,
-                calendarBuilders: CalendarBuilders(
-                  defaultBuilder: (context, day, focusedDay) {
-                    final status =
-                        _leaveStatus[DateTime(day.year, day.month, day.day)];
-                    final color = _getStatusColor(status);
-
-                    return Container(
-                      margin: const EdgeInsets.all(6.0),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: color,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        '${day.day}',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    );
-                  },
-                  markerBuilder: (context, day, events) {
-                    final status = _leaveStatus[day];
-                    if (status != null) {
-                      Color statusColor;
-                      switch (status) {
-                        case 'accepted':
-                          statusColor = Colors.green;
-                          break;
-                        case 'rejected':
-                          statusColor = Colors.red;
-                          break;
-                        case 'pending':
-                        default:
-                          statusColor = Colors.orange;
-                      }
-                      return Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: statusColor,
-                        ),
-                      );
-                    }
-                    return null;
-                  },
-                ),
-                onFormatChanged: (format) {
-                  if (_calendarFormat != format) {
-                    setState(() {
-                      _calendarFormat = format;
-                    });
-                  }
-                },
-                onPageChanged: (focusedDay) {
-                  _focusedDay = focusedDay;
-                  futureLeaveData = _loadMonthlyLeaveData(focusedDay);
-                },
-              ),
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile',
+                    arguments: widget.token);
+              },
             ),
-            SizedBox(height: 10.0),
-            Divider(thickness: 1),
-            SizedBox(height: 8.0),
-            Column(
-              children: [
-                FutureBuilder<List<LeaveData>>(
-                  future: futureLeaveData,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text('No leave data available.'));
-                    } else {
-                      final data = snapshot.data!;
-                      final selectedDateData = data.firstWhere(
-                        (element) =>
-                            element.date ==
-                            _selectedDay?.toString().split(" ")[0],
-                        orElse: () => LeaveData(
-                          amdIn: 'N/A',
-                          recIn: 'N/A',
-                          amdOut: 'N/A',
-                          comment: 'N/A',
-                          recOut: 'N/A',
-                          date: _selectedDay?.toString().split(" ")[0] ?? 'N/A',
-                          status: 'N/A',
-                        ),
-                      );
-                      return Padding(
-                        padding: EdgeInsets.all(screenWidth * 0.02),
-                        child: Card(
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(screenWidth * 0.03),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Date: ${selectedDateData.date}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: screenWidth * 0.044,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Status: ${selectedDateData.status ?? 'N/A'}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: screenWidth * 0.044,
-                                        color: _getStatusColor(
-                                            selectedDateData.status),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Divider(thickness: 1),
-                                Text(
-                                  'Comment: ${selectedDateData.comment ?? 'N/A'}',
-                                  style:
-                                      TextStyle(fontSize: screenWidth * 0.04),
-                                ),
-                                if (selectedDateData.status == 'leave')
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                      iconSize: 35.0,
-                                      onPressed: () {
-                                        String date = DateFormat('yyyy-MM-dd')
-                                            .format(_selectedDay!);
-                                        _submitLeaveRemoval(
-                                            widget.token, [date], _refreshData);
-                                      },
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.all(screenWidth * 0.02),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            isLoading
-                                ? Center(child: CircularProgressIndicator())
-                                : leaveBalanceData != null &&
-                                        leaveBalanceData!.isNotEmpty
-                                    ? Card(
-                                        elevation: 4,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(
-                                              screenWidth * 0.02),
-                                          child:
-                                              Center(child: _buildLeaveTable()),
-                                        ),
-                                      )
-                                    : Center(
-                                        child: Text(
-                                          'No leave balance data available.',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            IconButton(
+              icon: Icon(Icons.info_outline),
+              color: Color(0xff4d2880),
+              onPressed: () {
+                _hideTooltipMessage();
+                _showAttendanceAmendmentInfo(context);
+              },
             ),
           ],
         ),
-      ),
-    );
-  }
+        drawer: CustomSidebar(token: widget.token),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Color(0xff4d2880),
+          onPressed: () {
+            _showAddLeaveBottomSheet(context, _refreshData);
+          },
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              // TableCalendar with tooltip positioned on top-right
+              Container(
+                child: Stack(
+                  children: [
+                    TableCalendar(
+                      rowHeight: 40,
+                      headerStyle: HeaderStyle(
+                        titleCentered: true,
+                        formatButtonVisible: true,
+                        formatButtonShowsNext: false,
+                        formatButtonDecoration: BoxDecoration(
+                          color: Color(0xff4d2880),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        formatButtonTextStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                        titleTextStyle: TextStyle(
+                          fontSize: screenWidth * 0.05,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff4d2880),
+                        ),
+                        leftChevronIcon: Icon(
+                          Icons.chevron_left,
+                          color: Color(0xff4d2880),
+                        ),
+                        rightChevronIcon: Icon(
+                          Icons.chevron_right,
+                          color: Color(0xff4d2880),
+                        ),
+                      ),
+                      focusedDay: _focusedDay,
+                      startingDayOfWeek: StartingDayOfWeek.monday,
+                      onDaySelected: _onDaySelected,
+                      availableGestures: AvailableGestures.all,
+                      selectedDayPredicate: (day) =>
+                          isSameDay(_selectedDay, day),
+                      firstDay: DateTime.utc(2023, 01, 01),
+                      lastDay: DateTime.utc(3030, 12, 31),
+                      calendarFormat: _calendarFormat,
+                      eventLoader: _getEventsForDay,
+                      calendarBuilders: CalendarBuilders(
+                        defaultBuilder: (context, day, focusedDay) {
+                          final status = _leaveStatus[DateTime(
+                              day.year, day.month, day.day)];
+                          final color = _getStatusColor(status);
 
-  Widget _buildLeaveTable() {
-    return DataTable(
-      columnSpacing: 12,
-      headingRowHeight: 35,
-      columns: [
-        DataColumn(
-          label: Text(
-            'Leave',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          return Container(
+                            margin: const EdgeInsets.all(6.0),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: color,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              '${day.day}',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
+                        markerBuilder: (context, day, events) {
+                          final status = _leaveStatus[day];
+                          if (status != null) {
+                            Color statusColor;
+                            switch (status) {
+                              case 'accepted':
+                                statusColor = Colors.green;
+                                break;
+                              case 'rejected':
+                                statusColor = Colors.red;
+                                break;
+                              case 'pending':
+                              default:
+                                statusColor = Colors.orange;
+                            }
+                            return Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: statusColor,
+                              ),
+                            );
+                          }
+                          return null;
+                        },
+                      ),
+                      onFormatChanged: (format) {
+                        if (_calendarFormat != format) {
+                          setState(() {
+                            _calendarFormat = format;
+                          });
+                        }
+                      },
+                      onPageChanged: (focusedDay) {
+                        _focusedDay = focusedDay;
+                        futureLeaveData = _loadMonthlyLeaveData(focusedDay);
+                      },
+                    ),
+
+                    // Tooltip positioned at the top-right of the calendar
+                    if (_showTooltip)
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: Colors.purple[100],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Click ',
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.black),
+                                  ),
+                                  Icon(Icons.info_outline, size: 20,
+                                      color: Colors.black),
+                                  Text(
+                                    ' for instructions',
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              top: 2,
+                              right: 2,
+                              child: CircleAvatar(
+                                radius: 10,
+                                backgroundColor: Colors.grey[500],
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  icon: Icon(Icons.close, size: 14,
+                                      color: Colors.black),
+                                  onPressed: () {
+                                    _hideTooltipMessage();
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 10.0),
+              Divider(thickness: 1),
+              SizedBox(height: 8.0),
+              Column(
+                children: [
+                  FutureBuilder<List<LeaveData>>(
+                    future: futureLeaveData,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(child: Text('No leave data available.'));
+                      } else {
+                        final data = snapshot.data!;
+                        final selectedDateData = data.firstWhere(
+                              (element) =>
+                          element.date ==
+                              _selectedDay?.toString().split(" ")[0],
+                          orElse: () =>
+                              LeaveData(
+                                amdIn: 'N/A',
+                                recIn: 'N/A',
+                                amdOut: 'N/A',
+                                comment: 'N/A',
+                                recOut: 'N/A',
+                                date: _selectedDay?.toString().split(" ")[0] ??
+                                    'N/A',
+                                status: 'N/A',
+                              ),
+                        );
+                        return Padding(
+                          padding: EdgeInsets.all(screenWidth * 0.02),
+                          child: Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(screenWidth * 0.03),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Date: ${selectedDateData.date}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: screenWidth * 0.044,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Status: ${selectedDateData.status ??
+                                            'N/A'}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: screenWidth * 0.044,
+                                          color: _getStatusColor(
+                                              selectedDateData.status),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(thickness: 1),
+                                  Text(
+                                    'Comment: ${selectedDateData.comment ??
+                                        'N/A'}',
+                                    style: TextStyle(
+                                        fontSize: screenWidth * 0.04),
+                                  ),
+                                  if (selectedDateData.status == 'leave')
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                        iconSize: 35.0,
+                                        onPressed: () {
+                                          String date = DateFormat('yyyy-MM-dd')
+                                              .format(_selectedDay!);
+                                          _submitLeaveRemoval(
+                                              widget.token, [date],
+                                              _refreshData);
+                                        },
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SingleChildScrollView(
+                        child: Padding(
+                          padding: EdgeInsets.all(screenWidth * 0.02),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              isLoading
+                                  ? Center(child: CircularProgressIndicator())
+                                  : leaveBalanceData != null &&
+                                  leaveBalanceData!.isNotEmpty
+                                  ? Card(
+                                elevation: 4,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(screenWidth * 0.02),
+                                  child: Center(child: _buildLeaveTable()),
+                                ),
+                              )
+                                  : Center(
+                                child: Text(
+                                  'No leave balance data available.',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        DataColumn(
-          label: Text(
-            'Entitled',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+      );
+    }
+
+    Widget _buildLeaveTable() {
+      return DataTable(
+        columnSpacing: 12,
+        headingRowHeight: 35,
+        columns: [
+          DataColumn(
+            label: Text(
+              'Leave',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
           ),
-        ),
-        DataColumn(
-          label: Text(
-            'Utilized',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          DataColumn(
+            label: Text(
+              'Entitled',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
           ),
-        ),
-        DataColumn(
-          label: Text(
-            'Pending',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          DataColumn(
+            label: Text(
+              'Utilized',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
           ),
-        ),
-        DataColumn(
-          label: Text(
-            'Available',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          DataColumn(
+            label: Text(
+              'Pending',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
           ),
-        ),
-      ],
-      rows: leaveBalanceData!.map((data) {
-        return DataRow(cells: [
-          DataCell(
-              Center(child: Text(data.leave, style: TextStyle(fontSize: 14)))),
-          DataCell(Center(
-              child:
-                  Text(data.total.toString(), style: TextStyle(fontSize: 14)))),
-          DataCell(Center(
-              child: Text(data.utilized.toString(),
-                  style: TextStyle(fontSize: 14)))),
-          DataCell(Center(
-              child: Text(data.pending.toString(),
-                  style: TextStyle(fontSize: 14)))),
-          DataCell(Center(
-              child: Text(data.available.toString(),
-                  style: TextStyle(fontSize: 14)))),
-        ]);
-      }).toList(),
-    );
+          DataColumn(
+            label: Text(
+              'Available',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+          ),
+        ],
+        rows: leaveBalanceData!.map((data) {
+          return DataRow(cells: [
+            DataCell(Center(
+                child: Text(data.leave, style: TextStyle(fontSize: 14)))),
+            DataCell(Center(child: Text(
+                data.total.toString(), style: TextStyle(fontSize: 14)))),
+            DataCell(Center(child: Text(
+                data.utilized.toString(), style: TextStyle(fontSize: 14)))),
+            DataCell(Center(child: Text(
+                data.pending.toString(), style: TextStyle(fontSize: 14)))),
+            DataCell(Center(child: Text(
+                data.available.toString(), style: TextStyle(fontSize: 14)))),
+          ]);
+        }).toList(),
+      );
+    }
   }
-}
 
 class Event {
   final String startTime;
