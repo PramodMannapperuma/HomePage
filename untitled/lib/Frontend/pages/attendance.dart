@@ -523,7 +523,7 @@ class _AttendanceState extends State<Attendance> {
               showLeading: true,
               context: context,
               showBackButton: true,
-        showInfoIcon: true,
+              showInfoIcon: true,
             )
           : AppBar(
               title: Row(
