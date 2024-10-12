@@ -1052,6 +1052,7 @@ import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import '../app_bar.dart';
@@ -1112,6 +1113,7 @@ class _LeavePageState extends State<Leave> {
   List<LeaveType>? leaveTypes;
   List<CoverUp>? coverUps;
   bool isLoading = true;
+  bool _showTooltip = false;
 
   String? _selectedLeaveType;
   String? _selectedTimeOfDay;
@@ -1124,6 +1126,7 @@ class _LeavePageState extends State<Leave> {
     _fetchLeaveBalance();
     _fetchLeaveTypes();
     _fetchCoverUps();
+    _checkTooltipShown();
 
     // Initialize the futureLeaveData with an empty Future to prevent LateInitializationError
     futureLeaveData = _loadMonthlyLeaveData(_focusedDay);
@@ -1134,13 +1137,23 @@ class _LeavePageState extends State<Leave> {
     _selectedEvents = ValueNotifier([]);
   }
 
-  Future<List<LeaveData>> _loadMonthlyLeaveData(
-      DateTime focusedDay) async {
+  Future<void> _checkTooltipShown() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool tooltipShown = prefs.getBool('tooltipShown') ?? false;
+
+    if (!tooltipShown) {
+      setState(() {
+        _showTooltip = true; // Show the tooltip if it hasn't been shown before
+      });
+    }
+  }
+
+  Future<List<LeaveData>> _loadMonthlyLeaveData(DateTime focusedDay) async {
     DateTime startOfMonth = DateTime(focusedDay.year, focusedDay.month, 1);
 
     try {
       final List<LeaveData> data =
-      await apiService.fetchLeaveData(widget.token, startOfMonth);
+          await apiService.fetchLeaveData(widget.token, startOfMonth);
       setState(() {
         _leaveStatus.clear();
         for (var attendance in data) {
@@ -1156,6 +1169,15 @@ class _LeavePageState extends State<Leave> {
       print('Error loading Leave data: $e');
       return [];
     }
+  }
+
+  // Function to hide the tooltip
+  void _hideTooltipMessage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('tooltipShown', true); // Set flag to true once shown
+    setState(() {
+      _showTooltip = false; // Hide the message
+    });
   }
 
   Future<void> _fetchLeaveTypes() async {
@@ -1308,7 +1330,7 @@ class _LeavePageState extends State<Leave> {
         await _loadMonthlyLeaveData(_focusedDay);
         setState(() {
           _selectedEvents.value = _getEventsForDay(_selectedDay!);
-          futureLeaveData= _loadMonthlyLeaveData(_focusedDay);
+          futureLeaveData = _loadMonthlyLeaveData(_focusedDay);
         });
         refreshDataCallback(); // Refresh the parent state
       } else {
@@ -1610,6 +1632,63 @@ class _LeavePageState extends State<Leave> {
     );
   }
 
+  // Add this method to show the dialog with the required information
+  Future<void> _showAttendanceAmendmentInfo(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("How to amend Attendance?"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text("Select any day or range of days to make amendments."),
+                SizedBox(height: 10),
+                Text(
+                    "The colors below represent the status of each attendance:"),
+                SizedBox(height: 10),
+                _buildLegendItem("Incomplete", incompleteColor),
+                _buildLegendItem("Amendment", amendmentColor),
+                _buildLegendItem("Pending", pendingColor),
+                _buildLegendItem("Rejected", rejectedColor),
+                _buildLegendItem("Attendance", attendanceColor),
+                _buildLegendItem("Holiday", holidayColor),
+                _buildLegendItem("Leave", leaveColor),
+                SizedBox(height: 20),
+                Text("***Make sure to save after any changes!"),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildLegendItem(String label, Color color) {
+    return Row(
+      children: [
+        Container(
+          width: 16,
+          height: 16,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+        ),
+        SizedBox(width: 8),
+        Text(label),
+      ],
+    );
+  }
+
   Color _getStatusColor(String? status) {
     return statusColorMap[status] ?? Colors.grey;
   }
@@ -1636,6 +1715,7 @@ class _LeavePageState extends State<Leave> {
               showLeading: true,
               context: context,
               showBackButton: true,
+              showInfoIcon: true,
             )
           : AppBar(
               title: Row(
@@ -1702,6 +1782,14 @@ class _LeavePageState extends State<Leave> {
                         arguments: widget.token);
                   },
                 ),
+                IconButton(
+                  icon: Icon(Icons.info_outline),
+                  color: Color(0xff4d2880),
+                  onPressed: () {
+                    _hideTooltipMessage();
+                    _showAttendanceAmendmentInfo(context);
+                  },
+                ),
               ],
             ),
       drawer: CustomSidebar(token: widget.token),
@@ -1718,6 +1806,58 @@ class _LeavePageState extends State<Leave> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Tooltip message display before the calendar
+            if (_showTooltip)
+              Positioned(
+                top: 0,
+                left: 185,
+                child: Stack(
+                  alignment: Alignment.topLeft,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: Colors.purple[100],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Click ',
+                            style: TextStyle(fontSize: 14, color: Colors.black),
+                          ),
+                          Icon(Icons.info_outline,
+                              size: 20, color: Colors.black),
+                          Text(
+                            ' for instructions',
+                            style: TextStyle(fontSize: 14, color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      top: 2,
+                      right: 2,
+                      child: CircleAvatar(
+                        radius: 10,
+                        backgroundColor: Colors.grey[500],
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon:
+                              Icon(Icons.close, size: 14, color: Colors.black),
+                          onPressed: () {
+                            _hideTooltipMessage();
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            // TableCalendar widget
             Container(
               child: TableCalendar(
                 rowHeight: 40,
@@ -1810,28 +1950,24 @@ class _LeavePageState extends State<Leave> {
                 },
                 onPageChanged: (focusedDay) {
                   _focusedDay = focusedDay;
-                  futureLeaveData = _loadMonthlyLeaveData(
-                      focusedDay); // Reload data when page changes/ Ensure data is fetched on page change
+                  futureLeaveData = _loadMonthlyLeaveData(focusedDay);
                 },
               ),
             ),
+            SizedBox(height: 10.0),
+            Divider(thickness: 1),
+            SizedBox(height: 8.0),
             Column(
               children: [
                 FutureBuilder<List<LeaveData>>(
                   future: futureLeaveData,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
+                      return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(
-                        child: Text('No leave data available.'),
-                      );
+                      return Center(child: Text('No leave data available.'));
                     } else {
                       final data = snapshot.data!;
                       final selectedDateData = data.firstWhere(
@@ -1936,9 +2072,8 @@ class _LeavePageState extends State<Leave> {
                                         child: Padding(
                                           padding: EdgeInsets.all(
                                               screenWidth * 0.02),
-                                          child: Center(
-                                            child: _buildLeaveTable(),
-                                          ),
+                                          child:
+                                              Center(child: _buildLeaveTable()),
                                         ),
                                       )
                                     : Center(
@@ -1967,46 +2102,52 @@ class _LeavePageState extends State<Leave> {
       headingRowHeight: 35,
       columns: [
         DataColumn(
-            label: Text('Leave',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+          label: Text(
+            'Leave',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+        ),
         DataColumn(
-            label: Text('Entitled',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+          label: Text(
+            'Entitled',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+        ),
         DataColumn(
-            label: Text('Utilized',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+          label: Text(
+            'Utilized',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+        ),
         DataColumn(
-            label: Text('Pending',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+          label: Text(
+            'Pending',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+        ),
         DataColumn(
-            label: Text('Available',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+          label: Text(
+            'Available',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+        ),
       ],
       rows: leaveBalanceData!.map((data) {
         return DataRow(cells: [
           DataCell(
-            Center(child: Text(data.leave, style: TextStyle(fontSize: 14))),
-          ),
-          DataCell(
-            Center(
-                child: Text(data.total.toString(),
-                    style: TextStyle(fontSize: 14))),
-          ),
-          DataCell(
-            Center(
-                child: Text(data.utilized.toString(),
-                    style: TextStyle(fontSize: 14))),
-          ),
-          DataCell(
-            Center(
-                child: Text(data.pending.toString(),
-                    style: TextStyle(fontSize: 14))),
-          ),
-          DataCell(
-            Center(
-                child: Text(data.available.toString(),
-                    style: TextStyle(fontSize: 14))),
-          ),
+              Center(child: Text(data.leave, style: TextStyle(fontSize: 14)))),
+          DataCell(Center(
+              child:
+                  Text(data.total.toString(), style: TextStyle(fontSize: 14)))),
+          DataCell(Center(
+              child: Text(data.utilized.toString(),
+                  style: TextStyle(fontSize: 14)))),
+          DataCell(Center(
+              child: Text(data.pending.toString(),
+                  style: TextStyle(fontSize: 14)))),
+          DataCell(Center(
+              child: Text(data.available.toString(),
+                  style: TextStyle(fontSize: 14)))),
         ]);
       }).toList(),
     );
